@@ -651,6 +651,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
 
     	//startGame(double minX, double maxX, double minY, double maxY, double minZ, double maxZ, double vel, double vis, double gran)
     	//gp.startGame(0,575,0,575,0,0, 1,10, 5); //FIXME: controllare l'ultimo parametro granularity
+       //UPDATE
         request.startGame(0,575,0,575,0,0, 1,10, 5);
 
         /********************************/
