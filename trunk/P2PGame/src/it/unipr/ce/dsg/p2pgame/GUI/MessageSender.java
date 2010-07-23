@@ -81,10 +81,10 @@ public class MessageSender{
 
         socket.setSoTimeout(0);
         socket.setReuseAddress(true);
-	socket.setSoLinger(true,0);
+	    socket.setSoLinger(true,0);
 
         DataInputStream is = new DataInputStream(socket.getInputStream());
-	DataOutputStream os = new DataOutputStream(socket.getOutputStream());
+	    DataOutputStream os = new DataOutputStream(socket.getOutputStream());
 
         os.write(message.generateXmlMessageString().getBytes());
         
@@ -1257,10 +1257,6 @@ public boolean GamePeerExist()
       SuccessMessage success=new SuccessMessage(receivedMessage);
       boolean suc=success.getSuccess();
 
-     // if(suc==true)
-    	 // System.out.println("SUCCESS: true");
-     // else
-    	 // System.out.println("SUCCESS: false");
       return suc;
     }
 
