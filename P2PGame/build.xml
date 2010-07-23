@@ -72,4 +72,19 @@
             <classpath refid="P2PGame.classpath"/>
         </java>
     </target>
+	<target name="gamepeer">
+	        <java classname="it.unipr.ce.dsg.p2pgame.Engine.MainGamePeer" failonerror="true" fork="yes">
+	            <classpath refid="P2PGame.classpath"/>
+	        </java>
+	    </target>
+	    <target name="server">
+	        <java classname="it.unipr.ce.dsg.p2pgame.GUI.RTSGameBootstrapServer" failonerror="true" fork="yes">
+	            <classpath refid="P2PGame.classpath"/>
+	        </java>
+	    </target>
+	    <target name="gui">
+	        <java classname="it.unipr.ce.dsg.p2pgame.GUI.RTSGameGUI" failonerror="true" fork="yes">
+	            <classpath refid="P2PGame.classpath"/>
+	        </java>
+	    </target>
 </project>
