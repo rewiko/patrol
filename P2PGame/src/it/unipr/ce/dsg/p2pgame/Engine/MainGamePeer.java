@@ -240,12 +240,12 @@ public class MainGamePeer extends Thread{
           
 
           if(this.gp==null){
-        	System.out.println("GAMEPEER false");  
+        	//System.out.println("GAMEPEER false");  
         	success=new SuccessMessage(false);
           }
           else
           {
-        	  System.out.println("GAMEPEER true");
+        	  //System.out.println("GAMEPEER true");
         	  success=new SuccessMessage(true);
           }
 
