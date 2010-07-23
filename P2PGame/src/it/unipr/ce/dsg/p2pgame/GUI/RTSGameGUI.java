@@ -612,12 +612,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
     	int serverPort = Integer.parseInt(serverPortTextField.getText().trim());
     	MultiLog.println(RTSGameGUI.class.toString(), "porta server letta " + serverPort);
     	
-    	try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	
     	//message_dispatcher
         request.CreateGamePeer(portMin+ 1 , portMin, 160, "", serverAddressTextField.getText().trim(), serverPort, portMin + 3, portMin + 2, serverAddressTextField.getText().trim(), serverPort+2, 4000,1000,64000,2000);
 
