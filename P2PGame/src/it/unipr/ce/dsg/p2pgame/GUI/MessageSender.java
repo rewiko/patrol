@@ -54,17 +54,17 @@ public class MessageSender{
 	DataOutputStream os = new DataOutputStream(socket.getOutputStream());
 
         os.write(message.generateXmlMessageString().getBytes());
-        System.out.println("MessageDispatcher: messaggio inviato");
+        
         byte buffer[]=new byte[100000];
 
 	is.read(buffer);
-
+		
         is.close();
         os.close();
         socket.close();
 
         String response=new String(buffer);
-
+        
         return response;
     }
 
@@ -97,7 +97,7 @@ public class MessageSender{
         socket.close();
 
         String response=new String(buffer);
-
+        
         return response;
     }
 
@@ -1057,6 +1057,7 @@ public GamePlayer getGamePlayer()
     String response = null;
         try {
             response = this.sendMessage(message);
+            //System.out.println("RESPONSE "+ response);
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -1243,6 +1244,7 @@ public boolean GamePeerExist()
     String response = null;
         try {
             response = this.sendMessage(message,9999);
+           // System.out.println("RESPONSE "+ response);
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
