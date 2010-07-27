@@ -39,10 +39,10 @@ public class GamePlayerMessage extends Message{
         this.getParametersList().add(new Parameter("id", this.id));
         this.getParametersList().add(new Parameter("name", this.name));
         this.getParametersList().add(new Parameter("posx", Double.toString(this.posX)));
-        this.getParametersList().add(new Parameter("posx", Double.toString(this.posY)));
-        this.getParametersList().add(new Parameter("posx", Double.toString(this.posZ)));
-        this.getParametersList().add(new Parameter("posx", Double.toString(this.velocity)));
-        this.getParametersList().add(new Parameter("posx", Double.toString(this.visibility)));
+        this.getParametersList().add(new Parameter("posy", Double.toString(this.posY)));
+        this.getParametersList().add(new Parameter("posz", Double.toString(this.posZ)));
+        this.getParametersList().add(new Parameter("velocity", Double.toString(this.velocity)));
+        this.getParametersList().add(new Parameter("visibility", Double.toString(this.visibility)));
 
          
 
