@@ -362,7 +362,7 @@ public class GUIMessageListener extends Thread{
             GameResource resource= new GameResource(id,description,quantity);
             this.gp.addToMyResource(resource);
             this.gp.printVision();
-            System.out.println("RISORSA AGGIUNTA "+ id);
+            //System.out.println("RISORSA AGGIUNTA "+ id);
 
             SuccessMessage success=new SuccessMessage(true);
 
@@ -391,7 +391,7 @@ public class GUIMessageListener extends Thread{
 
             this.gp.addToMyResource(resource);
             //System.out.println("RISORSA AGGIUNTA "+ id);
-            MultiLog.println(GUIMessageListener.class.toString(), "RISORSA AGGIUNTA "+ id );
+            //MultiLog.println(GUIMessageListener.class.toString(), "RISORSA AGGIUNTA "+ id );
 
             SuccessMessage success=new SuccessMessage(true);
 
@@ -1254,7 +1254,7 @@ public class GUIMessageListener extends Thread{
                 str_resources+=Double.toString(quantity);
             }
 
-            System.out.println(str_resources);
+           // System.out.println(str_resources);
 
             ResourceFromIDMessage response=new ResourceFromIDMessage(str_resources);
 
@@ -1571,7 +1571,7 @@ public class GUIMessageListener extends Thread{
                             gp.moveResourceMobile(resId, movX, movY, 0, threadId);
 
                             
-                            System.out.println("MOV_RESOURCE "+ res.getX() + "  "+res.getY());
+                           // System.out.println("MOV_RESOURCE "+ res.getX() + "  "+res.getY());
                         }
 
                     } catch (InterruptedException ex) {

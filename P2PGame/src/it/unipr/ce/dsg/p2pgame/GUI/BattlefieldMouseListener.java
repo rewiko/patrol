@@ -175,7 +175,7 @@ MouseMotionListener {
 
                     String id ="";
                     id = this.request.getGamePeerId();
-                    System.out.println("201 if " + id);
+                    //System.out.println("201 if " + id);
                     
                     if (ship.getOwnerId().compareTo(id) == 0){
 					
@@ -537,7 +537,7 @@ MouseMotionListener {
                     //    try {
 
                              this.starship = (GameResourceMobile) request.getMobileResource(this.attack.get(this.selection));
-                             System.out.println("\n\n\n605 mobile resource from id\n\n");
+                             //System.out.println("\n\n\n605 mobile resource from id\n\n");
                       //  } catch (UnknownHostException ex) {
                         //     Logger.getLogger(BattlefieldMouseListener.class.getName()).log(Level.SEVERE, null, ex);
                         //} catch (IOException ex) {

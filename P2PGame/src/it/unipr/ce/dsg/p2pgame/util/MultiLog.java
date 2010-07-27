@@ -159,7 +159,7 @@ public class MultiLog {
 		}
 
 		if (!fileOutBool){
-			System.out.println(id + " : " + text);
+			//System.out.println(id + " : " + text);
 		}
 		else if (fileOutBool){
 

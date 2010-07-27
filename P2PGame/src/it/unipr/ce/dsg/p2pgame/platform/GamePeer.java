@@ -161,7 +161,7 @@ public class GamePeer extends NetPeer {
 							userMessage.getVelocity(), userMessage.getVision()/*, userMessage.getGranularity()*/ );
 					MultiLog.println(GamePeer.class.toString(), "Created player " + this.player.getName() + " in position ( " +  this.player.getPosX() + ", " + this.player.getPosY() + ", " + this.player.getPosZ() + " )");
 					//System.out.println("Created player " + this.player.getName() + " in position ( " +  this.player.getPosX() + ", " + this.player.getPosY() + ", " + this.player.getPosZ() + " )");
-                                        System.out.println( "PARAMVISION"+userMessage.getVision());
+                                        //System.out.println( "PARAMVISION"+userMessage.getVision());
 				}
 
 
@@ -775,21 +775,21 @@ public class GamePeer extends NetPeer {
 	}
 
 	public void printVision(){
-                System.out.println("PRINTVISION");
+                //System.out.println("PRINTVISION");
 		for (int i=0; i< this.vision.size(); i++){
 			if (this.vision.get(i) instanceof GamePlayerResponsible){
 				GamePlayerResponsible player = (GamePlayerResponsible) this.vision.get(i);
 				MultiLog.println(GamePeer.class.toString(), "Vis " + i + " (GIOCATORE): " + player.getName() + ":)" + player.getPosX() + "," + player.getPosY() + "," + player.getPosZ() + " posHash " + player.getPositionHash());
-				System.out.println("Vis " + i + " (GIOCATORE): " + player.getName() + ":)" + player.getPosX() + "," + player.getPosY() + "," + player.getPosZ() + " posHash " + player.getPositionHash());
+				//System.out.println("Vis " + i + " (GIOCATORE): " + player.getName() + ":)" + player.getPosX() + "," + player.getPosY() + "," + player.getPosZ() + " posHash " + player.getPositionHash());
 			}
 			else if (this.vision.get(i) instanceof GameResourceMobileResponsible){
 				GameResourceMobileResponsible resource = (GameResourceMobileResponsible) this.vision.get(i);
 				MultiLog.println(GamePeer.class.toString(), "Vis "+ i + " (RISORSA): " + resource.getDescription() + ":)" + resource.getX() + "," + resource.getY() + "," + resource.getZ());
-				System.out.println("Vis "+ i + " (RISORSA): " + resource.getDescription() + ":)" + resource.getX() + "," + resource.getY() + "," + resource.getZ());
+				//System.out.println("Vis "+ i + " (RISORSA): " + resource.getDescription() + ":)" + resource.getX() + "," + resource.getY() + "," + resource.getZ());
 			}
 			else{
 			MultiLog.println(GamePeer.class.toString(), "Vis " + i + ":" + this.vision.get(i) + "!");
-				System.out.println("Vis " + i + ":" + this.vision.get(i) + "!");
+				//System.out.println("Vis " + i + ":" + this.vision.get(i) + "!");
 
 			}
 		}
@@ -1017,7 +1017,7 @@ public class GamePeer extends NetPeer {
 	public /*synchronized*/ void addToMyResource(GameResource res){
 		//System.out.println("addToMyResource CALLED###");
 		//if (this.getMyMobileResourceFromId(res.getId()) == null){
-		System.out.println();
+		//System.out.println();
 		MultiLog.println(GamePeer.class.toString(), "RISORSA AGGIUNTA "+ res.getId() );
 		if (this.getMyResourceFromId(res.getId()) == null){
 

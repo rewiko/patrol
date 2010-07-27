@@ -45,7 +45,7 @@ public class GamePeerMessageListener implements Runnable {
 		ServerSocket serverSocket = null;
 		Socket clientSocket = null;
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), "Creating PeerSocket for Game Peer...");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), "Creating PeerSocket for Game Peer...");
 		//System.out.println("Creating PeerSocket for Game Peer...");
 
 		try {
@@ -56,7 +56,7 @@ public class GamePeerMessageListener implements Runnable {
 
 		while (true) {
 
-			MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "waiting connection to game peer listener...");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "waiting connection to game peer listener...");
 			//System.out.println(LOG_TAG + "waiting connection to game peer listener...");
 
 
@@ -88,7 +88,7 @@ public class GamePeerMessageListener implements Runnable {
 					checkIncomingMessage(message, os);
 
 					is.close();
-					MultiLog.println(GamePeerMessageListener.class.toString(), "connection with game peer closed");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "connection with game peer closed");
 					//System.out.println("connection with game peer closed");
 					os.close();
 					clientSocket.close();
@@ -97,7 +97,7 @@ public class GamePeerMessageListener implements Runnable {
 
 
 			} catch (IOException e) {
-				MultiLog.println(GamePeerMessageListener.class.toString(),"Connection aborted");
+				//MultiLog.println(GamePeerMessageListener.class.toString(),"Connection aborted");
 				//System.out.println("Connection aborted");
 				e.printStackTrace();
 			}
@@ -114,7 +114,7 @@ public class GamePeerMessageListener implements Runnable {
 
 		Message receivedMessage = messageReader.readMessageFromString(messageString.trim());
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Received a Game Message of type: " + receivedMessage.getMessageType());
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Received a Game Message of type: " + receivedMessage.getMessageType());
 		//System.out.println(LOG_TAG + "Received a Game Message of type: " + receivedMessage.getMessageType());
 
 		//handle received Message
@@ -156,10 +156,10 @@ public class GamePeerMessageListener implements Runnable {
 	 */
 	private void pingMessageAction(Message receivedMessage, DataOutputStream os) throws IOException{
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), "Handler for PING MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), "Handler for PING MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for PING MESSAGE");
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Send Ack");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Send Ack");
 		//System.out.println(LOG_TAG + "Send Ack");
 
 		os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
@@ -168,7 +168,7 @@ public class GamePeerMessageListener implements Runnable {
 
 	private void positionMessageAction(Message receivedMessage, DataOutputStream os) throws IOException{
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for POSITION MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for POSITION MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for POSITION MESSAGE");
 
 		PositionPlayerMessage posMessage = new PositionPlayerMessage(receivedMessage);
@@ -179,7 +179,7 @@ public class GamePeerMessageListener implements Runnable {
 		//se manca la prima posizione (oldpos) rivolgersi al server per eseguire la verifica
 		if (posMessage.getOldPos().compareTo("") == 0){
 
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Received a Position Message without OldPosition");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Received a Position Message without OldPosition");
 			//System.out.println("Received a Position Message without OldPosition");
 
 			CheckPositionPlayerMessage checkPos = new CheckPositionPlayerMessage("", "", -1, resp.getId(), resp.getName(),
@@ -197,24 +197,24 @@ public class GamePeerMessageListener implements Runnable {
 				AckMessage ackMessage = new AckMessage(received);
 
 				if (ackMessage.getAckStatus() == 0){
-					MultiLog.println(GamePeerMessageListener.class.toString(), "Position possible. Save on cache");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "Position possible. Save on cache");
 					//System.out.println("Position possible. Save on cache");
-					MultiLog.println(GamePeerMessageListener.class.toString(), "DELLA RISORSA RICEVUTA CHECK SUL SERVER OK");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "DELLA RISORSA RICEVUTA CHECK SUL SERVER OK");
 					//System.out.println("DELLA RISORSA RICEVUTA CHECK SUL SERVER OK");
 					this.peer.addRespPlayerOnCache(resp);
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 
 				}
 				else {
-					MultiLog.println(GamePeerMessageListener.class.toString(), "DELLA RISORSA RICEVUTA CHECK SUL SERVER OK");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "DELLA RISORSA RICEVUTA CHECK SUL SERVER OK");
 					//System.out.println("Position impossible. Sending a NACK");
-					MultiLog.println(GamePeerMessageListener.class.toString(), "DELLA RISORSA RICEVUTA CHECK NOOO");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "DELLA RISORSA RICEVUTA CHECK NOOO");
 					//System.out.println("DELLA RISORSA RICEVUTA CHECK NOOO");
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 				}
 
 			}
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Received a Position from Server");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Received a Position from Server");
 			//System.out.println("Received a Position from Server");
 			return;
 
@@ -222,12 +222,12 @@ public class GamePeerMessageListener implements Runnable {
 
 		//TODO: prima di salvare la posizione chiedere al precedente responsabile se ï¿½ ammissible e farla cancellare se ok
 		//se la posizione non puï¿½ essere aggiornata essendo passato poco tempo cancellare nella cache locale di Chord
-		MultiLog.println(GamePeerMessageListener.class.toString(), "RECEIVED A POSITION MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), "RECEIVED A POSITION MESSAGE");
 		//System.out.println("RECEIVED A POSITION MESSAGE");
 
 		//aggiungere il caso in cui il vecchio responsabile ero IO. INUTILE?
 		if (this.peer.getResPlayers().containsKey(resp.getOldPos())){
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Have on cache also old position. Checking...");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Have on cache also old position. Checking...");
 			//System.out.println("Have on cache also old position. Checking...");
 
 			GamePlayerResponsible oldPlayer = this.peer.getResPlayers().get(resp.getOldPos());
@@ -243,16 +243,16 @@ public class GamePeerMessageListener implements Runnable {
 				//System.out.println("NEW Position OK ");
 				this.peer.deleteResPlayer(resp.getOldPos());
 				this.peer.addRespPlayerOnCache(resp);
-				MultiLog.println(GamePeerMessageListener.class.toString(),"PUB:CHECK INTERNO OK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(),"PUB:CHECK INTERNO OK");
 				//System.out.println("PUB:CHECK INTERNO OK");
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Responsible player updated. Sending ACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Responsible player updated. Sending ACK");
 				//System.out.println("Responsible player updated. Sending ACK");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 			}
 			else{
-				MultiLog.println(GamePeerMessageListener.class.toString(), "PUB:CHECK INTERNO NOOO");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "PUB:CHECK INTERNO NOOO");
 				//System.out.println("PUB:CHECK INTERNO NOOO");
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Position impossible. Sending a NACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Position impossible. Sending a NACK");
 				//System.out.println("Position impossible. Sending a NACK");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			}
@@ -266,7 +266,7 @@ public class GamePeerMessageListener implements Runnable {
 		String destAddr = this.peer.getSharedInfos().getInfoFor(this.threadId).getIpAddress();
 		int destPort = this.peer.getSharedInfos().getInfoFor(this.threadId).getPortNumber() + 2;
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), "Sending check to responsible " + responsible);
+		//MultiLog.println(GamePeerMessageListener.class.toString(), "Sending check to responsible " + responsible);
 		//System.out.println("Sending check to responsible " + responsible);
 
 		CheckPositionPlayerMessage checkPos = new CheckPositionPlayerMessage("", "", -1, resp.getId(), resp.getName(),
@@ -284,18 +284,18 @@ public class GamePeerMessageListener implements Runnable {
 			AckMessage ackMessage = new AckMessage(received);
 
 			if (ackMessage.getAckStatus() == 0){
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK ESTERNO OK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK ESTERNO OK");
 				//System.out.println("CHECK ESTERNO OK");
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Position possible. Save on cache");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Position possible. Save on cache");
 				//System.out.println("Position possible. Save on cache");
 				this.peer.addRespPlayerOnCache(resp);
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 
 			}
 			else {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK ESTERNO FALLITO");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK ESTERNO FALLITO");
 				//System.out.println("CHECK ESTERNO FALLITO");
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Position impossible. Sending a NACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Position impossible. Sending a NACK");
 				//System.out.println("Position impossible. Sending a NACK");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			}
@@ -307,14 +307,14 @@ public class GamePeerMessageListener implements Runnable {
 	//se viene chiesto un check position allora il nodo cancella la risorsa dopo averla verificata
 	private void checkPositionMessageAction(Message receivedMessage, DataOutputStream os) throws IOException{
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for CHECK POSITION MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for CHECK POSITION MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for CHECK POSITION MESSAGE");
 
 		CheckPositionPlayerMessage checkPos = new CheckPositionPlayerMessage(receivedMessage);
 
 		if (this.peer.getResPlayers().containsKey(checkPos.getOldPos())) {
 
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Player is on cache. Verifying movement");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Player is on cache. Verifying movement");
 			//System.out.println("Player is on cache. Verifying movement");
 
 			GamePlayerResponsible oldPlayer = this.peer.getResPlayers().get(checkPos.getOldPos());
@@ -326,26 +326,26 @@ public class GamePeerMessageListener implements Runnable {
 			boolean checkResponse = this.peer.checkPosition(oldPlayer, scostX, scostY, scostZ, checkPos.getVel());
 
 			if (checkResponse){
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Position possible. Sending a ACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Position possible. Sending a ACK");
 				//System.out.println("Position possible. Sending a ACK");
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK PASSED");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK PASSED");
 				//System.out.println("CHECK PASSED");
 				this.peer.deleteResPlayer(oldPlayer.getPositionHash());
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 			}
 			else {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK NOT PASSED");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK NOT PASSED");
 				//System.out.println("CHECK NOT PASSED");
-				MultiLog.println(GamePeerMessageListener.class.toString(), "New Position too far. Sending a NACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "New Position too far. Sending a NACK");
 				//System.out.println("New Position too far. Sending a NACK");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			}
 
 		}
 		else {
-			MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK NOT PASSED. NOT HAVE POSITION");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK NOT PASSED. NOT HAVE POSITION");
 			//System.out.println("CHECK NOT PASSED. NOT HAVE POSITION");
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Position not availabe. Sending a NACK");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Position not availabe. Sending a NACK");
 			//System.out.println("Position not availabe. Sending a NACK");
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 		}
@@ -360,11 +360,11 @@ public class GamePeerMessageListener implements Runnable {
 
 	private void findResourceMessageAction(Message receivedMessage, DataOutputStream os) throws IOException{
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler FIND RESOURCE MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler FIND RESOURCE MESSAGE");
 		//System.out.println(LOG_TAG + "Handler FIND RESOURCE MESSAGE");
 
 		//TODO: prima di rispondere con la risorsa richiesta vedere se chi chiede ha i privilegi sufficienti
-		MultiLog.println(GamePeerMessageListener.class.toString(), "Verify source privileges. Sending check message to reponsible");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), "Verify source privileges. Sending check message to reponsible");
 		//System.out.println("Verify source privileges. Sending check message to reponsible");
 
 		FindResourceMessage findResourceMessage = new FindResourceMessage(receivedMessage);
@@ -375,7 +375,7 @@ public class GamePeerMessageListener implements Runnable {
 				!this.peer.getResResources().containsKey(findResourceMessage.getPositionHash()) )
 		{
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
-			MultiLog.println(GamePeerMessageListener.class.toString(), "NON ho la risorsa");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "NON ho la risorsa");
 			//System.out.println("NON ho la risorsa");
 			return;
 		}
@@ -402,7 +402,7 @@ public class GamePeerMessageListener implements Runnable {
 
 		//verifica interna (CHECK INTERNO)
 		if (resp.compareTo(this.peer.getMyId()) == 0){
-			MultiLog.println(GamePeerMessageListener.class.toString(), "INTERNAL CHECK FIND RESOURCE");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "INTERNAL CHECK FIND RESOURCE");
 			//System.out.println("INTERNAL CHECK FIND RESOURCE");
 			String playerUsername = checkResourceMessage.getUserName();
 			double reqX = checkResourceMessage.getPosX();
@@ -433,7 +433,7 @@ public class GamePeerMessageListener implements Runnable {
 									infoRequested.getPositionHash(), infoRequested.getPosX(), infoRequested.getPosY(), infoRequested.getPosZ(),
 									infoRequested.getVelocity(), infoRequested.getVisibility(), infoRequested.getOldPos());
 
-							MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
+							//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
 							//System.out.println("invio informazioni risorsa richieste");
 							os.write(posPlayer.generateXmlMessageString().getBytes());
 
@@ -446,13 +446,13 @@ public class GamePeerMessageListener implements Runnable {
 									infoRequested.getPositionHash(), infoRequested.getX(), infoRequested.getY(), infoRequested.getZ(), infoRequested.getVelocity(), infoRequested.getVision(),
 									infoRequested.getOldPos(), infoRequested.getOwner(), infoRequested.getOwnerId(), infoRequested.getQuantity());
 
-							MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa MOBILE richieste");
+							//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa MOBILE richieste");
 							//System.out.println("invio informazioni risorsa MOBILE richieste");
 							os.write(posResource.generateXmlMessageString().getBytes());
 						}
 					}
 					else{
-						MultiLog.println(GamePeerMessageListener.class.toString(), "Position out of bound. Sending a NACK");
+						//MultiLog.println(GamePeerMessageListener.class.toString(), "Position out of bound. Sending a NACK");
 						//System.out.println("Position out of bound. Sending a NACK");
 
 						os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -460,7 +460,7 @@ public class GamePeerMessageListener implements Runnable {
 
 				}
 				else{
-					MultiLog.println(GamePeerMessageListener.class.toString(), "Position error. Sending a NACK");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "Position error. Sending a NACK");
 					//System.out.println("Position error. Sending a NACK");
 
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -491,7 +491,7 @@ public class GamePeerMessageListener implements Runnable {
 									infoRequested.getPositionHash(), infoRequested.getPosX(), infoRequested.getPosY(), infoRequested.getPosZ(),
 									infoRequested.getVelocity(), infoRequested.getVisibility(), infoRequested.getOldPos());
 
-							MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
+							//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
 							//System.out.println("invio informazioni risorsa richieste");
 							os.write(posPlayer.generateXmlMessageString().getBytes());
 
@@ -504,14 +504,14 @@ public class GamePeerMessageListener implements Runnable {
 									infoRequested.getPositionHash(), infoRequested.getX(), infoRequested.getY(), infoRequested.getZ(), infoRequested.getVelocity(), infoRequested.getVision(),
 									infoRequested.getOldPos(), infoRequested.getOwner(), infoRequested.getOwnerId(), infoRequested.getQuantity());
 
-							MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa MOBILE richieste");
+							//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa MOBILE richieste");
 							//System.out.println("invio informazioni risorsa MOBILE richieste");
 							os.write(posResource.generateXmlMessageString().getBytes());
 						}
 
 					}
 					else{
-						MultiLog.println(GamePeerMessageListener.class.toString(), "Position RESOURCE out of bound. Sending a NACK");
+						//MultiLog.println(GamePeerMessageListener.class.toString(), "Position RESOURCE out of bound. Sending a NACK");
 						//System.out.println("Position RESOURCE out of bound. Sending a NACK");
 
 						os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -519,7 +519,7 @@ public class GamePeerMessageListener implements Runnable {
 
 				}
 				else{
-					MultiLog.println(GamePeerMessageListener.class.toString(), "Position RESOURCE error. Sending a NACK");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "Position RESOURCE error. Sending a NACK");
 					//System.out.println("Position RESOURCE error. Sending a NACK");
 
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -527,7 +527,7 @@ public class GamePeerMessageListener implements Runnable {
 
 			} // NACK complessivo
 			else {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Position not availabe. Sending a NACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Position not availabe. Sending a NACK");
 				//System.out.println("Position not availabe. Sending a NACK");
 
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -539,7 +539,7 @@ public class GamePeerMessageListener implements Runnable {
 		String responseMessage = MessageSender.sendMessage(destAddr, destPort, checkResourceMessage.generateXmlMessageString());
 
 		if (responseMessage.contains("ERROR")){
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Sending Check Resource Message ERROR !");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Sending Check Resource Message ERROR !");
 			//System.err.println("Sending Check Resource Message ERROR !");
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 		}
@@ -567,7 +567,7 @@ public class GamePeerMessageListener implements Runnable {
 							infoRequested.getPositionHash(), infoRequested.getPosX(), infoRequested.getPosY(), infoRequested.getPosZ(),
 							infoRequested.getVelocity(), infoRequested.getVisibility(), infoRequested.getOldPos());
 
-					MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
 					//System.out.println("invio informazioni risorsa richieste");
 					os.write(posPlayer.generateXmlMessageString().getBytes());
 				}
@@ -580,14 +580,14 @@ public class GamePeerMessageListener implements Runnable {
 							infoReqested.getX(), infoReqested.getY(),infoReqested.getZ(), infoReqested.getVelocity(), infoReqested.getVision(),
 							infoReqested.getOldPos(), infoReqested.getOwner(), infoReqested.getOwnerId(), infoReqested.getQuantity());
 
-					MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni sulla RISORSA MOBILE richieste");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni sulla RISORSA MOBILE richieste");
 					//System.out.println("invio informazioni sulla RISORSA MOBILE richieste");
 					os.write(posResource.generateXmlMessageString().getBytes());
 				}
 
 			} else {
 			//invio nack non avendo ricevuto l'ok da parte del responsabile
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Not enough privileges. Sending a NACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Not enough privileges. Sending a NACK");
 				//System.out.println("Not enough privileges. Sending a NACK");
 
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -604,7 +604,7 @@ public class GamePeerMessageListener implements Runnable {
 
 	private void checkFindResourceMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler CHECK FIND RESOURCE MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler CHECK FIND RESOURCE MESSAGE");
 		//System.out.println(LOG_TAG + "Handler CHECK FIND RESOURCE MESSAGE");
 
 		CheckFindResourceMessage checkResourceMessage = new CheckFindResourceMessage(messageReceived);
@@ -631,14 +631,14 @@ public class GamePeerMessageListener implements Runnable {
 //						&& reqZ >= player.getPosZ() - player.getVisibility() && reqZ <= player.getPosZ() + player.getVisibility()){
 				if (true) { //solo per prova //TODO:
 
-					MultiLog.println(GamePeerMessageListener.class.toString(), "Position correct. Sending a ACK");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "Position correct. Sending a ACK");
 					//System.out.println("Position correct. Sending a ACK");
 
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 
 				}
 				else{
-					MultiLog.println(GamePeerMessageListener.class.toString(), "Position out of bound. Sending a NACK");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "Position out of bound. Sending a NACK");
 					//System.out.println("Position out of bound. Sending a NACK");
 
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -646,7 +646,7 @@ public class GamePeerMessageListener implements Runnable {
 
 			}
 			else{
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Position error. Sending a NACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Position error. Sending a NACK");
 				//System.out.println("Position error. Sending a NACK");
 
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -670,14 +670,14 @@ public class GamePeerMessageListener implements Runnable {
 //						&& reqZ >= player.getPosZ() - player.getVisibility() && reqZ <= player.getPosZ() + player.getVisibility()){
 				if (true) { //solo per prova //TODO:
 
-					MultiLog.println(GamePeerMessageListener.class.toString(), "Position MOBILE RESOURCE correct. Sending a ACK");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "Position MOBILE RESOURCE correct. Sending a ACK");
 					//System.out.println("Position MOBILE RESOURCE correct. Sending a ACK");
 
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 
 				}
 				else{
-					MultiLog.println(GamePeerMessageListener.class.toString(), "Position MOBILE RESOURCE out of bound. Sending a NACK");
+					//MultiLog.println(GamePeerMessageListener.class.toString(), "Position MOBILE RESOURCE out of bound. Sending a NACK");
 					//System.out.println("Position MOBILE RESOURCE out of bound. Sending a NACK");
 
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -685,7 +685,7 @@ public class GamePeerMessageListener implements Runnable {
 
 			}
 			else{
-				MultiLog.println(GamePeerMessageListener.class.toString(), "Position MOBILE RESOURCE error. Sending a NACK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "Position MOBILE RESOURCE error. Sending a NACK");
 				//System.out.println("Position MOBILE RESOURCE error. Sending a NACK");
 
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -694,7 +694,7 @@ public class GamePeerMessageListener implements Runnable {
 		}
 
 		else {
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Position not availabe. Sending a NACK");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Position not availabe. Sending a NACK");
 			//System.out.println("Position not availabe. Sending a NACK");
 
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -704,7 +704,7 @@ public class GamePeerMessageListener implements Runnable {
 
 
 	private void mobileResourceMessageAction(Message messageReceived, DataOutputStream os) throws IOException{
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for MOBILE RESOURCE MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for MOBILE RESOURCE MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for MOBILE RESOURCE MESSAGE");
 
 		MobileResourceMessage resMessage = new MobileResourceMessage(messageReceived);
@@ -716,7 +716,7 @@ public class GamePeerMessageListener implements Runnable {
 		//TODO: fare i diversi casi e quello in cui non si ha l'old ma ï¿½ uguale a quello del Player (SUL CHECK)
 
 		if (this.peer.getResResources().containsKey(resp.getOldPos())){
-			MultiLog.println(GamePeerMessageListener.class.toString(), "HAVE ON CACHE ALSO OLD POSITION");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "HAVE ON CACHE ALSO OLD POSITION");
 			//System.out.println("HAVE ON CACHE ALSO OLD POSITION");
 
 			GameResourceMobileResponsible oldResource = this.peer.getResResources().get(resp.getOldPos());
@@ -729,18 +729,18 @@ public class GamePeerMessageListener implements Runnable {
 
 			if (checkResp){
 
-				MultiLog.println(GamePeerMessageListener.class.toString(), "NEW RESOURCE POSITION OK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "NEW RESOURCE POSITION OK");
 				//System.out.println("NEW RESOURCE POSITION OK");
 
 				this.peer.deleteResResource(resp.getOldPos());
 				this.peer.addRespResourceOnCache(resp);
 
-				MultiLog.println(GamePeerMessageListener.class.toString(), "PUB e CHECK INTERNO");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "PUB e CHECK INTERNO");
 				//System.out.println("PUB e CHECK INTERNO");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 			}
 			else {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "PUB e CHECK INTERNO FALLITO");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "PUB e CHECK INTERNO FALLITO");
 				//System.out.println("PUB e CHECK INTERNO FALLITO");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			}
@@ -750,7 +750,7 @@ public class GamePeerMessageListener implements Runnable {
 		//se si ha la posizione del player propietario
 		if (this.peer.getResPlayers().containsKey(resp.getOldPos()) &&
 				resp.getOwnerId().compareTo(this.peer.getResPlayers().get(resp.getOldPos()).getId()) == 0){
-			MultiLog.println(GamePeerMessageListener.class.toString(), "SI ha in cache la posizione del propietario");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "SI ha in cache la posizione del propietario");
 			//System.out.println("SI ha in cache la posizione del propietario");
 
 			GamePlayerResponsible oldPlayer = this.peer.getResPlayers().get(resp.getOldPos());
@@ -761,15 +761,15 @@ public class GamePeerMessageListener implements Runnable {
 			boolean checkResp = this.peer.checkPosition(oldPlayer, scostX, scostY, scostZ, resp.getVelocity());
 
 			if (checkResp){
-				MultiLog.println(GamePeerMessageListener.class.toString(), "new Resource POsition OK for PLAYER POSITION");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "new Resource POsition OK for PLAYER POSITION");
 				//System.out.println("new Resource POsition OK for PLAYER POSITION");
 				this.peer.addRespResourceOnCache(resp);
-				MultiLog.println(GamePeerMessageListener.class.toString(), "PUB E CHECK interno per OLD PLAYER");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "PUB E CHECK interno per OLD PLAYER");
 				//System.out.println("PUB E CHECK interno per OLD PLAYER");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 			}
 			else {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "PUB e CHECK INTERNO OLD PLAYER FALLITO");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "PUB e CHECK INTERNO OLD PLAYER FALLITO");
 				//System.out.println("PUB e CHECK INTERNO OLD PLAYER FALLITO");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			}
@@ -781,7 +781,7 @@ public class GamePeerMessageListener implements Runnable {
 		String destAddr = this.peer.getSharedInfos().getInfoFor(this.threadId).getIpAddress();
 		int destPort = this.peer.getSharedInfos().getInfoFor(this.threadId).getPortNumber() + 2;
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), "SEND ack for RESOURCE to " + responsible);
+		//MultiLog.println(GamePeerMessageListener.class.toString(), "SEND ack for RESOURCE to " + responsible);
 		//System.out.println("SEND ack for RESOURCE to " + responsible);
 		//String sourceName, String sourceSocketAddr, int sourcePort, String id, String username,
 		 //double x, double y, double z, double vel, double vis, String oldPos, String owner, String ownerId, double quantity
@@ -805,7 +805,7 @@ public class GamePeerMessageListener implements Runnable {
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 			}
 			else {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK RISORSA ESTERNA FALLITO");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK RISORSA ESTERNA FALLITO");
 				//System.out.println("CHECK RISORSA ESTERNA FALLITO");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			}
@@ -814,14 +814,14 @@ public class GamePeerMessageListener implements Runnable {
 
 	//dï¿½ check ok anche se possiede la posizione del propietario che ï¿½ quella dell'oldpos
 	private void checkMobileResourceMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for CHECK MOBILE RESOURCE MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for CHECK MOBILE RESOURCE MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for CHECK MOBILE RESOURCE MESSAGE");
 
 		CheckMobileResourceMessage checkResPos = new CheckMobileResourceMessage(messageReceived);
 
 		if (this.peer.getResResources().containsKey(checkResPos.getOldPos())){
 
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Resource is on cache");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Resource is on cache");
 			//System.out.println("Resource is on cache");
 
 			GameResourceMobileResponsible oldResource = this.peer.getResResources().get(checkResPos.getOldPos());
@@ -833,7 +833,7 @@ public class GamePeerMessageListener implements Runnable {
 			boolean checkResponse = this.peer.checkResourceMobile(oldResource, scostX, scostY, scostZ, checkResPos.getVel());
 
 			if (checkResponse) {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE position OK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE position OK");
 				//System.out.println("CHECK for RESOURCE position OK");
 
 				this.peer.deleteResResource(oldResource.getPositionHash());
@@ -841,7 +841,7 @@ public class GamePeerMessageListener implements Runnable {
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 			}
 			else {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE position NO");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE position NO");
 				//System.out.println("CHECK for RESOURCE position NO");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			}
@@ -849,7 +849,7 @@ public class GamePeerMessageListener implements Runnable {
 		else if (this.peer.getResPlayers().containsKey(checkResPos.getOldPos()) &&
 				checkResPos.getOwnerId().compareTo(this.peer.getResPlayers().get(checkResPos.getOldPos()).getId()) == 0) {
 
-			MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK WITH PLAYER OWNER POSITION");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK WITH PLAYER OWNER POSITION");
 			//System.out.println("CHECK WITH PLAYER OWNER POSITION");
 			GamePlayerResponsible player = this.peer.getResPlayers().get(checkResPos.getOldPos());
 			double scostX = Math.abs(player.getPosX() - checkResPos.getPosX());
@@ -859,7 +859,7 @@ public class GamePeerMessageListener implements Runnable {
 			boolean checkResponse = this.peer.checkPosition(player, scostX, scostY, scostZ, checkResPos.getVel());
 
 			if (checkResponse) {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE position OK");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE position OK");
 				//System.out.println("CHECK for RESOURCE position OK");
 
 				//this.peer.deleteResResource(oldResource.getPositionHash());
@@ -867,7 +867,7 @@ public class GamePeerMessageListener implements Runnable {
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 			}
 			else {
-				MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE position NO");
+				//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE position NO");
 				//System.out.println("CHECK for RESOURCE position NO");
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			}
@@ -875,7 +875,7 @@ public class GamePeerMessageListener implements Runnable {
 		}
 		else {
 
-			MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE NO mancanza RISORSA");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "CHECK for RESOURCE NO mancanza RISORSA");
 			//System.out.println("CHECK for RESOURCE NO mancanza RISORSA");
 
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -885,7 +885,7 @@ public class GamePeerMessageListener implements Runnable {
 	//occorre registrare l'hash dell'attacco ricevuto e rispondere ack
 	private void startMatchMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
 
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for START MATCH MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for START MATCH MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for START MATCH MESSAGE");
 
 		//TODO: mettere controlli per verificare la posizione dell'altro avversario
@@ -893,14 +893,14 @@ public class GamePeerMessageListener implements Runnable {
 
 		if (this.peer.addAttackReceived(startMatch.getId(), startMatch.getUserName(), startMatch.getHash())){
 
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Attack RECEIVED");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Attack RECEIVED");
 			//System.out.println("Attack RECEIVED");
 
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 
 		}
 		else {
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Attack Refused");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Attack Refused");
 			//System.out.println("Attack Refused");
 
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
@@ -910,7 +910,7 @@ public class GamePeerMessageListener implements Runnable {
 
 	//ricezione della difesa e risposta con l'attacco in chiaro
 	private void defenseMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
-		MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for DEFENSE MESSAGE");
+		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for DEFENSE MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for DEFENSE MESSAGE");
 
 		DefenseMatchMessage defenseMessage = new DefenseMatchMessage(messageReceived);
@@ -931,7 +931,7 @@ public class GamePeerMessageListener implements Runnable {
 
 		}
 		else {
-			MultiLog.println(GamePeerMessageListener.class.toString(), "Invalid defense");
+			//MultiLog.println(GamePeerMessageListener.class.toString(), "Invalid defense");
 			//System.out.println("Invalid defense");
 
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());

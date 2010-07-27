@@ -13,6 +13,8 @@ import it.unipr.ce.dsg.p2pgame.platform.GameResource;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
+import it.unipr.ce.dsg.p2pgame.util.CheckOutput;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,10 +31,11 @@ import java.util.logging.Logger;
 public class MessageSender{
 
     private Socket socket;
+    private CheckOutput check;
 
     public MessageSender()
     {
-
+    	check=new CheckOutput("output.txt");
 
     }
 
@@ -593,7 +596,7 @@ public class MessageSender{
 
             }
 
-            System.out.println("MessageDispatcher: getResources");
+           
 
             return Resources;
 
@@ -1245,6 +1248,7 @@ public boolean GamePeerExist()
         try {
             response = this.sendMessage(message,9999);
            // System.out.println("RESPONSE "+ response);
+            this.check.print_msg(MessageSender.class.getName(),response);
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
