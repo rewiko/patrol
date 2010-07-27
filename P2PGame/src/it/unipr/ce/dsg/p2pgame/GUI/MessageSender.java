@@ -84,7 +84,7 @@ public class MessageSender{
         socket.close();
 
         //String response=new String(buffer);
-        this.check.print_msg(MessageSender.class.getName(), response);
+     //  this.check.print_msg(MessageSender.class.getName(), response);
         
         return response.trim();
     }
@@ -135,7 +135,7 @@ public class MessageSender{
         socket.close();
 
         //response=new String(buffer);
-        this.check.print_msg(MessageSender.class.getName(), response);
+       // this.check.print_msg(MessageSender.class.getName(), response);
         
         return response;
     }
