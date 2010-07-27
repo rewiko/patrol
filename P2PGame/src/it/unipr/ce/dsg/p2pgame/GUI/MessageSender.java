@@ -1060,6 +1060,7 @@ public GamePlayer getGamePlayer()
     String response = null;
         try {
             response = this.sendMessage(message);
+            this.check.print_msg(MessageSender.class.getName(),response);
             //System.out.println("RESPONSE "+ response);
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
