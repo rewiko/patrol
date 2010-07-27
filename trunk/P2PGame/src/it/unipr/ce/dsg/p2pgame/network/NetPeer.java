@@ -1124,18 +1124,18 @@ public class NetPeer {
 	 */
 	public /*synchronized*/ void publishResource(String threadId){
 
-		       System.out.println("CACHE1");
+		       //System.out.println("CACHE1");
 		       MultiLog.println(NetPeer.class.toString(),"CACHE1");
-                System.out.println("resource on cache: "+this.resourceOnCache.size());
+               //System.out.println("resource on cache: "+this.resourceOnCache.size());
                 if (this.resourceOnCache.size() == 0)
 			return;
 
 		Set<String> key_set = this.resourceOnCache.keySet();
 		Iterator<String> iter = key_set.iterator();
-                 System.out.println("CACHE1");
+                 //System.out.println("CACHE1");
 		 while (iter.hasNext()){
 			String key = iter.next();
-                         System.out.println("CACHE : "+key);
+                         //System.out.println("CACHE : "+key);
 			//String responsible = this.findSuccessor(key, this.myThreadId);
 			String responsible = this.findSuccessor(key, threadId);
 
@@ -1608,9 +1608,9 @@ public class NetPeer {
 					this.successor = this.fingerTable.get(this.successorId);
 
 					if (this.messageListener.isInterrupted()){
-						MultiLog.println(NetPeer.class.toString(), "Thread was interrupted");
+			//			MultiLog.println(NetPeer.class.toString(), "Thread was interrupted");
 						//System.out.println("Thread was interrupted");
-						MultiLog.println(NetPeer.class.toString(), "Now restarting thread...");
+				//		MultiLog.println(NetPeer.class.toString(), "Now restarting thread...");
 						//System.out.println("Now restarting thread...");
 						this.messageListener.interrupt();
 					}

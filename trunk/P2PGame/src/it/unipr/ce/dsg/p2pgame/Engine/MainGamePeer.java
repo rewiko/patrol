@@ -15,6 +15,8 @@ import it.unipr.ce.dsg.p2pgame.GUI.message.RegisterResponseMessage;
 import it.unipr.ce.dsg.p2pgame.GUI.message.StartMessage;
 import it.unipr.ce.dsg.p2pgame.GUI.message.SuccessMessage;
 import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
+
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,11 +34,13 @@ public class MainGamePeer extends Thread{
     private GamePeer gp = null;
     ServerSocket server=null;
     private GUIMessageListener message_listener;
+    
 
     
     public MainGamePeer()
     {
     	this.gp=null;
+    	
     	
     }
     @Override
@@ -71,6 +75,7 @@ public class MainGamePeer extends Thread{
 
 			if (reader != -1){
 			message = new String(buf);
+			
 			current++;
 			}
                     }
