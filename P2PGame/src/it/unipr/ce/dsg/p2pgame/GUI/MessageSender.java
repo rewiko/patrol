@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 public class MessageSender{
 
     private Socket socket;
+    private Socket socket1;
     private CheckOutput check;
 
     public MessageSender()
@@ -98,14 +99,14 @@ public class MessageSender{
      */
     private String sendMessage(Message message,int port) throws UnknownHostException, IOException
     {
-        this.socket=new Socket("127.0.0.1",port); // TODO: edit name
+        this.socket1=new Socket("127.0.0.1",port); // TODO: edit name
 
-        socket.setSoTimeout(0);
-        socket.setReuseAddress(true);
-	    socket.setSoLinger(true,0);
+        socket1.setSoTimeout(0);
+        socket1.setReuseAddress(true);
+	    socket1.setSoLinger(true,0);
 
-        DataInputStream is = new DataInputStream(socket.getInputStream());
-	    DataOutputStream os = new DataOutputStream(socket.getOutputStream());
+        DataInputStream is = new DataInputStream(socket1.getInputStream());
+	    DataOutputStream os = new DataOutputStream(socket1.getOutputStream());
 
         os.write(message.generateXmlMessageString().getBytes());
         
@@ -132,7 +133,7 @@ public class MessageSender{
 
         is.close();
         os.close();
-        socket.close();
+        socket1.close();
 
         //response=new String(buffer);
        // this.check.print_msg(MessageSender.class.getName(), response);
