@@ -11,6 +11,7 @@ import it.unipr.ce.dsg.p2pgame.platform.GameResource;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
+import it.unipr.ce.dsg.p2pgame.util.CheckOutput;
 import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -29,6 +30,7 @@ public class GUIMessageListener extends Thread{
 
     private ServerSocket server;
     private GamePeer gp;
+    private CheckOutput check;
     
 
     public GUIMessageListener(GamePeer gp)
@@ -37,6 +39,7 @@ public class GUIMessageListener extends Thread{
         this.gp=gp;
         
         this.server=null;
+        check=new CheckOutput("output.txt");
     }
 
     @Override
@@ -713,6 +716,8 @@ public class GUIMessageListener extends Thread{
 
                 
                 //add the resource's vision string to the resource's string
+                System.out.println("RESOURCE_VISION LISTENER "+ str_rvision);
+                this.check.print_msg(GUIMessageListener.class.getName(), "RESOURCE_VISION LISTENER "+ str_rvision);
                 str_resources+=str_rvision;
 
             }
@@ -878,6 +883,7 @@ public class GUIMessageListener extends Thread{
                         str_rvision+=";";
 
                         str_rvision+=oldpos;
+                        
 
 
                     }
@@ -972,7 +978,8 @@ public class GUIMessageListener extends Thread{
                 //adds the resource's vision string to the resource's string
                 str_resources+=str_rvision;
 
-              //  System.out.println("RESOURCE_VISION LISTENER "+ str_rvision);
+                System.out.println("RESOURCE_VISION LISTENER "+ str_rvision);
+                this.check.print_msg(GUIMessageListener.class.getName(), "RESOURCE_VISION LISTENER "+ str_rvision);
 
                 MobileResourceFromIDMessage res_message=new MobileResourceFromIDMessage(str_resources);
 
