@@ -51,24 +51,42 @@ public class MessageSender{
 
         socket.setSoTimeout(0);
         socket.setReuseAddress(true);
-	socket.setSoLinger(true,0);
+	    socket.setSoLinger(true,0);
 
         DataInputStream is = new DataInputStream(socket.getInputStream());
-	DataOutputStream os = new DataOutputStream(socket.getOutputStream());
+	    DataOutputStream os = new DataOutputStream(socket.getOutputStream());
 
         os.write(message.generateXmlMessageString().getBytes());
         
-        byte buffer[]=new byte[100000];
+        //byte buffer[]=new byte[100000];
 
-	is.read(buffer);
+	    //is.read(buffer);
+	    
+	        String response="";
+	   
+
+		    int current = 0;
+			byte[] buffer = new byte[100000];
+
+			while (current < 1) {
+
+				int reader = is.read(buffer);
+
+				if (reader != -1){
+					//response=new String(buffer,0,buffer.length);
+					response=new String(buffer);
+					current++;
+				}
+			}
 		
         is.close();
         os.close();
         socket.close();
 
-        String response=new String(buffer);
+        //String response=new String(buffer);
+        this.check.print_msg(MessageSender.class.getName(), response);
         
-        return response;
+        return response.trim();
     }
 
     /*
@@ -91,15 +109,33 @@ public class MessageSender{
 
         os.write(message.generateXmlMessageString().getBytes());
         
-        byte buffer[]=new byte[100000];
+        //byte buffer[]=new byte[100000];
 
-	is.read(buffer);
+	    //is.read(buffer);
+	    
+	    String response="";
+		   
+
+	    int current = 0;
+		byte[] buffer = new byte[100000];
+
+		while (current < 1) {
+
+			int reader = is.read(buffer);
+
+			if (reader != -1){
+				//response=new String(buffer,0,buffer.length);
+				response=new String(buffer);
+				current++;
+			}
+		}
 
         is.close();
         os.close();
         socket.close();
 
-        String response=new String(buffer);
+        //response=new String(buffer);
+        this.check.print_msg(MessageSender.class.getName(), response);
         
         return response;
     }

@@ -22,6 +22,7 @@ public class CheckOutput {
 	public void print_msg(String id,String msg){
 		
 		this.output.print(id + " : "+ msg+ "\n");
+		System.out.println("lenght: "+ msg.length()+"  " +  id + " : "+ msg+ "\n");
 		
 	}
 
