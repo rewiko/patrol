@@ -33,6 +33,7 @@ public class MessageSender{
     private Socket socket;
     private Socket socket1;
     private CheckOutput check;
+    
 
     public MessageSender()
     {
@@ -152,14 +153,15 @@ public class MessageSender{
         Message message=new IDRequestMessage();
 
         String response = null;
-        try {
+       /* try {
             response = this.sendMessage(message);
+            
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        }*/
+        response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader = new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -185,14 +187,15 @@ public class MessageSender{
         Message message=new GamePeerDescriptionRequest();
 
         String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
         MessageReader messageReader = new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -223,13 +226,15 @@ public class MessageSender{
         Message message=new MoveResourceMessage(resId,movX,movY,movZ,threadId);
 
         String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader = new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -259,13 +264,15 @@ public class MessageSender{
         Message message=new PositionRequestMessage();
 
         String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -296,13 +303,15 @@ public class MessageSender{
 
 
         String response = null;
-        try {
-            response = this.sendMessage(message,9999);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -336,13 +345,15 @@ public class MessageSender{
         Message message=new StartMessage(minX,maxX,minY,maxY,minZ,maxZ, vel,vis,gran);
 
         String response = null;
-        try {
-            response = this.sendMessage(message,9999);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -367,13 +378,15 @@ public class MessageSender{
     {
         Message message=new MultilogMessage(id,text);
         String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -399,14 +412,15 @@ public class MessageSender{
     {
         Message message=new CreateResourceMessage(id, description,quantity);
         String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -435,13 +449,15 @@ public class MessageSender{
          Message message=new CreateResourceEvolveMessage(id,description,quantity,period,offset);
 
          String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+         /* try {
+         response = this.sendMessage(message);
+         
+     } catch (UnknownHostException ex) {
+         Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+     } catch (IOException ex) {
+         Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+     }*/
+     response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
          MessageReader messageReader=new MessageReader();
          Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -466,13 +482,15 @@ public class MessageSender{
     {
         Message message=new CreateMobileResourceMessage(type,qt);
         String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -494,13 +512,15 @@ public class MessageSender{
 
         Message message=new GamePeerResourcesRequest();
         String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -654,13 +674,15 @@ public class MessageSender{
         Message message=new InfoGamePeerRequestMessage();
 
         String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /* try {
+        response = this.sendMessage(message);
+        
+    } catch (UnknownHostException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+        Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -699,13 +721,15 @@ public GameResourceMobile getMobileResource(String resource_id)
     Message message=new MobileResourceFromIDRequestMessage(resource_id);
 
     String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -821,13 +845,15 @@ public GameResource getMyResourceFromId(String r_id)
     Message message=new ResourceFromIDRequestMessage(r_id);
 
     String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -968,13 +994,15 @@ public ArrayList<Object> getVision()
 
 
     String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1060,13 +1088,15 @@ public int getResourcesSize()
 
 
     String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1095,16 +1125,15 @@ public GamePlayer getGamePlayer()
     Message message=new GamePlayerRequestMessage();
 
     String response = null;
-        try {
-            response = this.sendMessage(message);
-            //this.check.print_msg(MessageSender.class.getName(),response);
-            //System.out.println("RESPONSE "+ response);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -1142,14 +1171,15 @@ public double getGranularity()
     Message message=new GranularityRequestMessage();
 
     String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -1178,14 +1208,15 @@ public void UpdateResourceEvolve(double quantity)
     Message message=new UpdateResourceEvolveMessage(quantity);
 
     String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -1210,13 +1241,15 @@ public void MovementRequest(double targetx,double targety,String resId,String th
 {
     Message message=new MovementRequestMessage(targetx,targety,resId,threadId);
     String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1255,13 +1288,15 @@ public void CreateGamePeer(int inPort, int outPort, int idBitLength, String id, 
 
     Message message=new CreateGamePeerRequestMessage(inPort,outPort,idBitLength,id,serverAddr,serverPort,gameInPort,gameOutPort,gameServerAddr,gameServerPort,stab,fix,check, pub);
     String response = null;
-        try {
-            response = this.sendMessage(message,9999);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /* try {
+    response = this.sendMessage(message,9999);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",9999, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1283,15 +1318,15 @@ public boolean GamePeerExist()
 {
     Message message=new GamePeerExistRequestMessage();
     String response = null;
-        try {
-            response = this.sendMessage(message,9999);
-           // System.out.println("RESPONSE "+ response);
-           //  this.check.print_msg(MessageSender.class.getName(),response);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /* try {
+    response = this.sendMessage(message,9999);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",9999, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1318,13 +1353,15 @@ public String getIpAddress()
 {
     Message message=new IpAddressRequestMessage();
     String response = null;
-        try {
-            response = this.sendMessage(message);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /* try {
+    response = this.sendMessage(message);
+    
+} catch (UnknownHostException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+} catch (IOException ex) {
+    Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
+}*/
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
