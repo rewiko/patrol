@@ -716,8 +716,8 @@ public class GUIMessageListener extends Thread{
 
                 
                 //add the resource's vision string to the resource's string
-                System.out.println("RESOURCE_VISION LISTENER "+ str_rvision);
-                this.check.print_msg(GUIMessageListener.class.getName(), "RESOURCE_VISION LISTENER "+ str_rvision);
+                //System.out.println("RESOURCE_VISION LISTENER "+ str_rvision);
+                //this.check.print_msg(GUIMessageListener.class.getName(), "RESOURCE_VISION LISTENER "+ str_rvision);
                 str_resources+=str_rvision;
 
             }
@@ -978,8 +978,8 @@ public class GUIMessageListener extends Thread{
                 //adds the resource's vision string to the resource's string
                 str_resources+=str_rvision;
 
-                System.out.println("RESOURCE_VISION LISTENER "+ str_rvision);
-                this.check.print_msg(GUIMessageListener.class.getName(), "RESOURCE_VISION LISTENER "+ str_rvision);
+                //System.out.println("RESOURCE_VISION LISTENER "+ str_rvision);
+                //this.check.print_msg(GUIMessageListener.class.getName(), "RESOURCE_VISION LISTENER "+ str_rvision);
 
                 MobileResourceFromIDMessage res_message=new MobileResourceFromIDMessage(str_resources);
 

@@ -5,6 +5,6 @@
 	<classpathentry kind="lib" path="inc/weka.jar"/>
 	<classpathentry kind="lib" path="inc/joone-engine.jar"/>
 	<classpathentry kind="lib" path="inc/log4j.jar"/>
-	<classpathentry kind="lib" path="inc/SimpleXMLProtocol_MT.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/pelito/workspace/P2PGame/inc/simpleXML.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
