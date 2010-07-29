@@ -59,7 +59,7 @@ public class PlayerPositionUpdate implements Runnable {
 		double vis = this.player.getVisibility();
 		MultiLog.println(PlayerPositionUpdate.class.toString(),"Lunched SEARCH Near Object");
 		//System.out.println("Lunched SEARCH Near Object" );
-                System.out.println("GRANULARITA "+  this.world.getGranularity());
+               // System.out.println("GRANULARITA "+  this.world.getGranularity());
 		int i=0;
 
 		GameResourceMobile res = null;

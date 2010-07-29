@@ -11,7 +11,7 @@ import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
 import it.simplexml.message.MessageReader;
 import it.simplexml.sender.MessageSender;
-import it.unipr.ce.dsg.p2pgame.GUI.RTSGameGUI;
+
 import it.unipr.ce.dsg.p2pgame.network.NetPeer;
 import it.unipr.ce.dsg.p2pgame.network.NetPeerInfo;
 import it.unipr.ce.dsg.p2pgame.platform.message.CheckMobileResourceMessage;
@@ -766,7 +766,7 @@ public class GamePeer extends NetPeer {
 
 
 	public /*synchronized*/ void addToVision(Object obj, int pos) {
-                System.out.println("ADDVISION "+ pos);
+                //System.out.println("ADDVISION "+ pos);
 		if (this.vision.size() > pos)
 			this.vision.set(pos, obj);
 		else

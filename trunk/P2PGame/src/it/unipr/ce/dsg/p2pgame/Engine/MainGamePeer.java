@@ -5,11 +5,10 @@
 
 package it.unipr.ce.dsg.p2pgame.Engine;
 
-import it.unipr.ce.dsg.p2pgame.GUI.test.*;
+
 import it.simplexml.message.Message;
 import it.simplexml.message.MessageReader;
 import it.unipr.ce.dsg.p2pgame.GUI.message.CreateGamePeerRequestMessage;
-import it.unipr.ce.dsg.p2pgame.GUI.message.GamePeerExistRequestMessage;
 import it.unipr.ce.dsg.p2pgame.GUI.message.RegisterRequestMessage;
 import it.unipr.ce.dsg.p2pgame.GUI.message.RegisterResponseMessage;
 import it.unipr.ce.dsg.p2pgame.GUI.message.StartMessage;
