@@ -14,7 +14,7 @@
         <pathelement location="inc/weka.jar"/>
         <pathelement location="inc/joone-engine.jar"/>
         <pathelement location="inc/log4j.jar"/>
-        <pathelement location="inc/SimpleXMLProtocol_MT.jar"/>
+        <pathelement location="inc/simpleXML.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
