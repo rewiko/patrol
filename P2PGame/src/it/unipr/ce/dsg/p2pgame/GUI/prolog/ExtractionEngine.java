@@ -8,6 +8,8 @@ package it.unipr.ce.dsg.p2pgame.GUI.prolog;
 import alice.tuprolog.NoSolutionException;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Var;
+import it.unipr.ce.dsg.p2pgame.platform.prolog.PrologEngine;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
