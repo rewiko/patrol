@@ -5,8 +5,10 @@
 
 package it.unipr.ce.dsg.p2pgame.GUI.prolog;
 
-import util.Resource;
+import it.unipr.ce.dsg.p2pgame.GUI.prolog.util.Resource;
 import alice.tuprolog.SolveInfo;
+import it.unipr.ce.dsg.p2pgame.platform.prolog.PrologEngine;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

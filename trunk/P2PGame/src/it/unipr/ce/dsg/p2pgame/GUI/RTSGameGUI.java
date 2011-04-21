@@ -201,11 +201,11 @@ public class RTSGameGUI extends javax.swing.JFrame {
                 registerButton.setEnabled(false);
 
                    
-                //message_dispatcher
+                //message_sender
                 peerIdLabel.setText(request.getGamePeerId());
                 
 
-                //message_dispatcher
+                //message_sender
                 localAddrLabel.setText(request.getIpAddress());
                 localPortLabel.setText(portTextField.getText() + " : " + ( Integer.toString(Integer.parseInt(portTextField.getText())+3) ) );
 
@@ -613,13 +613,13 @@ public class RTSGameGUI extends javax.swing.JFrame {
     	MultiLog.println(RTSGameGUI.class.toString(), "porta server letta " + serverPort);
     	
     	
-    	//message_dispatcher
+    	//message_sender
         request.CreateGamePeer(portMin+ 1 , portMin, 160, "", serverAddressTextField.getText().trim(), serverPort, portMin + 3, portMin + 2, serverAddressTextField.getText().trim(), serverPort+2, 4000,1000,64000,2000);
 
-    	//message_dispatcher
+    	//message_sender
         request.registerOnServer(usernameTextField.getText(), passwordField.getPassword().toString());
 
-    	//message_dispatcher
+    	//message_sender
         request.startGame(0,575,0,575,0,0, 1,10, 5);
 
         
@@ -631,14 +631,14 @@ public class RTSGameGUI extends javax.swing.JFrame {
 
         MessageSender request1=new MessageSender();
 
-        //message_dispatcher
+        //message_sender
         if (request.GamePeerExist() == false)
     		return;
 
     	
     	MultiLog.println(RTSGameGUI.class.toString(), "Opening buy windows...");
 
-    	//message_dispatcher
+    	//message_sender
         GameResourceEvolve resev=(GameResourceEvolve)request1.getMyResourceFromId("moneyEvolveble");
         double moneyQt=resev.getQuantity();
         //System.out.println("RESOURCE_ID 682");
@@ -900,7 +900,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
 						Thread.sleep(100);
 						
 
-                                                //message_dispatcher
+                                                //message_sender
                                                 if (request1.GamePeerExist()==true) {
                                                 		
                                                         if (request1.getGamePlayer() != null){
@@ -910,7 +910,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
                                                          double py=0;
                                                         
                                                          Point point=null;
-                                                         //message_dispatcher
+                                                         //message_sender
                                                          point = request1.getGamePlayerPosition();
                                                          px=point.getX();
                                                          py=point.getY();
@@ -922,7 +922,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
 							if (!this.createInitialResource){ //con flag per vedere se ci sono tutte le risorse evolvibili
 								MultiLog.println(RTSGameGUI.class.toString(), "RISORSA SOLDI CREATA aa");
 
-                                                                //message_dispatcher
+                                                                //message_sender
                                                                 request1.addResourceEvolve("moneyEvolveble", "Money", 0, 1000, 1);
 
                                                                // System.out.println("\n\n\n\n\n\n\n\n\1024 money evolve\n\n\n\n\n\n\n\n\n\n");
@@ -935,11 +935,11 @@ public class RTSGameGUI extends javax.swing.JFrame {
 
                                                                 //System.out.println("\n\n\n\n\n\n1040 multilog res size\n\n\n\n\n");
 
-                                                                //message_dispatcher
+                                                                //message_sender
                                                                 request1.addResource("stdDef", "Defense", 10);
                                                                // System.out.println("\n\n\n\n\n\n 1043 defense addresource\n\n\n\n\n\n");
 
-                                                                //message_dispatcher
+                                                                //message_sender
                                                                 peerGUI.getResourcesList().setModel(new GameResourceListModel(request1.getResources()));
                   
 								}
@@ -948,7 +948,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
 							//TODO: aggiustare non funziona bene
 
                                                         GameResource res=null;
-                                                        //message_dispatcher
+                                                        //message_sender
                                                         res = request1.getMyResourceFromId("moneyEvolveble");
 
                                                         //System.out.println("\n\n\n\n\n1111 resource\n\n\n\n\n");
@@ -960,13 +960,13 @@ public class RTSGameGUI extends javax.swing.JFrame {
 							}
                                                       
                                                         ArrayList<Object> vision=null;
-                                                        //message_dispatcher
+                                                        //message_sender
                                                         vision = request1.getVision();
                                                        // System.out.println("\n\n\n\n\n\n\n1136 vision\n\n\n\n\n\n");
                                                        
                                                         if (vision != null) {
 
-						    	//message_dispatcher
+						    	//message_sender
                                                         setPlanetVision(vision, request1.getGamePlayer(), request1.getGranularity());
                                                         //System.out.println("GRANULARITY2 1146");
                                                         
@@ -974,7 +974,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
 
                                                        ArrayList<Object> myRes=null;
 
-                                                       //message_dispatcher
+                                                       //message_sender
                                                        myRes = request1.getResources();
                                                     
 						       for (int i = 0; i < myRes.size(); i++){
@@ -1042,7 +1042,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
         }
         
          GamePeerInfo info=null;
-            //message_dispatcher
+            //message_sender
          info =new GamePeerInfo( request1.getGamePeerInfo());
          //System.out.println("\n\n\n\n\n\n1231 gamepeer info\n\n\n\n\n\n\n");
       

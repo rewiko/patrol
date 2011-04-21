@@ -21,4 +21,6 @@ verify_conquest_element(P):-nl,write(P),required_conquest_resources(R),required_
 fase(F):-(conquest, F is 3,!);(exploration,F is 2,!);(F is 1,!).
 
 radius(R):-fase(F), ((F =:=1,R is 0.3,!);(F =:=2,R is 0.7,!);(F=:=3, R is 1,!)).
-probability_attack(P):-fase(F), ((F =:=1,P is 0.3,!);(F =:=2,P is 0.7,!);(F=:=3, P is 1,!)).
+probability_attack(P):-fase(F), ((F =:=1,P is 30,!);(F =:=2,P is 70,!);(F=:=3, P is 100,!)).
+probability_movement(P):-fase(F),((F=:=1,P is 30);(F=:=2,P is 70,!);(F=:=3,P is 100,!)).
+probability_buy(P):-fase(F),((F=:=1,P is 90);(F=:=2,P is 60,!);(F=:=3,P is 30,!)).
