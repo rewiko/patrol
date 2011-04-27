@@ -40,7 +40,7 @@ public class GamePeer extends NetPeer {
 
 	private GamePlayer player = null;
 	private GameWorld world = null;
-	//private double playerVelocity;
+	//private double playerVelocity;y
 	//private double visibilityScope;
 	private Thread playerMovement = null;
 

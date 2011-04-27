@@ -148,6 +148,31 @@ public class GameEvolutionEngine extends PrologEngine{
 		 
 	 }
 	 
+	 
+	 public int getFase()
+	 {
+		 	String query="fase(F).";
+		 	ArrayList<SolveInfo > arrayinfo=this.solveQuery(query);
+	        SolveInfo info=arrayinfo.get(0);
+	        List l=null;
+	        try {
+	            l = info.getBindingVars();
+	            Var var=(Var) l.get(0);
+	            String strval=var.toStringFlattened();
+	            int val=Integer.parseInt(strval);
+	            return val;
+
+	        } catch (NoSolutionException ex) {
+	            Logger.getLogger(VisibilityEngine.class.getName()).log(Level.SEVERE, null, ex);
+	        }
+
+
+	        return 0;
+		 
+		 
+		 
+	 }
+	 
 	 public double getRadius()
 	 {
 		 	String query="radius(R).";
