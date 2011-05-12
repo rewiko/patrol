@@ -1,6 +1,7 @@
 package it.unipr.ce.dsg.p2pgame.platform.bot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.BuyResourceEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.ExtractionEngine;
@@ -25,14 +26,64 @@ public class Bot implements Runnable{
 	double L;
 	int nrmobile;
 	int nres;
+	ArrayList<Object> res;
+	HashMap<String, Boolean> status;
+	ArrayList<VirtualResource> enemies;
+	public ArrayList<VirtualResource> getEnemies() {
+		return enemies;
+	}
+
+	public void setEnemies(ArrayList<VirtualResource> enemies) {
+		this.enemies = enemies;
+	}
+
+	int probattack;
+	int probdefense;
 	
+	
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getOwnerid() {
+		return ownerid;
+	}
+
+	public void setOwnerid(String ownerid) {
+		this.ownerid = ownerid;
+	}
+
+	public int getProbattack() {
+		return probattack;
+	}
+
+	public void setProbattack(int probattack) {
+		this.probattack = probattack;
+	}
+
+	public int getProbdefense() {
+		return probdefense;
+	}
+
+	public void setProbdefense(int probdefense) {
+		this.probdefense = probdefense;
+	}
+
 	public Bot()
 	{
 		//this.gp=new GamePeer();
 		//gp = new GamePeer(portMin+ 1 , portMin, 160, "", serverAddressTextField.getText().trim(), serverPort, portMin + 3, portMin + 2, serverAddressTextField.getText().trim(), serverPort+2, 4000,1000,64000,2000);
 		gee=new GameEvolutionEngine("rules/evolutionTheory.pl");
 		ee=new ExtractionEngine("rules/extractionTheory.pl");
+		ve=new VisibilityEngine("rules/visibilityTheory.pl");
+		res=new ArrayList<Object>();
+		status=new HashMap<String, Boolean>();
 		L=1000;
+		enemies=new ArrayList<VirtualResource>();
 		
 	}
 
@@ -76,7 +127,7 @@ public class Bot implements Runnable{
 		//ottengo da gp informazioni sulle risorse e i soldi a disposizione
 		//ArrayList<Object> res=gp.getMyResources(); // poi verifico le risorse sulla lista tranne moneyEvolve
 		
-		ArrayList<Object> res=new ArrayList<Object>();
+		
 		
 		res.add(new GameResource("id1","defense",1.0));
 		res.add(new GameResource("id2","defense",1.0));
@@ -87,7 +138,10 @@ public class Bot implements Runnable{
 		
 		//String id, String description, String owner, String ownerId, double quantity, double x, double y, double z, double vel, double vis
 		res.add(new GameResourceMobile("m1","attack",owner,ownerid,1.0,0,0,0,0,0));
+		status.put("m1", new Boolean(false));
 		res.add(new GameResourceMobile("m2","attack",owner,ownerid,1.0,0,0,0,0,0));
+		status.put("m2", new Boolean(false));
+		
 	    //res.add(new GameResourceMobile("m3","attack",owner,ownerid,1.0,0,0,0,0,0));
 		//res.add(new GameResourceMobile("m4","attack",owner,ownerid,1.0,0,0,0,0,0));
 		//res.add(new GameResourceMobile("m5","attack",owner,ownerid,1.0,0,0,0,0,0));
@@ -96,6 +150,53 @@ public class Bot implements Runnable{
 		
 		currentres.add("GameResource");
 		currentres.add("GameResourceMobile");
+		
+		// inizializzo la lista di nemici
+	/*	for(int i=-10;i<11;i++)
+		{
+			for(int j=-10;j<11;j++)
+			{
+				if((i!=0)||(j!=0))
+				{
+					VirtualResource res=new VirtualResource();
+					res.setOwnerID("enemyID");
+					res.setResType("GameResourceMobile");
+					res.setX(i*20);
+					res.setY(j*20);
+				    this.enemies.add(res);
+				}
+				
+			}
+			
+		}*/
+		
+		
+		for(int i=-20;i<21;i++)
+		{
+			VirtualResource res=new VirtualResource();
+			res.setOwnerID("enemyID");
+			res.setResType("GameResourceMobile");
+			if(i!=0)
+			res.setX(i*5);
+			res.setY(0);
+			
+		    this.enemies.add(res);
+			
+		}
+		
+		
+		for(int i=-20;i<21;i++)
+		{
+			VirtualResource res=new VirtualResource();
+			res.setOwnerID("enemyID");
+			res.setResType("GameResourceMobile");
+			if(i!=0)
+			res.setY(i*5);
+			res.setX(0);
+			
+		    this.enemies.add(res);
+			
+		}
 		
 		
 		
@@ -107,7 +208,7 @@ public class Bot implements Runnable{
 		while(true)
 		{
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				c++;
 				System.out.println("@@@@@@@@@@@@@@@@@@@ ciclo "+c+"@@@@@@@@@@@@@@@@ò");
 				
@@ -138,11 +239,11 @@ public class Bot implements Runnable{
 				rad*=L;
 				System.out.println("rad: "+rad);
 				
-				int probattack=gee.getProbAttack();
+				 probattack=gee.getProbAttack();
 				
 				System.out.println("prob attack: "+probattack);
 				
-				int probdefense=gee.getProbDefense();
+				probdefense=gee.getProbDefense();
 				
 				System.out.println("prob defense: "+probdefense);
 				
@@ -175,6 +276,7 @@ public class Bot implements Runnable{
 						
 						this.nrmobile++;
 						res.add(new GameResourceMobile("m"+this.nrmobile,"attack",owner,ownerid,1.0,0,0,0,0,0));
+						status.put("m"+this.nrmobile, new Boolean(false));
 						currentmoney-=1000;
 						System.out.println("###################nuova risorsa mobile##################");
 					}
@@ -190,6 +292,9 @@ public class Bot implements Runnable{
 					
 				}
 				
+				//stampo elenco di risorse
+				this.printResources();
+				
 				
 				//decido se spostare ogni risorsa mobile e determino la destinazione
 				int sr=res.size();
@@ -200,75 +305,102 @@ public class Bot implements Runnable{
 					if( res.get(i) instanceof GameResourceMobile){
 						
 						
-						int aux=(int)(Math.random()*100);
+						
 						GameResourceMobile grm=(GameResourceMobile)res.get(i);
 						String id=grm.getId();
 						
-						System.out.println("pribabilita' di spostare risorsa "+id+" : "+aux+" %");
-						if(aux<probmove)
+						
+						if(!this.getMovStatus(id)) // se non è in movimento
 						{
-							//se decido di spostare una risorsa, devo scegliere in modo aleatorio il punto d'arrivo
-							// il punto d'arrivo dipende del raggio massimo di spostamento scelto dalla fase del gioco
-							
-							
-							
-							//scelgo tra 5 possibili angoli rispetto all'ascisa
-							int angle=(int)(Math.random()*4+ 1);
-							
-							//scelgo le coordinate per un vettore di lunghezza 1
-							double x,y;
-							
-							if(angle==1){//0°
-								x=1;
-								y=0;
+														
+							// qua devo mettere il tread di spostamento e indicare che la risorsa e' in movimento
+							//prima verifico se la risors è attualmente in movimento
+							int aux=(int)(Math.random()*100);
+							System.out.println("pribabilita' di spostare risorsa "+id+" : "+aux+" %");
+						    if(aux<probmove)
+							{
+								//se la risorsa non è attualmente in movimento
+								//se decido di spostare una risorsa, devo scegliere in modo aleatorio il punto d'arrivo
+								// il punto d'arrivo dipende del raggio massimo di spostamento scelto dalla fase del gioco
 								
-							}else if(angle==2){ //30°
-								x=0.8;
-								y=0.5;
+																
+								//scelgo tra 5 possibili angoli rispetto all'ascisa
+								int angle=(int)(Math.random()*4+ 1);
 								
-							}else if(angle==3){//45°
-								x=y=0.5;
+								//scelgo le coordinate per un vettore di lunghezza 1
+								double x,y;
 								
-							}else if(angle==4){//60°
+								if(angle==1){//0°
+									x=1;
+									y=0;
+									
+								}else if(angle==2){ //30°
+									x=0.8;
+									y=0.5;
+									
+								}else if(angle==3){//45°
+									x=y=0.5;
+									
+								}else if(angle==4){//60°
+									
+									x=0.5;
+									y=0.8;
+									
+								}else{//90°
+									x=0;
+									y=1;
+								}
 								
-								x=0.5;
-								y=0.8;
+								//qudrante
+								//scelgo aleatoriamente qudrante e angolo 
+								int quad=(int)(Math.random()*3+ 1);
 								
-							}else{//90°
-								x=0;
-								y=1;
+								// se e' il primo quadrante non faccio niente
+								if(quad==2){
+									x*=-1;
+									//y rimane uguale
+								}else if(quad==3){
+									x*=-1;
+									y*=-1;
+									
+								}else{
+									y*=-1;
+									//x rimane uguale
+								}
+								
+								//lunghezza della traiettoria
+									double l=(double)(Math.random()*rad);					
+								
+								x*=l; //coordinate di destinazione
+								y*=l;
+									
+								
+								int tx=(int)x;
+								int ty=(int)y;
+								
+								System.out.println("move "+id+": x=" +tx+" y= "+ty);
+								
+								MovementThread move=new MovementThread(this,id,tx,ty);
+								
+								
+								
+								
+								
 							}
 							
-							//qudrante
-							//scelgo aleatoriamente qudrante e angolo 
-							int quad=(int)(Math.random()*3+ 1);
 							
-							// se e' il primo quadrante non faccio niente
-							if(quad==2){
-								x*=-1;
-								//y rimane uguale
-							}else if(quad==3){
-								x*=-1;
-								y*=-1;
-								
-							}else{
-								y*=-1;
-								//x rimane uguale
-							}
-							
-							//lunghezza della traiettoria
-								double l=(double)(Math.random()*rad);					
-							
-							x*=l; //coordinate di destinazione
-							y*=l;
-								
-							
-							int cx=(int)x;
-							int cy=(int)y;
-							
-							System.out.println("move "+id+": x=" +cx+" y= "+cy);
 							
 						}
+						else
+						{
+							
+							System.out.println("Resource "+id+" in movimento");
+						}
+						
+						//controllo della visibilità della navicella. Poi estenderò il controllo della visibilità 
+						// a quella associata al gamepeer
+												
+
 						
 						
 					}
@@ -294,5 +426,102 @@ public class Bot implements Runnable{
 		
 		
 	}
+	
+	public void setMovStatus(String id,boolean newstatus)
+	{
+		this.status.put(id,new Boolean(newstatus));
+		
+	}
+	
+	public boolean getMovStatus(String id)
+	{
+		Boolean st=(Boolean)this.status.get(id);
+		return st.booleanValue();
+	}
+	
+	public GameResourceMobile getResourceMobilebyID(String id)
+	{
+		boolean band=false;
+		Object aux=null;
+		GameResourceMobile grm=null;
+		int i =0;
+		int l=this.res.size();
+		while(!band){
+			
+			aux=this.res.get(i);
+			
+			if(aux instanceof GameResourceMobile)
+			{
+				grm=(GameResourceMobile)aux;						
+				if(grm.getId().equals(id))
+				{
+					band=true;					
+				}
+			}
+			i++;
+			if(i>=l)
+				band=true;
+			
+		}
+		return grm;
+	}
+	
+	
+	public void printResources()
+	{
+		System.out.println("Resource:");
+		for(int i=0;i<this.res.size();i++)
+		{
+			Object aux=res.get(i);
+			
+			if((aux instanceof GameResource)&&!(aux instanceof GameResourceMobile))
+			{
+				GameResource gr=(GameResource)aux;
+				System.out.println("Resource: "+gr.getId());
+				
+			}
+			
+		}
+		
+		System.out.println("\n\nResourceMobile:");
+		for(int i=0;i<this.res.size();i++)
+		{
+			Object aux=res.get(i);
+			
+			if(aux instanceof GameResourceMobile)
+			{
+				GameResource gr=(GameResourceMobile)aux;
+				System.out.println("Resource: "+gr.getId());
+				
+			}
+			
+		}
+		
+		
+	}
+	
+	public VirtualResource getVResourcebyCoordinates(int x,int y)
+	{
+		int l=this.enemies.size();
+		VirtualResource res=null;
+		VirtualResource aux=null;
+		for(int i=0;i<l;i++)
+		{
+			aux=this.enemies.get(i);
+			
+			if((aux.getX()==x) &&(aux.getY()==y))
+			{
+				res=aux;
+				System.out.println("NEMICO TROVATO POS "+x +" , "+ y );
+				break;
+			}
+			
+		}
+		
+		return res;
+		
+		
+	}
+	
 
 }
