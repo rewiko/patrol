@@ -305,7 +305,7 @@ public class VisibilityEngine extends PrologEngine{
     public int posDX()//obtain the coordinate x to be defended, if doesn't returns MINVALUE
     {
 
-        String query="posX(X).";
+        String query="posDX(X).";
         ArrayList<SolveInfo > arrayinfo=this.solveQuery(query);
         SolveInfo info=arrayinfo.get(0);
         List l=null;
@@ -433,7 +433,8 @@ public class VisibilityEngine extends PrologEngine{
        //testing the visibility, verifing if i can attack and the X,Y coordinates
        if(pos!=0)
        {
-          int x=engine.posX();
+          System.out.println("Pos "+pos);
+    	  int x=engine.posX();
           int y=engine.posY();
 
           System.out.println("attack: ("+x+" , "+y+")");
@@ -454,8 +455,12 @@ public class VisibilityEngine extends PrologEngine{
 
 
        }
+       
+       engine.printTheory();
 
     }
+    
+    
     
 
     
