@@ -29,6 +29,9 @@ public class GameResourceMobile extends GameResource {
 //	private double relMovX;//direzione che stï¿½ seguendo cosï¿½ da mantenerla automaticamente
 //	private double relMovY;
 //	private double relMoxZ;
+	
+	//status
+	private boolean status;
 
 	public GameResourceMobile(String id, String description, String owner, String ownerId, double quantity, double x, double y, double z, double vel, double vis) {
 
@@ -47,12 +50,20 @@ public class GameResourceMobile extends GameResource {
 		this.resourceVision = new ArrayList<Object>();
 
 
-
+		this.status=false;
 
 //		this.relMovX = relMovX;
 //		this.relMovY = relMovY;
 //		this.relMoxZ = relMovZ;
 
+	}
+
+	public boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 	public void initializeSearch(final long period, GameWorld world, GamePeer peer){

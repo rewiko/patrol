@@ -16,12 +16,12 @@ public class MovementThread implements Runnable{
 	
 	private Thread runner;
 	private String resid;
-	private Bot mybot;
+	private InterfaceBot mybot;
 	private double targetx,targety;
 	FileOutputStream fos;
 	File file;
 	PrintStream ps;
-	public MovementThread(Bot mybot,String resid,double targetx,double targety)
+	public MovementThread(InterfaceBot mybot,String resid,double targetx,double targety)
 	{   //bisogna aggiungere parametro per area di gioco
 		runner=new Thread(this);
 		this.resid=resid;
@@ -70,8 +70,8 @@ public class MovementThread implements Runnable{
 		
 		//imposto la risorsa mobile in movimento
 		
-		this.mybot.setMovStatus(resid, true); //così segnalo che è in movimento
-		
+		//this.mybot.setMovStatus(resid, true); //così segnalo che è in movimento
+		grm.setStatus(true);
 			
 		
 		int cont=0;
@@ -236,7 +236,8 @@ public class MovementThread implements Runnable{
 			
 		}
 		
-		this.mybot.setMovStatus(resid, false); //non mi muovo più
+		//this.mybot.setMovStatus(resid, false); //non mi muovo più
+		grm.setStatus(false);
 		
 		System.out.println("arrived "+resid+": x=" +targetx+" y= "+targety);
 	}
