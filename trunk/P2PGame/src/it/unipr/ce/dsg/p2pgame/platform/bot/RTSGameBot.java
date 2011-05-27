@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import it.unipr.ce.dsg.p2pgame.GUI.MessageSender;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.BuyResourceEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.ExtractionEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.GameEvolutionEngine;
@@ -19,7 +20,7 @@ import it.unipr.ce.dsg.p2pgame.platform.GameResource;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 
-public class Bot implements Runnable, InterfaceBot{
+public class RTSGameBot implements Runnable,InterfaceBot{
 	
 	
 	private BuyResourceEngine bre;
@@ -36,6 +37,10 @@ public class Bot implements Runnable, InterfaceBot{
 	private HashMap<String, Boolean> status;
 	private ArrayList<VirtualResource> enemies;
 	private String profile;
+	private double resmobcost;
+	//aggiungere oggetto della classe MessageSender
+	MessageSender request;
+	
 	public ArrayList<VirtualResource> getEnemies() {
 		return enemies;
 	}
@@ -80,7 +85,7 @@ public class Bot implements Runnable, InterfaceBot{
 		this.probdefense = probdefense;
 	}
 
-	public Bot(String profile)
+	public RTSGameBot(String profile)
 	{
 		
 		gee=new GameEvolutionEngine("rules/evolutionTheory.pl");
@@ -91,8 +96,8 @@ public class Bot implements Runnable, InterfaceBot{
 		L=1000;
 		enemies=new ArrayList<VirtualResource>();
 		this.profile=profile;
-		
-       
+		this.request=new MessageSender();
+		this.resmobcost=10;
        
 		
 	}
@@ -114,8 +119,18 @@ public class Bot implements Runnable, InterfaceBot{
 
 		 * */
 		
+		//GamePeer
+		request.CreateGamePeer(inPort, outPort, idBitLength, id, serverAddr, serverPort, gameInPort, gameOutPort, gameServerAddr, gameServerPort, stab, fix, check, pub);
+		request.registerOnServer(username, password);
+		request.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
+		
+		
+		
+		
+		
 		//apro il file di profilo
 		//carico profilo del giocatore
+		
 		File f=new File(profile);
        	FileInputStream fis;
        	ArrayList<String> req_exp_res=new ArrayList<String>();
@@ -124,6 +139,7 @@ public class Bot implements Runnable, InterfaceBot{
        	ArrayList<Integer> req_conq_qres=new ArrayList<Integer>();
        	double req_conq_money=0;
        	double req_exp_money=0;
+       	
        	
 		try {
 			fis = new FileInputStream(f);
@@ -197,88 +213,23 @@ public class Bot implements Runnable, InterfaceBot{
 		}
 		
 		double currentmoney=0;//money.getQuantity();
-		
-		
-		
+		this.nres=0;
+		this.nrmobile=0;
+		//creo l'oggetto ResourceEvolve
+		this.request.addResourceEvolve("moneyEvolveble", "Money", 0, 1000, 1);
 		
 		//ottengo da gp informazioni sulle risorse e i soldi a disposizione
 		//ArrayList<Object> res=gp.getMyResources(); // poi verifico le risorse sulla lista tranne moneyEvolve
 		
+		//aggiungere un solo oggetto GameResource usando messagesender
 		
 		
-		res.add(new GameResource("id1","defense",1.0));
-		res.add(new GameResource("id2","defense",1.0));
-		//res.add(new GameResource("id3","defense",1.0));
-		//res.add(new GameResource("id4","defense",1.0));
-		//res.add(new GameResource("id5","defense",1.0));
-		this.nres=2;
-		
-		//String id, String description, String owner, String ownerId, double quantity, double x, double y, double z, double vel, double vis
-		res.add(new GameResourceMobile("m1","attack",owner,ownerid,1.0,0,0,0,0,0));
-		status.put("m1", new Boolean(false));
-		res.add(new GameResourceMobile("m2","attack",owner,ownerid,1.0,0,0,0,0,0));
-		status.put("m2", new Boolean(false));
-		
-	    //res.add(new GameResourceMobile("m3","attack",owner,ownerid,1.0,0,0,0,0,0));
-		//res.add(new GameResourceMobile("m4","attack",owner,ownerid,1.0,0,0,0,0,0));
-		//res.add(new GameResourceMobile("m5","attack",owner,ownerid,1.0,0,0,0,0,0));
-		this.nrmobile=2;
 		ArrayList<String> currentres=new ArrayList<String>();
 		
 		currentres.add("GameResource");
 		currentres.add("GameResourceMobile");
 		
-		// inizializzo la lista di nemici
-	/*	for(int i=-10;i<11;i++)
-		{
-			for(int j=-10;j<11;j++)
-			{
-				if((i!=0)||(j!=0))
-				{
-					VirtualResource res=new VirtualResource();
-					res.setOwnerID("enemyID");
-					res.setResType("GameResourceMobile");
-					res.setX(i*20);
-					res.setY(j*20);
-				    this.enemies.add(res);
-				}
-				
-			}
-			
-		}*/
-		
-		
-		for(int i=-20;i<21;i++)
-		{
-			VirtualResource res=new VirtualResource();
-			res.setOwnerID("enemyID");
-			res.setResType("GameResourceMobile");
-			if(i!=0)
-			res.setX(i*5);
-			res.setY(0);
-			
-		    this.enemies.add(res);
-			
-		}
-		
-		
-		for(int i=-20;i<21;i++)
-		{
-			VirtualResource res=new VirtualResource();
-			res.setOwnerID("enemyID");
-			res.setResType("GameResourceMobile");
-			if(i!=0)
-			res.setY(i*5);
-			res.setX(0);
-			
-		    this.enemies.add(res);
-			
-		}
-		
-		
-		
-		
-		
+	
 		
 		//poi entro nel ciclo infinito
 		int c=0;
@@ -289,13 +240,17 @@ public class Bot implements Runnable, InterfaceBot{
 				c++;
 				System.out.println("@@@@@@@@@@@@@@@@@@@ ciclo "+c+"@@@@@@@@@@@@@@@@ò");
 				
-				ArrayList<Integer> currentqres=new ArrayList<Integer>();
+				ArrayList<Integer> currentqres=new ArrayList<Integer>(); 
 				currentqres.add(new Integer(nres));
 				currentqres.add(new Integer(nrmobile));
 				
 				if(ee.isInfinite())
-					currentmoney+=1000;
-				//GameResourceEvolve money=(GameResourceEvolve) gp.getMyResourceFromId("moneyEvolveble");
+				{
+					
+					this.incrementMoney(resmobcost);
+					
+				}
+				
 				
 				
 				gee=new GameEvolutionEngine("rules/evolutionTheory.pl");
@@ -350,19 +305,27 @@ public class Bot implements Runnable, InterfaceBot{
 					if((aux%2)==0)
 					{
 						//compro risorsa mobile
+						String timestamp = Long.toString(System.currentTimeMillis());
+						this.nrmobile++;						
 						
-						this.nrmobile++;
-						res.add(new GameResourceMobile("m"+this.nrmobile,"attack",owner,ownerid,1.0,0,0,0,0,0));
-						status.put("m"+this.nrmobile, new Boolean(false));
-						currentmoney-=1000;
+						this.request.createMobileResource("Attack" + timestamp, this.resmobcost);
+						//lo status per default è false
+						
+						
+						//status.put("m"+timestamp, new Boolean(false)); // devo salvare anche l'ID
+						//currentmoney-=resmobcost;
+						this.decrementMoney(resmobcost);
 						System.out.println("###################nuova risorsa mobile##################");
 					}
 					else
 					{
 						//compro risorsa di difesa
+						String timestamp = Long.toString(System.currentTimeMillis());
 						this.nres++;
-						res.add(new GameResource("id"+this.nres,"defense",1.0));
-						currentmoney-=1000;
+						//res.add(new GameResource("id"+this.nres,"defense",1.0));
+						this.request.addResource("def" + timestamp, "Defense" + timestamp, resmobcost);
+						//currentmoney-=1000;
+						this.decrementMoney(resmobcost);
 						System.out.println("###########nuova risorsa di difesa####################");
 					}
 					
@@ -374,6 +337,7 @@ public class Bot implements Runnable, InterfaceBot{
 				
 				
 				//decido se spostare ogni risorsa mobile e determino la destinazione
+				ArrayList<Object> res=request.getResources();
 				int sr=res.size();
 				
 				for(int i=0;i<sr;i++)
@@ -385,9 +349,10 @@ public class Bot implements Runnable, InterfaceBot{
 						
 						GameResourceMobile grm=(GameResourceMobile)res.get(i);
 						String id=grm.getId();
+						boolean st=grm.getStatus();
+						//String id=grm.getDescription();
 						
-						
-						if(!this.getMovStatus(id)) // se non è in movimento
+						if(!st) // se non è in movimento
 						{
 														
 							// qua devo mettere il tread di spostamento e indicare che la risorsa e' in movimento
@@ -518,50 +483,36 @@ public class Bot implements Runnable, InterfaceBot{
 	
 	public GameResourceMobile getResourceMobilebyID(String id)
 	{
-		boolean band=false;
-		Object aux=null;
-		GameResourceMobile grm=null;
-		int i =0;
-		int l=this.res.size();
-		while(!band){
-			
-			aux=this.res.get(i);
-			
-			if(aux instanceof GameResourceMobile)
-			{
-				grm=(GameResourceMobile)aux;						
-				if(grm.getId().equals(id))
-				{
-					band=true;					
-				}
-			}
-			i++;
-			if(i>=l)
-				band=true;
-			
-		}
+		GameResourceMobile grm=request.getMobileResource(id);
+		
 		return grm;
 	}
 	
 	
 	public void printResources()
 	{
+		
+		ArrayList<Object> res=request.getResources();
 		System.out.println("Resource:");
-		for(int i=0;i<this.res.size();i++)
+		for(int i=0;i<res.size();i++)
 		{
 			Object aux=res.get(i);
 			
 			if((aux instanceof GameResource)&&!(aux instanceof GameResourceMobile))
 			{
-				GameResource gr=(GameResource)aux;
-				System.out.println("Resource: "+gr.getId());
+				if(!(aux instanceof GameResourceEvolve))
+				{
+					GameResource gr=(GameResource)aux;
+					System.out.println("Resource: "+gr.getId());
+										
+				}
 				
 			}
 			
 		}
 		
 		System.out.println("\n\nResourceMobile:");
-		for(int i=0;i<this.res.size();i++)
+		for(int i=0;i<res.size();i++)
 		{
 			Object aux=res.get(i);
 			
@@ -597,6 +548,22 @@ public class Bot implements Runnable, InterfaceBot{
 		
 		return res;
 		
+		
+	}
+	
+	private void incrementMoney(double inc)
+	{
+		GameResourceEvolve evolve=(GameResourceEvolve)request.getMyResourceFromId("moneyEvolveble");
+		double val=evolve.getQuantity();
+		request.UpdateResourceEvolve(val+inc);	
+		
+	}
+	
+	private void decrementMoney(double dec)
+	{
+		GameResourceEvolve evolve=(GameResourceEvolve)request.getMyResourceFromId("moneyEvolveble");
+		double val=evolve.getQuantity();
+		request.UpdateResourceEvolve(val-dec);
 		
 	}
 	

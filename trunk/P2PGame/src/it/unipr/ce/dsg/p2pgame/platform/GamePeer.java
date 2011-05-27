@@ -74,6 +74,9 @@ public class GamePeer extends NetPeer {
 
 	private Thread updateNet = null;
 	private Thread gameMessageListener = null;
+	
+	
+	
 
 	//id non disponibile solo dopo la registrazione
 	public GamePeer(int inPort, int outPort, int idBitLength, String id, String serverAddr, int serverPort, int gameInPort, int gameOutPort, String gameServerAddr, int gameServerPort,
@@ -95,8 +98,12 @@ public class GamePeer extends NetPeer {
 
 		this.resPlayers = new HashMap<String, GamePlayerResponsible>();
 		this.resResources = new HashMap<String, GameResourceMobileResponsible>();
+		
+		
+		
 
 	}
+
 
 
 	public void registerOnServer(String un, String pwd) {
@@ -978,6 +985,9 @@ public class GamePeer extends NetPeer {
 		//return resource;
 		return null;
 	}
+	
+	
+	
 
 	//TODO: provare, scritto 091001
 	public GameResource getMyResourceFromId(String id){
@@ -1453,7 +1463,7 @@ public class GamePeer extends NetPeer {
 
 	}
 
-	public /*synchronized*/ boolean newAttach(String oppositeId, String opposite, Attack myMove){
+	public /*synchronized*/ boolean newAttack(String oppositeId, String opposite, Attack myMove){
 
 		//se si ha giï¿½ avuto contatto con l'altro giocatore ed il precedente scontro non ï¿½ finito . ERRORE non si puï¿½ iniziare nuovamente
 		if ( this.clashes.containsKey(oppositeId) && this.clashes.get(oppositeId).getStatusLast() != Clash.Phase.END){
@@ -1542,7 +1552,7 @@ public class GamePeer extends NetPeer {
 
 		Attack attack = new Attack(quantity, resource);
 
-		if (this.newAttach(player.getId(), player.getName(), attack)) {
+		if (this.newAttack(player.getId(), player.getName(), attack)) {
 
 
 			StartMatchMessage startMatch = new StartMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
