@@ -10,7 +10,11 @@ import java.util.ArrayList;
 
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.MovementEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.VisibilityEngine;
+import it.unipr.ce.dsg.p2pgame.platform.Attack;
+import it.unipr.ce.dsg.p2pgame.platform.Clash;
+import it.unipr.ce.dsg.p2pgame.platform.GamePlayerResponsible;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
+import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
 
 public class MovementThread implements Runnable{
 	
@@ -18,16 +22,18 @@ public class MovementThread implements Runnable{
 	private String resid;
 	private InterfaceBot mybot;
 	private double targetx,targety;
+	private int period;
 	FileOutputStream fos;
 	File file;
 	PrintStream ps;
-	public MovementThread(InterfaceBot mybot,String resid,double targetx,double targety)
+	public MovementThread(InterfaceBot mybot,String resid,double targetx,double targety,int period)
 	{   //bisogna aggiungere parametro per area di gioco
 		runner=new Thread(this);
 		this.resid=resid;
 		this.mybot=mybot;
 		this.targetx=targetx;
 		this.targety=targety;
+		this.period=period;
 		runner.start();
 		file=new File("log/"+this.resid+".txt");
 		try {
@@ -39,12 +45,13 @@ public class MovementThread implements Runnable{
 		}
 		
 		
+		
 	}
 
 	@Override
 	public void run() {
 		MovementEngine me=new MovementEngine("rules/movementTheory.pl");
-		VisibilityEngine ve=new VisibilityEngine("rules/visibilityTheory.pl");
+		//VisibilityEngine ve=new VisibilityEngine("rules/visibilityTheory.pl");
 		GameResourceMobile grm=this.mybot.getResourceMobilebyID(this.resid);
 		
 		double currentx=grm.getX();
@@ -53,7 +60,7 @@ public class MovementThread implements Runnable{
 		double previousx=0;
 		double previousy=0;
 		
-		ArrayList<Integer> vis=new ArrayList<Integer>(); // da modificare
+		ArrayList<Integer> vis=new ArrayList<Integer>(); // da modificare relativo ad ostacoli per ora non serve
 		vis.add(new Integer(0));
 		vis.add(new Integer(0));
 		vis.add(new Integer(0));
@@ -79,40 +86,51 @@ public class MovementThread implements Runnable{
 		while((currentx!=this.targetx)||(currenty!=this.targety))
 		{
 			try{
-				Thread.sleep(100);
+				Thread.sleep(this.period);
 				
 				me.clearParameters("rules/movementTheory.pl");
 				me.createMovementTheory((int)currentx, (int)currenty, (int)this.targetx, (int)this.targety,(int) previousx, (int)previousy, vis);
+								
 				
-				int m=me.nextMovement();
+				int movx=me.longitudeMovement();
+				int movy=me.latitudeMovement();
 				
-				if(m==1)//nord
+				if(movx==1)//verso ovest
 				{
 					currentx--;
 					previousx=-1;
-					previousy=0;
+					
 				}
-				else if(m==2)
+				else if(movx==2) //verso est
 				{
 					currentx++;
 					previousx=1;
-					previousy=0;
 					
 				}
-				else if(m==3)
+				else if(movx==0)//non mi muovo in orizontale
 				{
-					currenty++;
-					previousy=1;
 					previousx=0;
-					
+				
 				}
-				else if(m==4)
+				
+				
+				if(movy==1)//verso nord
 				{
 					currenty--;
 					previousy=-1;
-					previousx=0;
+				}
+				else if(movy==2)//verso sud
+				{
+					currenty++;
+					previousy=1;
 					
 				}
+				else if(movy==0)//non mi muovo in verticale
+				{
+					previousy=0;
+					
+				}
+					
 				
 				grm.setX(currentx);
 				grm.setY(currenty);
@@ -144,6 +162,136 @@ public class MovementThread implements Runnable{
 					x=(int)xx;
 					y=(int)yy;
 					
+					/***
+					
+					ArrayList<Object> vision=grm.getResourceVision();
+					
+					double v=grm.getVision();
+					ArrayList<Integer> array_pos=new ArrayList<Integer>();
+					
+					for(int z=0;z<vision.size();z++)
+					{
+						if(vision.get(z) instanceof GamePlayerResponsible)
+						{
+							GamePlayerResponsible gpr=(GamePlayerResponsible)vision.get(z);
+							if(((gpr.getPosX()>=xx-v)&&(gpr.getPosX()<=xx-v))&&((gpr.getPosY()>=yy-v)&&(gpr.getPosY()<=yy-v)))
+							{
+								int k=(int)gpr.getPosX();
+								int j=(int)gpr.getPosY();
+								posx.add(new Integer(k));
+								posy.add(new Integer(j));
+								owner.add(gpr.getId());
+								type.add("GameResource");
+								array_pos.add(new Integer(z));
+								
+							}
+						}
+						else if(vision.get(z) instanceof GameResourceMobileResponsible)
+						{
+							
+							GameResourceMobileResponsible grmr=(GameResourceMobileResponsible)vision.get(z);
+							if(((grmr.getX()>=xx-v)&&(grmr.getX()<=xx-v))&&((grmr.getY()>=yy-v)&&(grmr.getY()<=yy-v)))
+							{
+								int k=(int)grmr.getX();
+								int j=(int)grmr.getY();
+								posx.add(new Integer(k));
+								posy.add(new Integer(j));
+								owner.add(grmr.getOwnerId());
+								type.add("GameResourceMobile");
+								array_pos.add(new Integer(z));
+							}
+						}
+						
+					}
+					
+					String id=mybot.getOwnerid();
+					ve.createVisibilityTheory(posx, posy, owner, type, id, pattack, restypes);
+					
+					//ottengo la posizione dell'arraylist che corrisponde all'elemento da attacare
+					int pos=ve.attack(); // la posizione corrispo
+					
+					if(pos!=0) 
+				       {  
+						
+						//recupero l'object
+						int posres=array_pos.get(pos-1);
+						
+						Object res=vision.get(posres);
+						
+						if(res instanceof GamePlayerResponsible)
+						{
+							String threadID=new Long(Thread.currentThread().getId()).toString();
+							GamePlayerResponsible player=(GamePlayerResponsible)res;
+						    this.mybot.getMyGamePeer().startMatch(player, player.getId(),0 , threadID); // da dove tiro fuori la quiantità?
+							this.mybot.getMyGamePeer().defenseMatch(player, player.getId(), 0, threadID);//threadId deve corrispondere a quello del nemic
+							//devo implementare il metodo per inviare il mio attacco in chiaro				GamePlayerResponsible non contiene l'informazione che mi serve
+							//devo implementare la decisione											//	
+						}
+						else if(res instanceof GameResourceMobileResponsible)
+						{
+							String threadID=new Long(Thread.currentThread().getId()).toString();
+							GameResourceMobileResponsible res_grm=(GameResourceMobileResponsible)res;
+							
+						    this.mybot.getMyGamePeer().startMatch(res_grm, res_grm.getId(), res_grm.getQuantity(), threadID); 
+							this.mybot.getMyGamePeer().defenseMatch(res_grm, res_grm.getId(), res_grm.getQuantity(), threadID);
+							//devo implementare il metodo per inviare il mio attacco in chiaro
+							//devo implementare la decisione
+							
+							if(this.mybot.getMyGamePeer().startMatch(res_grm, res_grm.getId(), res_grm.getQuantity(), threadID))
+							{
+								if(this.mybot.getMyGamePeer().defenseMatch(res_grm, res_grm.getId(), res_grm.getQuantity(), threadID))
+								{
+									//devo implementare il metodo per inviare il mio attacco in chiaro
+									Clash myclash=this.mybot.getMyGamePeer().getClashes().get(threadID);
+									ArrayList<Object> mymoves =myclash.getMyMoves();
+									ArrayList<Object> othermoves =myclash.getOtherPlayerMoves();
+									
+									
+									Attack myattack=(Attack)mymoves.get(0); //inizio con il mio attacco
+									
+									//int so=mymoves.size();
+									Attack otherattack=(Attack)othermoves.get(0); //finalizzo col mio attacco, ed è l'unica mossa che ricevo dal nemico
+									
+									double myq=myattack.getQuantity();
+									
+									double otherq=otherattack.getQuantity();
+									
+									//devo implementare la decisione e decidere se sono o meno il vincitore
+									
+									this.mybot.getMyGamePeer().getClashes().get(threadID).closeClash();									
+									
+									//devo implementare la decisione
+									
+								}
+								else
+								{
+									
+									System.out.println("ERRORE DIFESA CLASH");
+								}
+								
+							}
+							else
+							{
+								System.out.println("ERRORE INIZIO CLASH");
+								
+							}
+						}
+						
+						//qua implemento il protocollo di clash
+						
+						
+						
+						
+						//startmatch
+						
+						//defensematch
+						
+						//decision
+				       }
+					
+				    /***/
+						
+						
 					for(int k=x-2;k<=x+2;k++)
 					{
 						for(int j=y-2;j<=y+2;j++)
@@ -176,6 +324,9 @@ public class MovementThread implements Runnable{
 					
 					//qua faccio l'interrogazione sulla visibilita'
 					String id=mybot.getOwnerid();
+					id="PLAYER"+id;
+					//System.out.println("MOVEMENT THREAD ID "+id);
+					VisibilityEngine ve=new VisibilityEngine("rules/visibilityTheory.pl");
 					ve.createVisibilityTheory(posx, posy, owner, type, id, pattack, restypes);
 					
 					//ottengo la posizione dell'arraylist che corrisponde all'elemento da attacare
@@ -225,6 +376,8 @@ public class MovementThread implements Runnable{
 
 				       }
 					
+					 /***/
+					
 					cont=0;
 				}
 				cont++;
@@ -241,6 +394,8 @@ public class MovementThread implements Runnable{
 		
 		System.out.println("arrived "+resid+": x=" +targetx+" y= "+targety);
 	}
+	
+	
 	
 
 }

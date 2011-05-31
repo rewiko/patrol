@@ -120,9 +120,9 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 		 * */
 		
 		//GamePeer
-		request.CreateGamePeer(inPort, outPort, idBitLength, id, serverAddr, serverPort, gameInPort, gameOutPort, gameServerAddr, gameServerPort, stab, fix, check, pub);
-		request.registerOnServer(username, password);
-		request.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
+		//request.CreateGamePeer(inPort, outPort, idBitLength, id, serverAddr, serverPort, gameInPort, gameOutPort, gameServerAddr, gameServerPort, stab, fix, check, pub);
+		//request.registerOnServer(username, password);
+		//request.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
 		
 		
 		
@@ -565,6 +565,12 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 		double val=evolve.getQuantity();
 		request.UpdateResourceEvolve(val-dec);
 		
+	}
+
+	@Override
+	public GamePeer getMyGamePeer() {
+		
+		return null;
 	}
 	
 

@@ -457,7 +457,7 @@ public class Bot implements Runnable, InterfaceBot{
 								
 								System.out.println("move "+id+": x=" +tx+" y= "+ty);
 								
-								MovementThread move=new MovementThread(this,id,tx,ty);
+								MovementThread move=new MovementThread(this,id,tx,ty,100);
 								
 								
 								
@@ -598,6 +598,12 @@ public class Bot implements Runnable, InterfaceBot{
 		return res;
 		
 		
+	}
+
+	@Override
+	public GamePeer getMyGamePeer() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

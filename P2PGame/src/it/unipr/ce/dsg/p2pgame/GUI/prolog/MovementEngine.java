@@ -105,6 +105,56 @@ public class MovementEngine extends PrologEngine{
         }
         return mov;
     }
+    
+    public int latitudeMovement() //1 oppure due
+    {
+    	int mov=0;
+    	String query="latitude_movement(X).";
+    	ArrayList<SolveInfo> array_info=this.solveQuery(query);
+    	if(!array_info.isEmpty())
+    	{
+    		SolveInfo info=array_info.get(0) ;
+            try {
+                List binds = info.getBindingVars();
+                Var var=(Var)binds.get(0);
+                String val=var.toStringFlattened();
+                mov=Integer.parseInt(val);
+
+            } catch (NoSolutionException ex) {
+                Logger.getLogger(MovementEngine.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return mov;
+    		
+    	}
+    	
+    	return 0;
+    }
+    
+    public int longitudeMovement()
+    {
+    	int mov=0;
+    	String query="longitude_movement(X).";
+    	ArrayList<SolveInfo> array_info=this.solveQuery(query);
+    	if(!array_info.isEmpty())
+    	{
+    		SolveInfo info=array_info.get(0) ;
+            try {
+                List binds = info.getBindingVars();
+                Var var=(Var)binds.get(0);
+                String val=var.toStringFlattened();
+                mov=Integer.parseInt(val);
+
+            } catch (NoSolutionException ex) {
+                Logger.getLogger(MovementEngine.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return mov;
+    		
+    	}
+    	
+    	return 0;
+    	
+    }
+    
 
     public static void main(String [] arg)
     {
@@ -141,7 +191,7 @@ public class MovementEngine extends PrologEngine{
          */
         
         //create the facts with the previous informations 
-        engine.createMovementTheory(20,30, 20, 20, 0, 1, vis);
+        engine.createMovementTheory(20,20, 30, 30, 0, 1, vis);
         engine.printTheory();
 
         //obtain the next movement
@@ -151,5 +201,14 @@ public class MovementEngine extends PrologEngine{
         
 
         System.out.println("next movement: "+ mov);
+        
+        mov=engine.latitudeMovement();
+        
+        System.out.println("latitude movement: "+ mov);
+        
+        mov=engine.longitudeMovement();
+        System.out.println("longitude movement: "+ mov);
+        
+        
     }
 }

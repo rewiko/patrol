@@ -38,53 +38,14 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	private ArrayList<VirtualResource> enemies;
 	private String profile;
 	private double resmobcost;
+	private int period_movement;
+	private int probattack;
+	private int probdefense;
 	//aggiungere oggetto della classe MessageSender
 	//MessageSender request;
 	GamePeer gp;
 	
-	public ArrayList<VirtualResource> getEnemies() {
-		return enemies;
-	}
 
-	public void setEnemies(ArrayList<VirtualResource> enemies) {
-		this.enemies = enemies;
-	}
-
-	int probattack;
-	int probdefense;
-	
-	
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public String getOwnerid() {
-		return ownerid;
-	}
-
-	public void setOwnerid(String ownerid) {
-		this.ownerid = ownerid;
-	}
-
-	public int getProbattack() {
-		return probattack;
-	}
-
-	public void setProbattack(int probattack) {
-		this.probattack = probattack;
-	}
-
-	public int getProbdefense() {
-		return probdefense;
-	}
-
-	public void setProbdefense(int probdefense) {
-		this.probdefense = probdefense;
-	}
 
 	public RTSGameBot2(String profile)
 	{
@@ -137,8 +98,9 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		this.gp.startGame(0,575,0,575,0,0, 1,10, 5);
 		
 		
-		
-		
+		this.owner=gp.getMyId();
+		this.ownerid=gp.getMyId();
+		System.out.println("STARTGAME POSX "+this.gp.getPlayer().getPosX()+" POSY "+this.gp.getPlayer().getPosY());
 		
 		//apro il file di profilo
 		//carico profilo del giocatore
@@ -214,6 +176,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				int int_aux=Integer.parseInt(array_str[i]);
 				req_conq_qres.add(new Integer(int_aux));
 			}
+			
+			//period movement
+			str=br.readLine();
+			 this.period_movement=Integer.parseInt(str);
 						
 			
 		} catch (FileNotFoundException e) {
@@ -228,8 +194,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		this.nres=0;
 		this.nrmobile=0;
 		//creo l'oggetto ResourceEvolve
-		
-		GameResourceEvolve revolve=new GameResourceEvolve("moneyEvolveble", "Money", 0, 1000, 1);
+		double offset=(double)this.ee.getAccValue();
+		final long period=(long)this.ee.getPeriod();
+		double quantity=(double)this.ee.getCurrentResource();
+		GameResourceEvolve revolve=new GameResourceEvolve("moneyEvolveble", "Money", quantity, period, offset);
 		this.gp.addToMyResource(revolve);
 		//ottengo da gp informazioni sulle risorse e i soldi a disposizione
 		//ArrayList<Object> res=gp.getMyResources(); // poi verifico le risorse sulla lista tranne moneyEvolve
@@ -388,68 +356,48 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 								//se decido di spostare una risorsa, devo scegliere in modo aleatorio il punto d'arrivo
 								// il punto d'arrivo dipende del raggio massimo di spostamento scelto dalla fase del gioco
 								
-																
-								//scelgo tra 5 possibili angoli rispetto all'ascisa
-								int angle=(int)(Math.random()*4+ 1);
-								
-								//scelgo le coordinate per un vettore di lunghezza 1
-								double x,y;
-								
-								if(angle==1){//0°
-									x=1;
-									y=0;
+										
+								boolean mband=false;
+								double mx=0;
+								double my=0;
+								while(!mband) //cicla fino a trovare delle coordinate dentro lo scenario del gioco
+								{
+									mx=(double)(Math.random()*rad);	
+									my=(double)(Math.random()*rad);
 									
-								}else if(angle==2){ //30°
-									x=0.8;
-									y=0.5;
+									int mquad=(int)(Math.random()*3+ 1);
 									
-								}else if(angle==3){//45°
-									x=y=0.5;
+									// se e' il primo quadrante non faccio niente
+									if(mquad==2){
+										mx*=-1;
+										//y rimane uguale
+									}else if(mquad==3){
+										mx*=-1;
+										my*=-1;
+										
+									}else{
+										my*=-1;
+										//x rimane uguale
+									}
 									
-								}else if(angle==4){//60°
+									mx=mx+this.gp.getPlayer().getPosX();
+									my=my+this.gp.getPlayer().getPosY();
 									
-									x=0.5;
-									y=0.8;
-									
-								}else{//90°
-									x=0;
-									y=1;
+									if((mx>=0&&mx<=575)&&(my>=0&&my<=575))
+									{
+										mband=true;
+									}
+							
 								}
 								
-								//qudrante
-								//scelgo aleatoriamente qudrante e angolo 
-								int quad=(int)(Math.random()*3+ 1);
-								
-								// se e' il primo quadrante non faccio niente
-								if(quad==2){
-									x*=-1;
-									//y rimane uguale
-								}else if(quad==3){
-									x*=-1;
-									y*=-1;
-									
-								}else{
-									y*=-1;
-									//x rimane uguale
-								}
-								
-								//lunghezza della traiettoria
-									double l=(double)(Math.random()*rad);					
-								
-								x*=l; //coordinate di destinazione
-								y*=l;
-									
-								
-								int tx=(int)x;
-								int ty=(int)y;
+								int tx=(int)mx;
+								int ty=(int)my;
 								
 								System.out.println("move "+id+": x=" +tx+" y= "+ty);
 								
-								MovementThread move=new MovementThread(this,id,tx,ty);
+								MovementThread move=new MovementThread(this,id,tx,ty,period_movement);
 								
-								
-								
-								
+							
 								
 							}
 							
@@ -462,8 +410,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 							System.out.println("Resource "+id+" in movimento");
 						}
 						
-						//controllo della visibilità della navicella. Poi estenderò il controllo della visibilità 
-						// a quella associata al gamepeer
+						
 												
 
 						
@@ -475,12 +422,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					
 				}
 				
-				
-				
-				
-				
-				
-				
+		
 				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -597,6 +539,55 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//evolve.setQuantity(qt);
 		gp.getMyResourceFromId("moneyEvolveble").setQuantity(qt);
 		
+	}
+	
+
+
+	@Override
+	public GamePeer getMyGamePeer() {
+		return this.gp;
+	}
+	
+	public ArrayList<VirtualResource> getEnemies() {
+		return enemies;
+	}
+
+	public void setEnemies(ArrayList<VirtualResource> enemies) {
+		this.enemies = enemies;
+	}
+
+	
+	
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getOwnerid() {
+		return ownerid;
+	}
+
+	public void setOwnerid(String ownerid) {
+		this.ownerid = ownerid;
+	}
+
+	public int getProbattack() {
+		return probattack;
+	}
+
+	public void setProbattack(int probattack) {
+		this.probattack = probattack;
+	}
+
+	public int getProbdefense() {
+		return probdefense;
+	}
+
+	public void setProbdefense(int probdefense) {
+		this.probdefense = probdefense;
 	}
 	
 
