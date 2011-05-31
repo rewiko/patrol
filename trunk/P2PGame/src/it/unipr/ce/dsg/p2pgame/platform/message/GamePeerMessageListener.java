@@ -895,8 +895,9 @@ public class GamePeerMessageListener implements Runnable {
 
 			//MultiLog.println(GamePeerMessageListener.class.toString(), "Attack RECEIVED");
 			//System.out.println("Attack RECEIVED");
+			
 
-			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
+			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 
 		}
 		else {

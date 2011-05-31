@@ -29,6 +29,7 @@ public class ExtractionEngine extends PrologEngine{
     private boolean infinite;
     private int current_res;
     
+    
     public ExtractionEngine()
     {
     	super();
@@ -84,12 +85,14 @@ public class ExtractionEngine extends PrologEngine{
         this.period=period;
         this.value=value;
         this.current_res=current;
+        
 
         
         this.appendTheory("infinite_resources("+str+")."); // yes if i am an infinite resoruce's deposite
         this.appendTheory("accumulation_period("+period+")."); //sleep time for acc
         this.appendTheory("accumulation_value("+value+")."); //value of resource extracted every period
         this.appendTheory("current_resources("+current+")."); // current resources in the deposite
+        
         
         
 
@@ -138,6 +141,31 @@ public class ExtractionEngine extends PrologEngine{
 
         return 0;
 
+    }
+    
+    public int getCurrentResource()
+    {
+    	String query="current_resources(C).";
+        ArrayList<SolveInfo > arrayinfo=this.solveQuery(query);
+        if(!arrayinfo.isEmpty())
+        {
+        	SolveInfo info=arrayinfo.get(0);
+            List l=null;
+            try {
+                l = info.getBindingVars();
+                Var var=(Var) l.get(0);
+                String strval=var.toStringFlattened();
+                int val=Integer.parseInt(strval);
+                return val;
+
+            } catch (NoSolutionException ex) {
+                Logger.getLogger(VisibilityEngine.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        	
+        }
+        
+    	
+    	return 0;
     }
 
 

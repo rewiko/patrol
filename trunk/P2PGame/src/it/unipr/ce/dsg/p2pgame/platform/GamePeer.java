@@ -1541,6 +1541,8 @@ public class GamePeer extends NetPeer {
 			return false;
 	}
 
+	
+	/******/
 //attacca //TODO: utile o da eliminare
 	public void startMatch(GamePlayerResponsible player, String resource, double quantity, String threadId){
 		MultiLog.println(GamePeer.class.toString(), "Attacco " + player.getName());
@@ -1582,6 +1584,109 @@ public class GamePeer extends NetPeer {
 		}
 	}
 
+	/******
+	
+	public boolean startMatch(GameResourceMobileResponsible resmobile, String resource, double quantity, String threadId){
+		
+		MultiLog.println(GamePeer.class.toString(), "Attacco " + player.getName());
+		//System.out.println("Attacco " + player.getName());
+		//String oppositeId = this.findSuccessor(player.getId(), this.myThreadId);
+		String oppositeId = this.findSuccessor(player.getId(), threadId);
+		//NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(this.myThreadId);
+		NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(threadId);
+
+		Attack attack = new Attack(quantity, resource);
+
+		if (this.newAttack(resmobile.getOwnerId(), resmobile.getOwner(), attack)) {
+
+
+			StartMatchMessage startMatch = new StartMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
+					this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), this.player.getPosX(), this.player.getPosY(), this.player.getPosZ(), attack.getHash());
+
+			String responseStartMessage = MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, startMatch.generateXmlMessageString());
+
+			if (responseStartMessage.contains("ERROR")){
+				MultiLog.println(GamePeer.class.toString(), "Sending START MATCH ERROR !");
+				//System.out.println("Sending START MATCH ERROR !");
+			}
+			else {
+				MessageReader responseStartMessageReader = new MessageReader();
+				Message receivedStartMessageReader = responseStartMessageReader.readMessageFromString(responseStartMessage.trim());
+
+				AckMessage ackMessage = new AckMessage(receivedStartMessageReader);
+				if (ackMessage.getAckStatus() == 0){
+					MultiLog.println(GamePeer.class.toString(), "Now Match is started");
+					//System.out.println("Now Match is started");
+					return true;
+				}
+
+			}
+		}
+		else{
+			MultiLog.println(GamePeer.class.toString(), "Attacco gia' in corso");
+			//System.out.println("Attacco giï¿½ in corso");
+		}
+
+		
+		
+	
+		return false;
+	}
+	
+	
+	public boolean startMatch(GamePlayerResponsible player, String resource, double quantity, String threadId){
+		MultiLog.println(GamePeer.class.toString(), "Attacco " + player.getName());
+		//System.out.println("Attacco " + player.getName());
+		//String oppositeId = this.findSuccessor(player.getId(), this.myThreadId);
+		String oppositeId = this.findSuccessor(player.getId(), threadId);
+		//NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(this.myThreadId);
+		NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(threadId);
+
+		Attack attack = new Attack(quantity, resource);
+
+		if (this.newAttack(player.getId(), player.getName(), attack)) {
+
+
+			StartMatchMessage startMatch = new StartMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
+					this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), this.player.getPosX(), this.player.getPosY(), this.player.getPosZ(), attack.getHash());
+
+			String responseStartMessage = MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, startMatch.generateXmlMessageString());
+
+			if (responseStartMessage.contains("ERROR")){
+				MultiLog.println(GamePeer.class.toString(), "Sending START MATCH ERROR !");
+				//System.out.println("Sending START MATCH ERROR !");
+			}
+			else {
+				MessageReader responseStartMessageReader = new MessageReader();
+				Message receivedStartMessageReader = responseStartMessageReader.readMessageFromString(responseStartMessage.trim());
+
+				AckMessage ackMessage = new AckMessage(receivedStartMessageReader);
+				if (ackMessage.getAckStatus() == 0){
+					MultiLog.println(GamePeer.class.toString(), "Now Match is started");
+					//System.out.println("Now Match is started");
+					return true;;
+				}
+
+			}
+		}
+		else{
+			MultiLog.println(GamePeer.class.toString(), "Attacco gia' in corso");
+			//System.out.println("Attacco giï¿½ in corso");
+		}
+		
+		return false;
+	}
+
+	
+	
+	/******/
+	
+		
+	/************/
+	
+	
+	
+	
 
 
 	public /*synchronized*/ boolean newDefense(String oppositeId, String opposite, Defense myMove) {
@@ -1754,6 +1859,92 @@ public class GamePeer extends NetPeer {
 			//System.out.println("Attacco giï¿½ in corso");
 		}
 	}
+	
+	
+	/*****************
+	
+	
+	public boolean defenseMatch(GamePlayerResponsible player, String resource, double quantity, String threadId){
+		MultiLog.println(GamePeer.class.toString(), "Difesa " + player.getName());
+		
+		String oppositeId = this.findSuccessor(player.getId(), threadId);
+		
+		NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(threadId);
+
+		Defense defense = new Defense(quantity, resource);
+
+		if (this.newDefense(player.getId(), player.getName(), defense)) {
+
+
+			DefenseMatchMessage startMatch = new DefenseMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
+					this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), this.player.getPosX(), this.player.getPosY(), this.player.getPosZ(), defense.getType(), defense.getQuantity());
+
+			String responseDefenseMessage = MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, startMatch.generateXmlMessageString());
+
+			if (responseDefenseMessage.contains("ERROR")){
+				MultiLog.println(GamePeer.class.toString(), "Sending DEFENSE MATCH ERROR !");
+				
+			}
+			else {
+				MessageReader responseDefendMessageReader = new MessageReader();
+				Message receivedDefendMessageReader = responseDefendMessageReader.readMessageFromString(responseDefenseMessage.trim());
+
+
+
+				//TODO: non ci si aspetta un attacco ma la risposta con il messaggio in chiaro
+				if (receivedDefendMessageReader.getMessageType().equals("ACK")){
+					MultiLog.println(GamePeer.class.toString(), "ERRORE INVIO DIFESA");
+					//System.out.println("ERRORE INVIO DIFESA");
+				}
+				else if (receivedDefendMessageReader.getMessageType().equals("CLEARATTACK")){
+					MultiLog.println(GamePeer.class.toString(), "Riceveuto l'attacco in chiaro");
+					
+
+					ClearAttackMatchMessage clearAttack = new ClearAttackMatchMessage(receivedDefendMessageReader);
+
+
+					Attack attack = new Attack(clearAttack.getQuantity(), clearAttack.getType(), clearAttack.getNonce());
+					this.addClearAttackReceived(clearAttack.getId(), clearAttack.getUserName(), attack);
+
+					//TODO: vedere se l'hash corrisponde ed in caso contrario inviare un NACK
+					/*
+					if (this.clashes.get(clearAttack.getId()).verifyAttack()){
+
+						MultiLog.println(GamePeer.class.toString(), "Confronto CHIUSO CORRETTAMENTE");
+						//System.out.println("Confronto CHIUSO CORRETTAMENTE");
+						this.closeMatch(clearAttack.getId());
+
+						//(new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes()
+						//MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, (new AckMessage("","",-1,0,"")).generateXmlMessageString());
+
+					}
+					else {
+						MultiLog.println(GamePeer.class.toString(), "CHIUSURA MATCH ERRORE RILEVATO - Send Nack");
+						//System.out.println("CHIUSURA MATCH ERRORE RILEVATO - Send Nack");
+
+					//	MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, (new AckMessage("","",-1,1,"")).generateXmlMessageString());
+					}
+					*
+					
+					//ho il mio attacco e il suo
+					return true;
+				}
+			}
+		}
+		else{
+			MultiLog.println(GamePeer.class.toString(), "Attacco gia' in corso");
+			//System.out.println("Attacco giï¿½ in corso");
+		}
+		
+		return false;
+	}
+	
+	
+	/*****************/
+
+	
+	
+	
 
 
 	public GameWorld getWorld() {

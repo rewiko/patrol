@@ -1,5 +1,6 @@
 package it.unipr.ce.dsg.p2pgame.platform.bot;
 
+import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 
 public interface InterfaceBot {
@@ -15,7 +16,7 @@ public interface InterfaceBot {
 	String getOwnerid();
 
 	
-	
+	GamePeer getMyGamePeer();
 	
 	
 
