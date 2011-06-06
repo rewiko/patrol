@@ -4,18 +4,69 @@ public class VirtualResource {
 	
 	String resType;
 	String ownerID;
-	int x;
-	int y;
+	String id;
+	double x;
+	double y;
+	double z;
 	
-	
-	public VirtualResource(String resType, String ownerID, int x, int y) {
+	public VirtualResource(String resType,String id, String ownerID, double x, double y,double z) {
 		
 		this.resType = resType;
 		this.ownerID = ownerID;
+		this.id=id;
 		this.x = x;
 		this.y = y;
+		this.z = z;
 	}
 	
+public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+public String getResType() {
+		return resType;
+	}
+
+	public void setResType(String resType) {
+		this.resType = resType;
+	}
+
+	public String getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(String ownerID) {
+		this.ownerID = ownerID;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public double getZ() {
+		return z;
+	}
+
+	public void setZ(double z) {
+		this.z = z;
+	}
+
 public VirtualResource() {
 		
 		
@@ -23,30 +74,7 @@ public VirtualResource() {
 	
 	
 	
-	public String getResType() {
-		return resType;
-	}
-	public void setResType(String resType) {
-		this.resType = resType;
-	}
-	public String getOwnerID() {
-		return ownerID;
-	}
-	public void setOwnerID(String ownerID) {
-		this.ownerID = ownerID;
-	}
-	public int getX() {
-		return x;
-	}
-	public void setX(int x) {
-		this.x = x;
-	}
-	public int getY() {
-		return y;
-	}
-	public void setY(int y) {
-		this.y = y;
-	}
+	
 	
 	
 	

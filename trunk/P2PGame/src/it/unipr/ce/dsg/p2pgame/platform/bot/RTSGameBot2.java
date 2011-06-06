@@ -37,17 +37,37 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	private HashMap<String, Boolean> status;
 	private ArrayList<VirtualResource> enemies;
 	private String profile;
-	private double resmobcost;
+	private String configuration;
+	private double resmincost;
 	private int period_movement;
 	private int probattack;
 	private int probdefense;
+	
+	//attrbuti per la configurazione, mi serviranno dopo???
+	
+	//minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran
+	private double minX;
+	private double maxX;
+	private double minY;
+	private double maxY;
+	private double minZ;
+	private double maxZ;
+	private double vel;
+	private double vis;
+	private double gran;
+	//atruttura dati che rappresenta i pianeti nello spazio
+	
+	ArrayList<VirtualResource> planets;
+	
+	
+	
 	//aggiungere oggetto della classe MessageSender
 	//MessageSender request;
 	GamePeer gp;
 	
 
 
-	public RTSGameBot2(String profile)
+	public RTSGameBot2(String profile,String conf)
 	{
 		
 		gee=new GameEvolutionEngine("rules/evolutionTheory.pl");
@@ -58,9 +78,11 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		L=1000;
 		enemies=new ArrayList<VirtualResource>();
 		this.profile=profile;
+		this.configuration=conf;
 		
-		this.resmobcost=10;
+		this.resmincost=10;
        
+		planets=new ArrayList<VirtualResource>();
 		
 	}
 
@@ -87,6 +109,66 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
     	String serverAdd="127.0.0.1";
     	String username="username";
     	String password="password";
+    	
+    	
+    	try {
+    		//qua apro il file di configurazione e creo lo scenario
+        	File fconf=new File(this.configuration);
+			FileInputStream fisconf=new FileInputStream(fconf);
+			InputStreamReader isrconf=new InputStreamReader(fisconf);
+	       	BufferedReader brconf=new BufferedReader(isrconf);
+	      //minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran
+	        String straux=brconf.readLine();
+	        this.minX=Double.parseDouble(straux);
+	        straux=brconf.readLine();
+	        this.maxX=Double.parseDouble(straux);
+	        straux=brconf.readLine();
+	        this.minY=Double.parseDouble(straux);
+	        straux=brconf.readLine();
+	        this.maxY=Double.parseDouble(straux);
+	        straux=brconf.readLine();
+	        this.minZ=Double.parseDouble(straux);
+	        straux=brconf.readLine();
+	        this.maxZ=Double.parseDouble(straux);
+	        straux=brconf.readLine();
+	        this.vel=Double.parseDouble(straux);
+	        straux=brconf.readLine();
+	        this.vis=Double.parseDouble(straux);
+	        straux=brconf.readLine();
+	        this.gran=Double.parseDouble(straux);
+	        
+	        //spazio
+	        
+	        straux=brconf.readLine();
+	        int nplanets=Integer.parseInt(straux);
+	        //pianeti
+	        for(int i=0;i<nplanets;i++)
+	        {
+	        	straux=brconf.readLine();
+	        	String [] str_cord=straux.split(",");
+	        	VirtualResource planet=new VirtualResource();
+	        	planet.setOwnerID("null");
+	        	planet.setId("planet"+i);
+	        	planet.setResType("planet");
+	        	planet.setX(Double.parseDouble(str_cord[0]));
+	        	planet.setY(Double.parseDouble(str_cord[1]));
+	        	planet.setZ(Double.parseDouble(str_cord[2]));
+	        	this.planets.add(planet);
+	        	
+	        }
+	        	
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
+    	
+    	//L è pari alla lunghezza massima fratto due
 		
 		
 		this.gp = new GamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,1000,64000,2000);
@@ -225,12 +307,12 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				currentqres.add(new Integer(nres));
 				currentqres.add(new Integer(nrmobile));
 				
-				if(ee.isInfinite())
+				/*if(ee.isInfinite())
 				{
 					
 					this.incrementMoney(resmobcost);
 					
-				}
+				}*/
 				
 				
 				currentmoney=this.gp.getMyResourceFromId("moneyEvolveble").getQuantity();
@@ -288,35 +370,56 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					
 					int xx=(int)(Math.random()*10);
 					System.out.println("random "+xx);
-					if((xx%2)==0)
+					//if((xx%2)==0)
+					if(xx>=3)	
 					{
-						//compro risorsa mobile
-						String timestamp = Long.toString(System.currentTimeMillis());
-						this.nrmobile++;						
+						double qt=this.getCurrentMoney();
+						int multiplicity=(int) (qt/this.resmincost);
+						if(multiplicity>0)
+						{
+							qt=multiplicity*this.resmincost; //uso la stessa variabile
+							
+							//compro risorsa mobile
+							String timestamp = Long.toString(System.currentTimeMillis());
+							this.nrmobile++;						
+							
+							
+							this.gp.createMobileResource("Attack" + timestamp, this.resmincost);
+							//lo status per default è false
+							
+							
+							//status.put("m"+timestamp, new Boolean(false)); // devo salvare anche l'ID
+							//currentmoney-=resmobcost;
+							this.decrementMoney(qt);
+							System.out.println("###################nuova risorsa mobile##################");
+							
+							
+						}
+							
 						
 						
-						this.gp.createMobileResource("Attack" + timestamp, this.resmobcost);
-						//lo status per default è false
-						
-						
-						//status.put("m"+timestamp, new Boolean(false)); // devo salvare anche l'ID
-						//currentmoney-=resmobcost;
-						this.decrementMoney(resmobcost);
-						System.out.println("###################nuova risorsa mobile##################");
 					}
 					else
 					{
 						//compro risorsa di difesa
+						double qt=this.getCurrentMoney();
+						int multiplicity=(int) (qt/this.resmincost);
+						if(multiplicity>0)
+						{
+							qt=multiplicity*this.resmincost; //uso la stessa variabile
+							String timestamp = Long.toString(System.currentTimeMillis());
+							this.nres++;
+							//res.add(new GameResource("id"+this.nres,"defense",1.0));
+							
+							GameResource dif = new GameResource("def" + timestamp, "Defense" + timestamp, resmincost);
+			                this.gp.addToMyResource(dif);
+							//currentmoney-=1000;
+							this.decrementMoney(qt);
+							System.out.println("###########nuova risorsa di difesa####################");
+							
+						}
 						
-						String timestamp = Long.toString(System.currentTimeMillis());
-						this.nres++;
-						//res.add(new GameResource("id"+this.nres,"defense",1.0));
 						
-						GameResource dif = new GameResource("def" + timestamp, "Defense" + timestamp, resmobcost);
-		                this.gp.addToMyResource(dif);
-						//currentmoney-=1000;
-						this.decrementMoney(resmobcost);
-						System.out.println("###########nuova risorsa di difesa####################");
 					}
 					
 					
@@ -349,7 +452,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 							// qua devo mettere il tread di spostamento e indicare che la risorsa e' in movimento
 							//prima verifico se la risors è attualmente in movimento
 							int aux=(int)(Math.random()*100);
-							System.out.println("pribabilita' di spostare risorsa "+id+" : "+aux+" %");
+							System.out.println("probabilita' di spostare risorsa "+id+" : "+aux+" %");
 						    if(aux<probmove)
 							{
 								//se la risorsa non è attualmente in movimento
@@ -541,6 +644,15 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 	}
 	
+	public double getCurrentMoney()
+	{
+		GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		double qt=evolve.getQuantity();
+		
+		return qt;
+	}
+
+	
 
 
 	@Override
@@ -589,6 +701,32 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	public void setProbdefense(int probdefense) {
 		this.probdefense = probdefense;
 	}
+	
+	public ArrayList<VirtualResource> getPlanets()
+	{
+		return this.planets;
+		
+	}
+	
+	public void setPlanetOwner(String idPlanet,String idOwner)
+	{
+		
+		this.getPlanetbyID(idPlanet).setOwnerID(idOwner);
+		
+	}
+	
+	public VirtualResource getPlanetbyID(String idPlanet)
+	{
+		
+		for(int i=0;i<this.planets.size();i++)
+		{
+			if(this.planets.get(i).getId().equals(idPlanet))
+			return this.planets.get(i);
+		}
+		
+		return null;
+	}
+	
 	
 
 }

@@ -27,6 +27,8 @@ import it.unipr.ce.dsg.p2pgame.platform.message.PositionPlayerMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.RegisterPeerMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.StartMatchMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.UserPeerMessage;
+import it.unipr.ce.dsg.p2pgame.platform.message.UsersListMessage;
+import it.unipr.ce.dsg.p2pgame.platform.message.UsersListRequestMessage;
 import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 import it.unipr.ce.dsg.p2pgame.util.SHA1;
 
@@ -184,6 +186,67 @@ public class GamePeer extends NetPeer {
 		}
 
 
+	}
+	
+//aggiunto da Jose' Murga 6/6/2011
+	
+	/**
+	 * Sends a userslistrequest message and obtain the list of the logged users
+	 * in the session game. Then returns that list
+	 * 
+	 * returns users : ArrayList<String>
+	 * 
+	 * */
+	
+	public ArrayList<String> getLoggedUsersList()
+	{
+		ArrayList<String> users=new ArrayList<String>();
+		
+		MultiLog.println(GamePeer.class.toString(), "Sending usersListRequestMessage with:" + this.getMyPeer().getIpAddress() + ":" + this.getMyPeer().getPortNumber());
+		
+		UsersListRequestMessage usersListRequest=new UsersListRequestMessage(this.getMyId(),this.getMyPeer().getIpAddress(),this.getMyPeer().getPortNumber());
+		
+		String responseMessage=MessageSender.sendMessage(this.gameServerAddr, this.gameServerPort,usersListRequest.generateXmlMessageString());
+		
+		MultiLog.println(GamePeer.class.toString(), "Verify response...");
+		
+		if(responseMessage.contains("ERROR"))
+		{
+			
+			MultiLog.println(GamePeer.class.toString(), "Sending Message ERROR!");
+			
+		}
+		else
+		{
+			MultiLog.println(GamePeer.class.toString(), "Reading response...");
+			
+			MessageReader messageReader = new MessageReader();
+			Message receivedMessage = messageReader.readMessageFromString(responseMessage.trim());
+			
+			UsersListMessage userslist=new UsersListMessage(receivedMessage);
+			
+			//ora devo ottenere la lista di utenti
+			
+			String strUsersList=userslist.getStrUsersList();
+			
+			String [] array_users=strUsersList.split("\\$");
+			
+			
+			
+			for(int i=0;i<array_users.length;i++)
+			{
+				// ottengo una stringa della forma
+				// id;ipadd;portnumber
+				users.add(array_users[i]);
+				
+			}
+			//ritorno la lista degli utenti
+			
+			
+		}
+		
+		
+		return users;
 	}
 
 	public void loginOnServer(String un, String pwd) {

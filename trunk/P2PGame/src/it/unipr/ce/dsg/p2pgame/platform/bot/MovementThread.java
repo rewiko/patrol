@@ -289,8 +289,66 @@ public class MovementThread implements Runnable{
 						//decision
 				       }
 					
-				    /***/
+				    /********/
+					
+					//verifica pianeti
+					
+					//ottengo lista di pianeti
+					
+					ArrayList<VirtualResource> planets=this.mybot.getPlanets();
+					
+					for(int k=0;k<planets.size();k++)
+					{
 						
+						VirtualResource planet=planets.get(k);
+						
+						if((planet.getX()>=(x-2)) &&(planet.getX()<=(x+2))&&(planet.getY()>=(y-2))&&(planet.getY()<(y+2)))
+						{
+							if(planet.getOwnerID().equals("null")) // se il pianeta non è stato conquistato da qualcuno
+							{
+								this.mybot.setPlanetOwner(planet.getOwnerID(), this.mybot.getOwnerid()); //lo conquisto
+								
+								//invio un messaggio in broadcast a tutti peer nel gioco
+								ArrayList<String> usersList=this.mybot.getMyGamePeer().getLoggedUsersList();
+								
+								if(!usersList.isEmpty()) // se ci sono degli utenti nella lista invio i messaggi
+								{
+									for(int u=0;u<usersList.size();u++)
+									{
+										String str_user=usersList.get(u);
+										
+										String[] array_user=str_user.split(",");
+										String user_id=array_user[0];
+										String userip=array_user[1];
+										String userport=array_user[2];
+										
+										//implemento l'invio dei messaggi
+										//informazioni da inviare
+										//myid, planetid
+										
+									}
+									
+								}
+								else
+								{
+									System.out.println("ERROR USERS LIST");
+									
+								}
+								
+							}
+							else if(!planet.getOwnerID().equals(this.mybot.getOwnerid()))
+							{
+								//gestione di clash
+								
+							}
+							// se il pianeta è mio non faccio niente
+						}
+						
+						
+					}
+					
+					
+					/*******/	
 						
 					for(int k=x-2;k<=x+2;k++)
 					{

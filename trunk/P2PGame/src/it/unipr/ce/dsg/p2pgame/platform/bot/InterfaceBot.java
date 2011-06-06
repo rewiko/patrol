@@ -1,5 +1,7 @@
 package it.unipr.ce.dsg.p2pgame.platform.bot;
 
+import java.util.ArrayList;
+
 import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 
@@ -18,7 +20,11 @@ public interface InterfaceBot {
 	
 	GamePeer getMyGamePeer();
 	
+	ArrayList<VirtualResource> getPlanets();
 	
+	void setPlanetOwner(String idPlanet,String idOwner);
+	
+	VirtualResource getPlanetbyID(String idPlanet);
 
 	
 }
