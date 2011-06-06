@@ -5,7 +5,7 @@ public class RTSGameMainBot {
 	public static void main(String [] arg)
 	{
 		
-		Thread th=new Thread(new RTSGameBot2("profiles/profile1.txt"));
+		Thread th=new Thread(new RTSGameBot2("profiles/profile1.txt","conf/gameconf.txt"));
 		th.start();
 		
 	}
