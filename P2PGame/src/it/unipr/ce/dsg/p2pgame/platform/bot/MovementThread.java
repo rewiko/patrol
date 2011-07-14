@@ -8,13 +8,20 @@ import java.util.ArrayList;
 
 
 
+import it.simplexml.message.AckMessage;
+import it.simplexml.message.Message;
+import it.simplexml.message.MessageReader;
+import it.simplexml.sender.MessageSender;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.MovementEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.VisibilityEngine;
 import it.unipr.ce.dsg.p2pgame.platform.Attack;
 import it.unipr.ce.dsg.p2pgame.platform.Clash;
+import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
 import it.unipr.ce.dsg.p2pgame.platform.GamePlayerResponsible;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
+import it.unipr.ce.dsg.p2pgame.platform.bot.message.PlanetConqueredMessage;
+import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 
 public class MovementThread implements Runnable{
 	
@@ -78,7 +85,7 @@ public class MovementThread implements Runnable{
 		//imposto la risorsa mobile in movimento
 		
 		//this.mybot.setMovStatus(resid, true); //così segnalo che è in movimento
-		grm.setStatus(true);
+		grm.setStatus(true); // cambia lo stato della risorsa mobile indicando che e' in movimento
 			
 		
 		int cont=0;
@@ -284,7 +291,7 @@ public class MovementThread implements Runnable{
 						
 						//startmatch
 						
-						//defensematch
+m						//defensematch
 						
 						//decision
 				       }
@@ -296,35 +303,84 @@ public class MovementThread implements Runnable{
 					//ottengo lista di pianeti
 					
 					ArrayList<VirtualResource> planets=this.mybot.getPlanets();
-					
+					//System.out.println("£££planets "+planets.size());
 					for(int k=0;k<planets.size();k++)
 					{
 						
-						VirtualResource planet=planets.get(k);
-						
+						VirtualResource planet=planets.get(k); // per ogni pianeta, verifico se le sue coordinate sono dentro una finestra visiva della mia risorsa mobile
+						//System.out.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
+						//System.out.println("My coordinates x = "+x+ "y = "+y);
 						if((planet.getX()>=(x-2)) &&(planet.getX()<=(x+2))&&(planet.getY()>=(y-2))&&(planet.getY()<(y+2)))
 						{
+							System.out.println("PIANETA");
+							System.out.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
+							ps.println("PIANETA");
+							ps.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
+							
 							if(planet.getOwnerID().equals("null")) // se il pianeta non è stato conquistato da qualcuno
 							{
-								this.mybot.setPlanetOwner(planet.getOwnerID(), this.mybot.getOwnerid()); //lo conquisto
+								this.mybot.setPlanetOwner(planet.getId(), this.mybot.getOwnerid()); //lo conquisto
+								
+								
 								
 								//invio un messaggio in broadcast a tutti peer nel gioco
 								ArrayList<String> usersList=this.mybot.getMyGamePeer().getLoggedUsersList();
 								
 								if(!usersList.isEmpty()) // se ci sono degli utenti nella lista invio i messaggi
 								{
+									System.out.println("NUMBER OF USERS: "+usersList.size());
 									for(int u=0;u<usersList.size();u++)
 									{
 										String str_user=usersList.get(u);
 										
+										System.out.println("USERS: "+str_user);
 										String[] array_user=str_user.split(",");
-										String user_id=array_user[0];
+										String user_id=array_user[0]; // mi serve ???
 										String userip=array_user[1];
 										String userport=array_user[2];
 										
 										//implemento l'invio dei messaggi
 										//informazioni da inviare
 										//myid, planetid
+										
+										if(!this.mybot.getMyGamePeer().getMyId().equals(user_id))											
+										{
+											PlanetConqueredMessage message=new PlanetConqueredMessage(this.mybot.getMyGamePeer().getMyId(),
+													this.mybot.getMyGamePeer().getMyPeer().getIpAddress(),
+													this.mybot.getMyGamePeer().getMyPeer().getPortNumber(),this.mybot.getOwnerid(),planet.getOwnerID());
+											
+											String responseMessage=MessageSender.sendMessage(userip,Integer.parseInt(userport),message.generateXmlMessageString());
+											
+											MultiLog.println(GamePeer.class.toString(), "Verify response...");
+											
+											if(responseMessage.contains("ERROR"))
+											{
+												
+												MultiLog.println(GamePeer.class.toString(), "Sending Message ERROR!");
+												
+											}
+											else
+											{
+												//ack message
+												MessageReader responseStartMessageReader = new MessageReader();
+												Message receivedStartMessageReader = responseStartMessageReader.readMessageFromString(responseMessage.trim());
+
+												AckMessage ackMessage = new AckMessage(receivedStartMessageReader);
+												if (ackMessage.getAckStatus() == 0){
+													MultiLog.println(GamePeer.class.toString(), "Message received");
+													//System.out.println("Now Match is started");
+												}
+												
+												
+											}
+
+											
+										}
+										else
+										{
+											System.out.println("Ho conquistato un pianeta");
+										}
+										
 										
 									}
 									
@@ -340,6 +396,8 @@ public class MovementThread implements Runnable{
 							{
 								//gestione di clash
 								
+								
+								
 							}
 							// se il pianeta è mio non faccio niente
 						}
@@ -348,8 +406,9 @@ public class MovementThread implements Runnable{
 					}
 					
 					
-					/*******/	
-						
+					/*******/
+					
+											
 					for(int k=x-2;k<=x+2;k++)
 					{
 						for(int j=y-2;j<=y+2;j++)
@@ -405,7 +464,10 @@ public class MovementThread implements Runnable{
 				          ps.println("***********Nemico Trovato!!!**************");
 				          ps.println("Pos "+pos);
 				          ps.println("attack: ("+ax+" , "+ay+")\n");
-
+				          
+				          
+				          grm.setStatus(false);
+				          break;
 				       }
 				       else
 				       {  //otherwise, verifing if i have to defend against a possible attack and the X,Y coordinates
@@ -428,6 +490,10 @@ public class MovementThread implements Runnable{
 				        	  ps.println("***********Nemico Trovato!!!**************");
 				        	  ps.println("Pos "+pos);				              
 				        	  ps.println("defense: ("+dx+" , "+dy+")\n");
+				        	  
+				        	  
+				        	  grm.setStatus(false);
+				        	  break;
 				          }
 				          
 

@@ -42,6 +42,11 @@ public class GameServer extends BootstrapServer {
 
 
 	private GameWorld world;
+	
+	
+	//aggiunto da Jose' Murga 09/06/2011
+	private HashMap<String, AddressInfo> addressinfo=new HashMap<String, AddressInfo>();
+	
 
 	public GameServer(int outputPort, int inputPort, int sizeOfPeerCache,
 			int idBitLength, int gameOutPort, int gameInPort, double minX, double minY, double minZ,
@@ -298,6 +303,11 @@ public class GameServer extends BootstrapServer {
 			return null;
 
 	}
+	
+	public HashMap<String, GamePlayer> getResPlayers()
+	{
+		return this.respPlayer;
+	}
 
 
 //	public void addMobileResource(GameResourceMobile res) {
@@ -321,6 +331,45 @@ public class GameServer extends BootstrapServer {
 		if (this.respPlayer.containsKey(user)){
 			this.respPlayer.remove(user);
 		}
+	}
+	
+	
+	//aggiunto da jose' murga 09/06/2011
+	
+	public void addAddressInfo(String user,String ipAdd,int port)
+	{
+		try {
+			String id = SHA1.convertToHex(SHA1.calculateSHA1(user));
+			
+			if(this.addressinfo.containsKey(id))
+			{
+				AddressInfo addInfo=new AddressInfo(id,ipAdd,port);
+				
+				this.addressinfo.put(id, addInfo);
+				System.out.println("USER "+id);
+				
+			}
+			else
+			{
+				System.out.println("Already exist");
+				
+			}
+			
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public HashMap<String, AddressInfo> getAddressInfo()
+	{
+		return this.addressinfo;
+		
 	}
 
 //	//TODO: analogamente a quanto da fare per i giocatori
