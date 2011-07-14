@@ -5,11 +5,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
 import it.simplexml.message.MessageReader;
 import it.unipr.ce.dsg.p2pgame.network.NetPeerInfo;
+import it.unipr.ce.dsg.p2pgame.platform.AddressInfo;
 import it.unipr.ce.dsg.p2pgame.platform.GamePlayer;
 import it.unipr.ce.dsg.p2pgame.platform.GameServer;
 
@@ -118,9 +122,10 @@ public class GameServerMessageListener implements Runnable {
 		if (receivedMessage.getMessageType().equals("LOGOUT"))
 			this.logoutMessageAction(receivedMessage, os);
 
-
 		if (receivedMessage.getMessageType().equals("CHECKPOSITION"))
 			this.checkPositionMessageAction(receivedMessage, os);
+		if (receivedMessage.getMessageType().equals("USERSLISTREQUEST"))
+			this.usersListRequestAction(receivedMessage, os);
 //		if (receivedMessage.getMessageType().equals("LEAVERESP"))
 //			this.leaveResponsibilityMessageActino(receivedMessage, os);
 
@@ -159,6 +164,10 @@ public class GameServerMessageListener implements Runnable {
 		System.out.println("Verify that username " + registerMessage.getUserName() + " isn't already in use");
 
 		final String id = this.server.registerNewUser(registerMessage.getUserName(), registerMessage.getPassword());
+		
+		//aggiunto da jose' murga 09/06/2011
+		System.out.println("AddAddressInfo");
+		this.server.addAddressInfo(registerMessage.getUserName(),registerMessage.getSourceSocketAddr(),registerMessage.getSourcePort());
 
 		UserPeerMessage userPeer;
 		GamePlayer player = null;
@@ -235,8 +244,10 @@ public class GameServerMessageListener implements Runnable {
 		LoginPeerMessage loginMessage = new LoginPeerMessage(receivedMessage);
 
 		System.out.println("Verify that username " + loginMessage.getUserName() + " isn't already in use");
-
+		
 		String id = this.server.loginUser(loginMessage.getUserName(), loginMessage.getPassword(), false);
+		
+		
 
 		UserPeerMessage userPeer;
 
@@ -298,6 +309,44 @@ public class GameServerMessageListener implements Runnable {
 
 		}
 
+	}
+	
+	private void usersListRequestAction( Message receivedMessage, DataOutputStream os) throws IOException {
+		
+		UsersListRequestMessage usersListRequest=new UsersListRequestMessage(receivedMessage); 
+		
+		HashMap<String, AddressInfo> addressInfo=this.server.getAddressInfo();
+		
+		//creo la stringa
+		Iterator<String> iterator=addressInfo.keySet().iterator(); 
+		int s=addressInfo.size();
+		int i=0;
+		String list="";
+		while(iterator.hasNext())
+		{
+			AddressInfo info=addressInfo.get(iterator.next());
+				
+			String id=info.getId();
+			String ipadd=info.getIpAddress();
+			int port=info.getPort();
+			
+			//devo costruire la stringa
+			list+=id+","+ipadd+","+port;
+			if(i<(s-1))
+			{
+				list+="$";
+				
+			}
+			i++;
+			
+		}
+		System.out.println("NUMER OF USERS: "+addressInfo.size());
+		System.out.println("USERS: "+list);
+		//creo il messaggio con la lista degli indirizzi
+		UsersListMessage userlistmsg=new UsersListMessage(this.listenerId, this.listenerAddr, this.listenerPort,list);
+		//invio la risposta
+		os.write(userlistmsg.generateXmlMessageString().getBytes());
+		
 	}
 
 

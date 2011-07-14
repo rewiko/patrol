@@ -46,7 +46,7 @@ public class GameEvolutionEngine extends PrologEngine{
 	 		 
 	 {
 		 
-		 this.appendTheory("current_money("+cmoney+").");
+		 this.appendTheory("current_money("+(int)cmoney+")."); 
 		 
 		 String str_aux="[";
 		 
@@ -78,7 +78,7 @@ public class GameEvolutionEngine extends PrologEngine{
 		 
 		 this.appendTheory("current_qresources("+str_aux+").");
 		 
-		 this.appendTheory("required_exploration_money("+req_exp_money+").");
+		 this.appendTheory("required_exploration_money("+(int)req_exp_money+").");
 		 
 		 str_aux="[";
 		 for(int i=0;i<req_exp_res.size();i++)
@@ -111,7 +111,7 @@ public class GameEvolutionEngine extends PrologEngine{
 		 this.appendTheory("required_exploration_qresources("+str_aux+").");
 		 
 		 
-		 this.appendTheory("required_conquest_money("+req_conq_money+").");
+		 this.appendTheory("required_conquest_money("+(int)req_conq_money+").");
 		 
 		 str_aux="[";
 		 for(int i=0;i<req_conq_res.size();i++)

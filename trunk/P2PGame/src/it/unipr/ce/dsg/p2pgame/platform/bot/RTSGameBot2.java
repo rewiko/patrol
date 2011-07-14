@@ -19,6 +19,7 @@ import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
 import it.unipr.ce.dsg.p2pgame.platform.GameResource;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
+import it.unipr.ce.dsg.p2pgame.platform.bot.message.RTSBotMessageListener;
 
 public class RTSGameBot2 implements Runnable,InterfaceBot{
 	
@@ -84,6 +85,9 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
        
 		planets=new ArrayList<VirtualResource>();
 		
+		this.nres=0;
+		this.nrmobile=0;
+		
 	}
 
 	@Override
@@ -144,7 +148,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	        //pianeti
 	        for(int i=0;i<nplanets;i++)
 	        {
-	        	straux=brconf.readLine();
+	        	straux=brconf.readLine();	        	
 	        	String [] str_cord=straux.split(",");
 	        	VirtualResource planet=new VirtualResource();
 	        	planet.setOwnerID("null");
@@ -154,6 +158,14 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	        	planet.setY(Double.parseDouble(str_cord[1]));
 	        	planet.setZ(Double.parseDouble(str_cord[2]));
 	        	this.planets.add(planet);
+	        	
+	        }
+	        System.out.println("numero pianeti "+this.planets.size());
+	        //this.createEnememies();
+	        for(int i=0;i<this.planets.size();i++)
+	        {
+	        	VirtualResource planet=planets.get(i);
+	        	System.out.println("planet "+planet.getId()+" "+planet.getX()+" , "+planet.getY());
 	        	
 	        }
 	        	
@@ -182,6 +194,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 		this.owner=gp.getMyId();
 		this.ownerid=gp.getMyId();
+		
+		
+		//thread d'ascolto
+		Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,this.gp.getMyPeer().getIpAddress(),this.gp.getMyPeer().getPortNumber()));
 		System.out.println("STARTGAME POSX "+this.gp.getPlayer().getPosX()+" POSY "+this.gp.getPlayer().getPosY());
 		
 		//apro il file di profilo
@@ -218,9 +234,11 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			//EvolutionTheory
 			str=br.readLine();			
 			req_exp_money=Double.parseDouble(str);
+			System.out.println("req_exp_money " +req_exp_money);
+			
 			str=br.readLine();
 			String [] array_str=str.split(",");
-			
+			System.out.println("req_exp_res "+str);
 			
 			for(int i=0;i<array_str.length;i++)
 			{
@@ -229,6 +247,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			}					
 			
 			str=br.readLine();
+			System.out.println("req_exp_qres"+str);
 			array_str=str.split(",");
 			
 			for(int i=0;i<array_str.length;i++)
@@ -240,8 +259,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			
 			str=br.readLine();
 			req_conq_money=Double.parseDouble(str);
-			
+			System.out.println("req_conq_money"+ req_conq_money);
 			str=br.readLine();
+			
+			System.out.println("req_conq_res "+str);
 			array_str=str.split(",");			
 			
 			for(int i=0;i<array_str.length;i++)
@@ -251,6 +272,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			}
 			
 			str=br.readLine();
+			
+			System.out.println("req_conq_res "+str);
 			array_str=str.split(",");		
 			
 			for(int i=0;i<array_str.length;i++)
@@ -289,8 +312,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 		ArrayList<String> currentres=new ArrayList<String>();
 		
-		currentres.add("GameResource");
-		currentres.add("GameResourceMobile");
+		currentres.add("\"GameResource\"");
+		currentres.add("\"GameResourceMobile\"");
 		
 	
 		
@@ -710,8 +733,19 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	
 	public void setPlanetOwner(String idPlanet,String idOwner)
 	{
+		VirtualResource planet;
+		planet=this.getPlanetbyID(idPlanet);
+		if(planet!=null)
+		{
+			planet.setOwnerID(idOwner);	
+		}
+		else
+		{
+			
+			System.out.println(idPlanet+" non esiste");
+		}
 		
-		this.getPlanetbyID(idPlanet).setOwnerID(idOwner);
+		
 		
 	}
 	
@@ -720,11 +754,48 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 		for(int i=0;i<this.planets.size();i++)
 		{
-			if(this.planets.get(i).getId().equals(idPlanet))
-			return this.planets.get(i);
+			VirtualResource planet=this.planets.get(i);
+			if(planet.getId().equals(idPlanet))
+			return planet;
 		}
 		
 		return null;
+	}
+	
+	
+	public void createEnememies()
+	{
+		
+		int maxx=570;
+		int maxy=570;
+		
+		int gran=5;
+		
+		int x=gran;
+		int y=gran;
+		
+		while(x<maxx)
+		{
+			y=gran;
+			while(y<maxy)
+			{
+				VirtualResource enemy=new VirtualResource();
+				
+				enemy.setX(x);
+				enemy.setY(y);
+				enemy.setZ(0);
+				
+				enemy.setId("enemyID");
+				enemy.setOwnerID("enemyID");
+				enemy.setResType("GameResourceMobile");
+				
+				this.enemies.add(enemy);
+				y+=gran;
+			}
+			
+			x+=gran;
+		}
+		
 	}
 	
 	
