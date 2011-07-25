@@ -1,9 +1,14 @@
 package it.unipr.ce.dsg.p2pgame.platform.bot;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 
@@ -14,6 +19,7 @@ import it.simplexml.message.MessageReader;
 import it.simplexml.sender.MessageSender;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.MovementEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.VisibilityEngine;
+import it.unipr.ce.dsg.p2pgame.network.NetPeerInfo;
 import it.unipr.ce.dsg.p2pgame.platform.Attack;
 import it.unipr.ce.dsg.p2pgame.platform.Clash;
 import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
@@ -21,6 +27,7 @@ import it.unipr.ce.dsg.p2pgame.platform.GamePlayerResponsible;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
 import it.unipr.ce.dsg.p2pgame.platform.bot.message.PlanetConqueredMessage;
+import it.unipr.ce.dsg.p2pgame.platform.message.StartMatchMessage;
 import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 
 public class MovementThread implements Runnable{
@@ -227,6 +234,8 @@ public class MovementThread implements Runnable{
 						
 						if(res instanceof GamePlayerResponsible)
 						{
+							VIENE CAMBIATO
+							
 							String threadID=new Long(Thread.currentThread().getId()).toString();
 							GamePlayerResponsible player=(GamePlayerResponsible)res;
 						    this.mybot.getMyGamePeer().startMatch(player, player.getId(),0 , threadID); // da dove tiro fuori la quiantità?
@@ -284,14 +293,12 @@ public class MovementThread implements Runnable{
 							}
 						}
 						
-						//qua implemento il protocollo di clash
 						
 						
 						
 						
-						//startmatch
 						
-m						//defensematch
+						
 						
 						//decision
 				       }
@@ -519,6 +526,117 @@ m						//defensematch
 		System.out.println("arrived "+resid+": x=" +targetx+" y= "+targety);
 	}
 	
+	
+	public void startMatch(GamePlayerResponsible player, String resource, double quantity, String threadId)
+	{
+		
+		MultiLog.println(MovementThread.class.toString(), "Attacco " + player.getName());
+		//creo un nuovo oggetto Attack
+		NetPeerInfo oppositePeer = mybot.getMyGamePeer().getSharedInfos().getInfoFor(threadId);
+		
+		Attack attack = new Attack(quantity, resource);
+		
+		//creo il clash aggiungendo un nuovo attacco
+		if(mybot.getMyGamePeer().newAttack(player.getId(), player.getName(), attack))
+		{ //se creo senza problemi invio messaggio per iniziare match
+			
+			StartMatchMessage startMatch = new StartMatchMessage(mybot.getMyGamePeer().getMyId(),mybot.getMyGamePeer().getMyPeer().getIpAddress(), mybot.getMyGamePeer().getMyPeer().getPortNumber()+2,
+					mybot.getMyGamePeer().getPlayer().getId(), mybot.getMyGamePeer().getPlayer().getName(), mybot.getMyGamePeer().getPlayer().getSpatialPosition(), mybot.getMyGamePeer().getPlayer().getPosX(), mybot.getMyGamePeer().getPlayer().getPosY(), mybot.getMyGamePeer().getPlayer().getPosZ(), attack.getHash());
+
+			String responseStartMessage = MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, startMatch.generateXmlMessageString());
+			
+			//leggo la risposta
+			if (responseStartMessage.contains("ERROR")){
+				MultiLog.println(MovementThread.class.toString(), "Sending START MATCH ERROR !");
+				//System.out.println("Sending START MATCH ERROR !");
+			}
+			else {
+				MessageReader responseStartMessageReader = new MessageReader();
+				Message receivedStartMessageReader = responseStartMessageReader.readMessageFromString(responseStartMessage.trim());
+
+				AckMessage ackMessage = new AckMessage(receivedStartMessageReader);
+				if (ackMessage.getAckStatus() == 0){
+					MultiLog.println(MovementThread.class.toString(), "Now Match is started");
+					//System.out.println("Now Match is started");
+				}
+
+			}
+			
+			
+			//scontro iniziato!!!
+			//dopo che lo scontro è iniziato, il nemico deve decidere la sua mossa
+			//quindi devo rimanere in ascolto del suo messaggio che contiene la sua decisione in chiaro
+			//per fare questo posso implementare un ciclo che rimane in ascolto della risposta
+			
+			int port=0;
+			ServerSocket server=null;
+			Socket clientSocket = null;
+			try {
+				if (server == null)
+		                	server = new ServerSocket(port);
+
+		    } catch (IOException e) {
+				e.printStackTrace();
+		    }
+		    
+		    try {
+				clientSocket = server.accept();
+				String message = null;
+
+				DataInputStream is = new DataInputStream(clientSocket.getInputStream());
+				DataOutputStream os = new DataOutputStream(clientSocket.getOutputStream());
+				
+		        while(true){
+
+                    int current = 0;
+                    byte[] buf = new byte[100000];
+
+                    while (current < 1) {
+
+                    	int reader = is.read(buf);
+
+                    	if (reader != -1){
+                    		message = new String(buf);
+                    		current++;
+                    	}
+                    }
+
+                    clashMessageAction(message, os);
+
+                    is.close();
+                    os.close();
+                    clientSocket.close();
+                    break;
+                }
+		        
+				
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+
+			
+
+		}
+		else
+		{
+			MultiLog.println(MovementThread.class.toString(), "Attacco gia' in corso");
+			
+			
+		}
+		
+		
+			
+		
+	}
+	
+	private void clashMessageAction(String messageString, DataOutputStream os) throws IOException 
+	{
+		//da implementare
+		
+	}
 	
 	
 
