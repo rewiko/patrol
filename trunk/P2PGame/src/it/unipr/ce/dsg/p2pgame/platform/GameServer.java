@@ -339,14 +339,14 @@ public class GameServer extends BootstrapServer {
 	public void addAddressInfo(String user,String ipAdd,int port)
 	{
 		try {
-			String id = SHA1.convertToHex(SHA1.calculateSHA1(user));
+			String id =SHA1.convertToHex(SHA1.calculateSHA1(user));
 			
-			if(this.addressinfo.containsKey(id))
+			if(!this.addressinfo.containsKey(id))
 			{
 				AddressInfo addInfo=new AddressInfo(id,ipAdd,port);
 				
 				this.addressinfo.put(id, addInfo);
-				System.out.println("USER "+id);
+				System.out.println("USER "+id);//+" "+user);
 				
 			}
 			else

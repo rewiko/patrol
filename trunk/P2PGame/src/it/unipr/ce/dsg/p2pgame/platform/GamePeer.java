@@ -30,7 +30,7 @@ import it.unipr.ce.dsg.p2pgame.platform.message.UserPeerMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.UsersListMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.UsersListRequestMessage;
 import it.unipr.ce.dsg.p2pgame.util.MultiLog;
-import it.unipr.ce.dsg.p2pgame.util.SHA1;
+import it.unipr.ce.dsg.p2pgame.util.SHA1; 
 
 public class GamePeer extends NetPeer {
 

@@ -8,6 +8,7 @@ public class AddressInfo {
 	
 	public AddressInfo(String id,String ipAddress, int port) {
 		super();
+		this.id=id;
 		this.ipAddress = ipAddress;
 		this.port = port;
 	}
