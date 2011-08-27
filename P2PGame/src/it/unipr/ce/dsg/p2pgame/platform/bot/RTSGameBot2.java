@@ -8,10 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import it.unipr.ce.dsg.p2pgame.GUI.MessageSender;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.BuyResourceEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.ExtractionEngine;
+import it.unipr.ce.dsg.p2pgame.GUI.prolog.GameEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.GameEvolutionEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.MovementEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.VisibilityEngine;
@@ -59,6 +62,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	//atruttura dati che rappresenta i pianeti nello spazio
 	
 	ArrayList<VirtualResource> planets;
+	HashMap<String,UserInfo> loggedusers=null;
 	
 	
 	
@@ -92,6 +96,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 
 	@Override
 	public void run() {
+		
+		//////////////////////////INIZIALIZZAZIONE///////////////////////////////////
 		
 		//inizialmente imposto i parametri delle teorie
 		
@@ -152,6 +158,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	        	String [] str_cord=straux.split(",");
 	        	VirtualResource planet=new VirtualResource();
 	        	planet.setOwnerID("null");
+	        	planet.setOwnerName("null");
 	        	planet.setId("planet"+i);
 	        	planet.setResType("planet");
 	        	planet.setX(Double.parseDouble(str_cord[0]));
@@ -316,7 +323,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		currentres.add("\"GameResourceMobile\"");
 		
 	
-		
+		//////////////////////////////////////CICLO INFINITO///////////////////////////////////////
 		//poi entro nel ciclo infinito
 		int c=0;
 		while(true)
@@ -548,6 +555,89 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					
 				}
 				
+				
+				this.printMyPlanets();
+				//devo calcolare quanti pianeti sono stati conquistati da ogni giocatore
+				//aggiorno elenco dei giocatori
+				this.UpdateLoggedUsers();
+				
+				//dopo aver aggiornato l'elenco dei giocatori ottengo il loro numero
+				
+				
+				//ottengo un arrayList di tutti i giocatori loggati
+				ArrayList<String> players=new ArrayList<String>();
+				
+				Set<String> key_set=loggedusers.keySet();
+				Iterator<String> iterator=key_set.iterator();
+				
+				while(iterator.hasNext())
+				{
+					String iduser=iterator.next();
+					
+					UserInfo info=loggedusers.get(iduser);
+					//devo tener conto che  tuprolog ha problemi con le stringhe, non posso iniziare da un numero, quindi:
+					players.add("PLAYER"+info.getId()); //poi recupero la stringa originale
+					
+				}
+				
+				//conto quanti pianeti ha conquistato ogni giocatore
+				ArrayList<Integer> numberplanets=new ArrayList<Integer>();
+				
+				for(int i=0;i<players.size();i++)
+				{
+					int count=0;
+					for(int j=0;j<planets.size();j++)
+					{
+						VirtualResource planet=planets.get(j);
+						if(players.get(i).equals(planet.getOwnerID()))
+						{
+							count++;
+						}
+					}
+					numberplanets.add(new Integer(count));
+					
+				}
+
+				 GameEngine gameengine=new GameEngine("rules/gameTheory.pl");
+				 int nplanets=this.planets.size();
+				 
+				 gameengine.createGameTheory(players, numberplanets, nplanets);
+				//verifico se il goal del gioco e' stato ragiunto!!!
+				//se e' cosi' determino il vincitore e finisce il gioco 
+				 
+				 if(gameengine.gameover())//se il gioco e' finito perche' qualcuno ha raggiunto l'obiettivo
+				 {
+					 String winner=gameengine.getGameWinner(); //ricavo l'id del vincitore
+					 
+					 //devo togliere la parola PLAYER
+					 String idwinner=winner.substring(6);
+					 
+					 System.out.println("Gioco finito");
+					 if(gp.getMyId().equals(idwinner)) //se sono io il vincitore ....
+					 {
+						 System.out.println(" HO VINTO");
+						 
+					 }
+					 else
+					 {
+						 System.out.println("ha vinto giocatore "+idwinner);
+						 
+					 }
+					 
+					 //meccanismo per uscire del gioco e della rete
+				 }
+				 
+				 //ora devo verificare se ho ancora delle risorse, se non ho più nessuna risorsa vuol dire che sono stato annientato e quindi devo usicre del gioco
+				 //faccio una teori per verificarlo in casi piu' complessi????
+				 int nresources=this.gp.getMyResources().size();
+				 
+				 if(nresources==0)
+				 {
+					 System.out.println("SONO STATO ANNIENTATO, HO PERSO");
+					 //meccanismo di uscita del gioco
+				 }
+				
+				//da  fare
 		
 				
 			} catch (InterruptedException e) {
@@ -731,20 +821,24 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 	}
 	
-	public void setPlanetOwner(String idPlanet,String idOwner)
+	public void setPlanetOwner(String idPlanet,String idOwner,String nameOwner)
 	{
-		VirtualResource planet;
+		/*VirtualResource planet;
 		planet=this.getPlanetbyID(idPlanet);
 		if(planet!=null)
 		{
-			planet.setOwnerID(idOwner);	
+			planet.setOwnerID(idOwner);
+			planet.setOwnerName(nameOwner);
 		}
 		else
 		{
 			
 			System.out.println(idPlanet+" non esiste");
 		}
+		*/
 		
+		this.getPlanetbyID(idPlanet).setOwnerID(idOwner);
+		this.getPlanetbyID(idPlanet).setOwnerName(nameOwner);
 		
 		
 	}
@@ -798,6 +892,118 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 	}
 	
+	public boolean createResource(String idRes)
+	{
+		//compro risorsa di difesa
+		double qt=this.getCurrentMoney();
+		int multiplicity=(int) (qt/this.resmincost);
+		if(multiplicity>0)
+		{
+			qt=multiplicity*this.resmincost; //uso la stessa variabile
+			String timestamp = Long.toString(System.currentTimeMillis());
+			this.nres++;
+			//res.add(new GameResource("id"+this.nres,"defense",1.0));
+			
+			GameResource dif = new GameResource(idRes, "Defense" + timestamp, resmincost);
+            this.gp.addToMyResource(dif);
+			//currentmoney-=1000;
+			this.decrementMoney(qt);
+			System.out.println("###########nuova risorsa di difesa####################");
+			
+			return true;
+			
+		}
+		else
+		{
+			System.out.println("NON HO SOLDI PER COMPRARE DIFFESE");
+			return false;
+		}
+		
+	}
+	
+	public GameResource getLastGameResource()
+	{
+		GameResource res=null;
+		ArrayList<Object> resources=this.gp.getMyResources();
+		
+		int i=resources.size()-1;
+		
+		while(i>=0)
+		{
+			Object aux=resources.get(i);
+			if(aux instanceof GameResourceMobile)
+			{
+				i--;
+			}
+			else if(aux instanceof GameResourceEvolve)
+			{
+				i--;
+			}
+			else
+			{
+				res=(GameResource)aux;
+				i=-1;
+			}
+			
+		}
+		
+		
+		return res;
+	}
+	
+	public void UpdateLoggedUsers()
+	{
+		this.loggedusers=new HashMap<String,UserInfo>();
+		ArrayList<String> usersList=this.getMyGamePeer().getLoggedUsersList();
+		if(!usersList.isEmpty())// se ci sono degli utenti nella lista invio i messaggi
+		{
+			System.out.println("NUMBER OF USERS: "+usersList.size());
+			for(int u=0;u<usersList.size();u++)
+			{
+				String str_user=usersList.get(u);
+				
+				System.out.println("USERS: "+str_user);
+				String[] array_user=str_user.split(",");
+				String userid=array_user[0]; // mi serve ???
+				String userip=array_user[1];
+				String userport=array_user[2];
+				
+				UserInfo info=new UserInfo(userid,userip,Integer.parseInt(userport));
+				loggedusers.put(userid,info);
+				
+			}
+			
+		}
+	}
+	
+	public HashMap<String,UserInfo> getLoggedUsers()
+	{
+		return this.loggedusers;
+	}
+	
+	public UserInfo getLoggedUserInfo(String id)
+	{
+		return this.loggedusers.get(id);
+		
+	}
+	
+	public void printMyPlanets()
+	{
+		System.out.println("PIANETI CONQUISTATI");
+		
+		for(int i=0;i<this.planets.size();i++)
+		{
+			VirtualResource planet=this.planets.get(i);
+			
+			if(planet.getOwnerID().equals(this.ownerid))
+			{
+				System.out.println(planet.getId());
+				
+			}
+			
+		}
+		
+	}
 	
 
 }

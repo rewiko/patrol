@@ -312,4 +312,11 @@ public class GameResourceMobile extends GameResource {
 			this.resourceVision.add(pos, obj);
 
 	}
+	
+	//aggiunto da jose' murga 15/08/2011
+	public String getThreadId()
+	{
+		return this.threadId;
+	}
+	
 }

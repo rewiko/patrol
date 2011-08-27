@@ -29,6 +29,7 @@ public class StartMatchMessage extends Message {
 	private double posZ;
 
 	private String hash;
+	private String resourceId;
 //	private double vel;
 //	private double vis;
 //
@@ -48,13 +49,13 @@ public class StartMatchMessage extends Message {
 	 * @param peerPort info with the port of peer
 	 *
 	 */
-	public StartMatchMessage(String sourceName, String sourceSocketAddr, int sourcePort, String id, String username,
+	public StartMatchMessage(String sourceName, String sourceSocketAddr, int sourcePort,String resourceId,  String id, String username,
 			String position, double x, double y, double z, String hash) {
 
 		super(sourceName,sourceSocketAddr,sourcePort);
 
 		this.setMessageType("STARTMATCH");
-		this.PARAMETERS_NUM = 10;
+		this.PARAMETERS_NUM = 11;
 
 		this.getParametersList().add(new Parameter("id", id));
 		this.getParametersList().add(new Parameter("username", username));
@@ -63,6 +64,8 @@ public class StartMatchMessage extends Message {
 		this.getParametersList().add(new Parameter("y", new Double(y).toString()));
 		this.getParametersList().add(new Parameter("z", new Double(z).toString()));
 		this.getParametersList().add(new Parameter("hash", hash));
+		this.getParametersList().add(new Parameter("resourceid", resourceId));
+		
 
 		this.id = id;
 		this.userName = username;
@@ -71,6 +74,7 @@ public class StartMatchMessage extends Message {
 		this.posY = y;
 		this.posZ = z;
 		this.hash = hash;
+		this.resourceId=resourceId;
 	}
 
 	/**
@@ -86,7 +90,7 @@ public class StartMatchMessage extends Message {
 		super(message.getSourceName(), message.getSourceSocketAddr(), message.getSourcePort());
 
 		this.setMessageType("STARTMATCH");
-		this.PARAMETERS_NUM = 10;
+		this.PARAMETERS_NUM = 11;
 
 		//System.out.println("par size received " + this.getParametersList().size());
 
@@ -103,6 +107,7 @@ public class StartMatchMessage extends Message {
 		this.posY = Double.parseDouble(this.getParametersList().get(7).getValue());
 		this.posZ = Double.parseDouble(this.getParametersList().get(8).getValue());
 		this.hash = this.getParametersList().get(9).getValue();
+		this.resourceId=this.getParametersList().get(10).getValue();
 	}
 
 	public String getUserName() {
@@ -127,6 +132,15 @@ public class StartMatchMessage extends Message {
 
 	public void setPosition(String position) {
 		this.positionHash = position;
+	}
+	
+	public void setResourceId(String resourceId){
+		this.resourceId=resourceId;
+	}
+	
+	public String getResourceId()
+	{
+		return this.resourceId;
 	}
 
 	public String getPositionHash() {
@@ -168,6 +182,8 @@ public class StartMatchMessage extends Message {
 	public void setHash(String hash) {
 		this.hash = hash;
 	}
+	
+	
 
 
 }

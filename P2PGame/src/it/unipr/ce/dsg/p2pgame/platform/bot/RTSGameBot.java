@@ -572,6 +572,54 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 		
 		return null;
 	}
+
+	@Override
+	public ArrayList<VirtualResource> getPlanets() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPlanetOwner(String idPlanet, String idOwner) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public VirtualResource getPlanetbyID(String idPlanet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void createResource(String idRes) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public GameResource getLastGameResource() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void UpdateLoggedUsers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public HashMap<String, UserInfo> getLoggedUsers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserInfo getLoggedUserInfo(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }

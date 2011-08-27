@@ -110,9 +110,9 @@ public class GameEngine extends PrologEngine{
 		ArrayList<Integer> conq=new ArrayList<Integer>();
 		
 		conq.add(new Integer(3));
-		conq.add(new Integer(4));
+		conq.add(new Integer(5));
 		conq.add(new Integer(2));
-		conq.add(new Integer(4));
+		conq.add(new Integer(3));
 		
 		int total= 13;
 		

@@ -2,17 +2,19 @@ package it.unipr.ce.dsg.p2pgame.platform.bot;
 
 public class VirtualResource {
 	
-	String resType;
-	String ownerID;
-	String id;
-	double x;
-	double y;
-	double z;
+	private String resType;
+	private String ownerID;
+	private String ownerName;
+	private String id;	
+	private double x;
+	private double y;
+	private double z;
 	
-	public VirtualResource(String resType,String id, String ownerID, double x, double y,double z) {
+	public VirtualResource(String resType,String id, String ownerID,String ownerName, double x, double y,double z) {
 		
 		this.resType = resType;
 		this.ownerID = ownerID;
+		this.ownerName=ownerName;
 		this.id=id;
 		this.x = x;
 		this.y = y;
@@ -71,6 +73,14 @@ public VirtualResource() {
 		
 		
 	}
+public String getOwnerName() {
+	return ownerName;
+}
+
+public void setOwnerName(String ownerName) {
+	this.ownerName = ownerName;
+}
+
 	
 	
 	
