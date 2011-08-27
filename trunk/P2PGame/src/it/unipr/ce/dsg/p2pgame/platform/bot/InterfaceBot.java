@@ -1,8 +1,10 @@
 package it.unipr.ce.dsg.p2pgame.platform.bot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
+import it.unipr.ce.dsg.p2pgame.platform.GameResource;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 
 public interface InterfaceBot {
@@ -22,9 +24,18 @@ public interface InterfaceBot {
 	
 	ArrayList<VirtualResource> getPlanets();
 	
-	void setPlanetOwner(String idPlanet,String idOwner);
+	void setPlanetOwner(String idPlanet,String idOwner,String nameOwner);
 	
 	VirtualResource getPlanetbyID(String idPlanet);
 
+	boolean createResource(String idRes);
+	
+	GameResource getLastGameResource();
+	
+	void UpdateLoggedUsers();
+	
+	HashMap<String,UserInfo> getLoggedUsers();
+	
+	UserInfo getLoggedUserInfo(String id);
 	
 }

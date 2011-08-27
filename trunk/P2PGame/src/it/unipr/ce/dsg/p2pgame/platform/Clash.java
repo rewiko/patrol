@@ -9,13 +9,13 @@ public class Clash {
 //	public final static int HASH = 0;
 //	public final static int DEFENSE = 1;
 //	public final static int END = 2;
-	enum Phase {
+public	enum Phase {
 		HASH,
 		DEFENSE,
 		END
 	};
 
-	enum Result {
+public	enum Result {
 		WIN,
 		LOSE
 	};
@@ -26,7 +26,7 @@ public class Clash {
 	private ArrayList<Object> myMoves;
 	private ArrayList<Object> otherPlayerMoves;
 	private ArrayList<String> hash;
-	private ArrayList<Integer> results;
+	private ArrayList<Result> results;
 	private ArrayList<String> timing;
 
 	private String otherPlayer;
@@ -43,7 +43,7 @@ public class Clash {
 
 		this.myMoves = new ArrayList<Object>();
 		this.otherPlayerMoves = new ArrayList<Object>();
-		this.results = new ArrayList<Integer>();
+		this.results = new ArrayList<Result>();
 		this.hash = new ArrayList<String>();
 
 	}
@@ -65,8 +65,8 @@ public class Clash {
 
 	}
 
-	public void addResult(int res){
-		this.results.add(res);
+	public void addResult(Result win){
+		this.results.add(win);
 	}
 
 	public void addHash(String hash){
@@ -89,11 +89,11 @@ public class Clash {
 		this.otherPlayerMoves = otherPlayerMoves;
 	}
 
-	public ArrayList<Integer> getResults() {
+	public ArrayList<Result> getResults() {
 		return results;
 	}
 
-	public void setResults(ArrayList<Integer> results) {
+	public void setResults(ArrayList<Result> results) {
 		this.results = results;
 	}
 
@@ -142,6 +142,8 @@ public class Clash {
 	}
 
 	//TODO: per calcolare il vincitore
+	//Jose' Murga 05/08/2011
+	//si calcola in base alla quantità di risorsa coinvolta nello scontro. Se la quantità è uguale entrambi perdono
 	public void closeClash(){
 		int pos = this.myMoves.size();
 
@@ -150,7 +152,21 @@ public class Clash {
 			Defense my = (Defense) this.myMoves.get(pos);
 
 			//TODO : calcolo del vincitore
-
+			double otherquantity=other.getQuantity();
+			double myquantity=my.getQuantity();
+			
+			if(myquantity>otherquantity)
+			{
+				this.addResult(Result.WIN);
+			}
+			else
+			{
+				this.addResult(Result.LOSE);
+				
+			}
+			
+			
+			
 
 		}
 		else{
@@ -158,6 +174,18 @@ public class Clash {
 			Defense other = (Defense) this.myMoves.get(pos);
 
 			//TODO: calcolo del vincitore
+			double otherquantity=other.getQuantity();
+			double myquantity=my.getQuantity();
+			
+			if(myquantity>otherquantity)
+			{
+				this.addResult(Result.WIN);
+			}
+			else
+			{
+				this.addResult(Result.LOSE);
+				
+			}
 		}
 	}
 

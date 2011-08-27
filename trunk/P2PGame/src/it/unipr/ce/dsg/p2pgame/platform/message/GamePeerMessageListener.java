@@ -5,15 +5,20 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
 import it.simplexml.message.MessageReader;
 import it.simplexml.sender.MessageSender;
 import it.unipr.ce.dsg.p2pgame.platform.Attack;
+import it.unipr.ce.dsg.p2pgame.platform.Clash.Result;
 import it.unipr.ce.dsg.p2pgame.platform.Defense;
 import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
 import it.unipr.ce.dsg.p2pgame.platform.GamePlayerResponsible;
+import it.unipr.ce.dsg.p2pgame.platform.GameResource;
+import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
+import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
 import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 
@@ -895,9 +900,60 @@ public class GamePeerMessageListener implements Runnable {
 
 			//MultiLog.println(GamePeerMessageListener.class.toString(), "Attack RECEIVED");
 			//System.out.println("Attack RECEIVED");
+			//jose' murga 01/08/2011
 			
+			
+			String resource=startMatch.getResourceId();
+			if(resource.equals(this.peer.getMyId()))
+			{
+				//ottengo il primo GameResource
+				GameResource res=null;
+				ArrayList<Object> resources=this.peer.getMyResources();
+				
+				int i=resources.size()-1;
+				
+				while(i>=0)
+				{
+					Object aux=resources.get(i);
+					if(aux instanceof GameResourceMobile)
+					{
+						i--;
+					}
+					else if(aux instanceof GameResourceEvolve)
+					{
+						i--;
+					}
+					else
+					{
+						res=(GameResource)aux;
+						i=-1;
+					}
+					
+				}
+				
+				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
+				
+				//dopo aver inviato l'ack, inizio la risposta
+				//threadId del nemico
+				//metto come id della risorsa l'id del peer
+				this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
+				
+				
+			}
+			else
+			{
+				GameResourceMobile res=this.peer.getMyMobileResourceFromId(resource);
+				
 
-			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
+				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
+				
+				//dopo aver inviato l'ack, inizio la risposta
+				//threadId del nemico
+				this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),res.getId(),res.getQuantity() , threadId,res.getX(),res.getY(),res.getZ());
+			}
+			
+		    
+			
 
 		}
 		else {
@@ -929,6 +985,46 @@ public class GamePeerMessageListener implements Runnable {
 			os.write(clearMessage.generateXmlMessageString().getBytes());
 
 			this.peer.closeMatch(defenseMessage.getId());
+			
+			//so che lo scontro e' finito, quindi controllo l'esito
+			ArrayList<Result> results=this.peer.getClashes().get(defenseMessage.getId()).getResults();
+			int sz=results.size();
+			Result result=results.get(sz-1);
+			if(result==Result.WIN)
+			{
+				System.out.println("Ho vinto");
+				
+			}
+			else
+			{
+				System.out.println("Ho perso");
+				//tolgo il gameresource coinvolto nello scontro
+				GameResource res=null;
+				ArrayList<Object> resources=this.peer.getMyResources();
+				
+				int i=resources.size()-1;
+				
+				while(i>=0)
+				{
+					Object aux=resources.get(i);
+					if(aux instanceof GameResourceMobile)
+					{
+						i--;
+					}
+					else if(aux instanceof GameResourceEvolve)
+					{
+						i--;
+					}
+					else
+					{
+						res=(GameResource)aux;
+						i=-1;
+					}
+					
+				}
+				this.peer.removeToMyResources(res);
+				
+			}
 
 		}
 		else {
