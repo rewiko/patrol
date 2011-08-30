@@ -18,6 +18,7 @@ import it.unipr.ce.dsg.p2pgame.GUI.prolog.GameEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.GameEvolutionEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.MovementEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.VisibilityEngine;
+import it.unipr.ce.dsg.p2pgame.GUI.prolog.util.Resource;
 import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
 import it.unipr.ce.dsg.p2pgame.platform.GameResource;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
@@ -44,6 +45,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	private String configuration;
 	private double resmincost;
 	private int period_movement;
+	private int period_loop;
+	private int prob_buy_mobile_resource;
 	private int probattack;
 	private int probdefense;
 	
@@ -85,7 +88,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		this.profile=profile;
 		this.configuration=conf;
 		
-		this.resmincost=10;
+		this.resmincost=0;
        
 		planets=new ArrayList<VirtualResource>();
 		
@@ -147,6 +150,13 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	        straux=brconf.readLine();
 	        this.gran=Double.parseDouble(straux);
 	        
+	        
+	        //lunghezza dello spazio la considero la differenza tra le coordinate massima e minima di x
+	        this.L=this.maxX-this.minX;
+	        
+	        //costo minimo di acquisto di una risorsa
+	        straux=brconf.readLine();
+	        this.resmincost=Double.parseDouble(straux);
 	        //spazio
 	        
 	        straux=brconf.readLine();
@@ -196,7 +206,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//0,575,0,575,0,0, 1,10, 5
 		//minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran
 		//startgame
-		this.gp.startGame(0,575,0,575,0,0, 1,10, 5);
+		this.gp.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
 		
 		
 		this.owner=gp.getMyId();
@@ -204,7 +214,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 		
 		//thread d'ascolto
-		Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,this.gp.getMyPeer().getIpAddress(),this.gp.getMyPeer().getPortNumber()));
+		Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,this.gp.getMyPeer().getIpAddress(),this.gp.getMyPeer().getPortNumber()+7));
+		botListener.start();
 		System.out.println("STARTGAME POSX "+this.gp.getPlayer().getPosX()+" POSY "+this.gp.getPlayer().getPosY());
 		
 		//apro il file di profilo
@@ -233,10 +244,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			str=br.readLine();
 			boolean isinf=Boolean.parseBoolean(str);
 			str=br.readLine();
-			int current=Integer.parseInt(str);
+			double current=Double.parseDouble(str);
 			
 			//create the extraction theory
-			ee.createExtractTheory(per,val,isinf,current);
+			ee.createExtractTheory(per,val,isinf,(int)current);
 			
 			//EvolutionTheory
 			str=br.readLine();			
@@ -280,7 +291,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			
 			str=br.readLine();
 			
-			System.out.println("req_conq_res "+str);
+			System.out.println("req_conq_qres "+str);
 			array_str=str.split(",");		
 			
 			for(int i=0;i<array_str.length;i++)
@@ -289,9 +300,15 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				req_conq_qres.add(new Integer(int_aux));
 			}
 			
-			//period movement
 			str=br.readLine();
+			this.period_loop=Integer.parseInt(str);
+			//period movement
+			 str=br.readLine();
 			 this.period_movement=Integer.parseInt(str);
+			 
+			 //probabilta' di comprare risorsa mobile
+			 str=br.readLine();
+			 this.prob_buy_mobile_resource=Integer.parseInt(str);
 						
 			
 		} catch (FileNotFoundException e) {
@@ -308,19 +325,37 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//creo l'oggetto ResourceEvolve
 		double offset=(double)this.ee.getAccValue();
 		final long period=(long)this.ee.getPeriod();
-		double quantity=(double)this.ee.getCurrentResource();
-		GameResourceEvolve revolve=new GameResourceEvolve("moneyEvolveble", "Money", quantity, period, offset);
+		boolean isinf=this.ee.isInfinite();
+		//double quantity=(double)this.ee.getCurrentResource();
+		
+		GameResourceEvolve revolve;
+		double money_in_deposit=0;
+		if(ee.isInfinite()) // se e' infinito lasciamo che il thread di resource evolve accumuli risorse
+		{
+			revolve=new GameResourceEvolve("moneyEvolveble", "Money", 0, period, offset);
+		}
+		else //altrimenti l'accumulo lo gestiamo noi
+		{
+			revolve=new GameResourceEvolve("moneyEvolveble", "Money", 0, period, 0);
+			money_in_deposit=(double)this.ee.getCurrentResource();
+		}
+		
+		
 		this.gp.addToMyResource(revolve);
-		//ottengo da gp informazioni sulle risorse e i soldi a disposizione
-		//ArrayList<Object> res=gp.getMyResources(); // poi verifico le risorse sulla lista tranne moneyEvolve
 		
-		//aggiungere un solo oggetto GameResource usando messagesender
+		//////
+		ArrayList<Resource> buyresources = new ArrayList<Resource>();
+		Resource r1 = new Resource();
+        r1.setName("GameResource");
+        r1.setCost((int)this.resmincost);
+        buyresources.add(r1);
+        
+        
+        Resource r2 = new Resource();
+        r2.setName("GameResourceMobile");
+        r2.setCost((int)this.resmincost);
+		buyresources.add(r2);
 		
-		
-		ArrayList<String> currentres=new ArrayList<String>();
-		
-		currentres.add("\"GameResource\"");
-		currentres.add("\"GameResourceMobile\"");
 		
 	
 		//////////////////////////////////////CICLO INFINITO///////////////////////////////////////
@@ -329,20 +364,31 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		while(true)
 		{
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(this.period_loop);
 				c++;
 				System.out.println("@@@@@@@@@@@@@@@@@@@ ciclo "+c+"@@@@@@@@@@@@@@@@ò");
 				
-				ArrayList<Integer> currentqres=new ArrayList<Integer>(); 
-				currentqres.add(new Integer(nres));
-				currentqres.add(new Integer(nrmobile));
 				
-				/*if(ee.isInfinite())
+				
+				if(!ee.isInfinite())
 				{
+					if(!ee.stopExtraction((int)money_in_deposit))
+					{
+						this.incrementMoney(offset);
+						money_in_deposit-=offset;
+					}
 					
-					this.incrementMoney(resmobcost);
 					
-				}*/
+				}
+				
+				ArrayList<String> currentres=new ArrayList<String>();
+				
+				currentres.add("\"GameResource\"");
+				currentres.add("\"GameResourceMobile\"");
+				
+				ArrayList<Integer> currentqres=new ArrayList<Integer>(); 
+				currentqres.add(new Integer(this.nres));
+				currentqres.add(new Integer(this.nrmobile));
 				
 				
 				currentmoney=this.gp.getMyResourceFromId("moneyEvolveble").getQuantity();
@@ -398,12 +444,46 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				if(randombuy<probbuy)
 				{
 					
-					int xx=(int)(Math.random()*10);
-					System.out.println("random "+xx);
-					//if((xx%2)==0)
-					if(xx>=3)	
+					int random_res=(int)(Math.random()*100);
+					System.out.println("random "+random_res);
+										
+					if(random_res<=this.prob_buy_mobile_resource)	////modifica, aggiungere queste probabilita' al profilo del giocatore
 					{
-						double qt=this.getCurrentMoney();
+						
+						this.bre=new BuyResourceEngine("rules/buyResourceTheory.pl");					
+						double qt=this.getCurrentMoney();					
+						bre.createBuyResourceTheory(buyresources, "GameResourceMobile", (int)qt, currentres, currentqres);
+						
+						if(bre.buyResource())
+						{
+							int multiplicity=(int) (qt/this.resmincost);
+							if(multiplicity>0)
+							{
+								qt=multiplicity*this.resmincost; //uso la stessa variabile
+								
+								//compro risorsa mobile
+								String timestamp = Long.toString(System.currentTimeMillis());
+								this.nrmobile++;						
+								
+								
+								this.gp.createMobileResource("Attack" + timestamp, qt);
+								//lo status per default è false
+								
+								
+								//status.put("m"+timestamp, new Boolean(false)); // devo salvare anche l'ID
+								//currentmoney-=resmobcost;
+								this.decrementMoney(qt);
+								System.out.println("###################nuova risorsa mobile##################");
+								
+								
+							}
+						}
+						else
+						{
+							System.out.println("NON HO ABBASTANZA SOLDI");
+							
+						}
+						/*****
 						int multiplicity=(int) (qt/this.resmincost);
 						if(multiplicity>0)
 						{
@@ -414,7 +494,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 							this.nrmobile++;						
 							
 							
-							this.gp.createMobileResource("Attack" + timestamp, this.resmincost);
+							this.gp.createMobileResource("Attack" + timestamp, qt);
 							//lo status per default è false
 							
 							
@@ -425,6 +505,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 							
 							
 						}
+						
+						/*****/
 							
 						
 						
@@ -432,6 +514,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					else
 					{
 						//compro risorsa di difesa
+						
+						/*****
 						double qt=this.getCurrentMoney();
 						int multiplicity=(int) (qt/this.resmincost);
 						if(multiplicity>0)
@@ -441,11 +525,42 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 							this.nres++;
 							//res.add(new GameResource("id"+this.nres,"defense",1.0));
 							
-							GameResource dif = new GameResource("def" + timestamp, "Defense" + timestamp, resmincost);
+							GameResource dif = new GameResource("def" + timestamp, "Defense" + timestamp, qt);
 			                this.gp.addToMyResource(dif);
 							//currentmoney-=1000;
 							this.decrementMoney(qt);
 							System.out.println("###########nuova risorsa di difesa####################");
+							
+						}
+						
+						/*****/
+						
+						this.bre=new BuyResourceEngine("rules/buyResourceTheory.pl");					
+						double qt=this.getCurrentMoney();					
+						bre.createBuyResourceTheory(buyresources, "GameResource", (int)qt, currentres, currentqres);
+						
+						if(bre.buyResource())
+						{
+							int multiplicity=(int) (qt/this.resmincost);
+							if(multiplicity>0)
+							{
+								qt=multiplicity*this.resmincost; //uso la stessa variabile
+								String timestamp = Long.toString(System.currentTimeMillis());
+								this.nres++;
+								//res.add(new GameResource("id"+this.nres,"defense",1.0));
+								
+								GameResource dif = new GameResource("def" + timestamp, "Defense" + timestamp, qt);
+				                this.gp.addToMyResource(dif);
+								//currentmoney-=1000;
+								this.decrementMoney(qt);
+								System.out.println("###########nuova risorsa di difesa####################");
+								
+								
+							}
+						}
+						else
+						{
+							System.out.println("NON HO ABBASTANZA SOLDI");
 							
 						}
 						
@@ -516,7 +631,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 									mx=mx+this.gp.getPlayer().getPosX();
 									my=my+this.gp.getPlayer().getPosY();
 									
-									if((mx>=0&&mx<=575)&&(my>=0&&my<=575))
+									if((mx>=this.minX&&mx<=this.maxX)&&(my>=this.minY&&my<=this.maxY))
 									{
 										mband=true;
 									}
@@ -860,10 +975,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	public void createEnememies()
 	{
 		
-		int maxx=570;
-		int maxy=570;
+		int maxx=(int)this.maxX;
+		int maxy=(int)this.maxY;
 		
-		int gran=5;
+		int gran=(int)this.gran;
 		
 		int x=gran;
 		int y=gran;

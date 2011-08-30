@@ -47,9 +47,9 @@ public class MovementThread implements Runnable{
 	private double xx,yy,zz;
 	private double visResource=2;
 	private double radiusPlanet=10;
-	FileOutputStream fos;
-	File file;
-	PrintStream ps;
+	//FileOutputStream fos;
+	//File file;
+	//PrintStream ps;
 	public MovementThread(InterfaceBot mybot,String resid,double targetx,double targety,int period)
 	{   //bisogna aggiungere parametro per area di gioco
 		runner=new Thread(this);
@@ -59,14 +59,15 @@ public class MovementThread implements Runnable{
 		this.targety=targety;
 		this.period=period;
 		runner.start();
-		file=new File("log/"+this.resid+".txt");
+		/*file=new File("log/"+this.resid+".txt");
 		try {
 			fos=new FileOutputStream(file,true);
 			ps=new PrintStream(fos);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		
 		
 		
 		
@@ -269,7 +270,7 @@ public class MovementThread implements Runnable{
 									info=this.mybot.getLoggedUserInfo(player.getId());
 								}
 								
-								//ancora da decidere cosa fare in questo caso
+								
 								this.mybot.getMyGamePeer().startMatch(player.getId(),player.getName(),info.getIp(),info.getPort(), player.getId(),grm.getId() ,grm.getQuantity(), threadID,player.getPosX(),player.getPosY(),player.getPosZ());
 								//attendere esito dello scontro
 								ArrayList<Result> results=this.mybot.getMyGamePeer().getClashes().get(player.getId()).getResults();
@@ -321,9 +322,9 @@ public class MovementThread implements Runnable{
 								{
 									System.out.println("Ho perso");
 									this.mybot.getMyGamePeer().removeToMyResources(grm);
-									
+									break;
 								}
-								break;
+								
 							}
 						
 						
@@ -356,8 +357,8 @@ public class MovementThread implements Runnable{
 						{
 							System.out.println("PIANETA");
 							System.out.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
-							ps.println("PIANETA");
-							ps.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
+							//ps.println("PIANETA");
+							//ps.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
 							
 							if(planet.getOwnerID().equals("null")) // se il pianeta non è stato conquistato da qualcuno
 							{
@@ -387,7 +388,7 @@ public class MovementThread implements Runnable{
 											{
 												PlanetConqueredMessage message=new PlanetConqueredMessage(this.mybot.getMyGamePeer().getMyId(),
 												this.mybot.getMyGamePeer().getMyPeer().getIpAddress(),
-												this.mybot.getMyGamePeer().getMyPeer().getPortNumber(),this.mybot.getOwnerid(),this.mybot.getMyGamePeer().getPlayer().getName(),planet.getId());
+												this.mybot.getMyGamePeer().getMyPeer().getPortNumber()+7,this.mybot.getOwnerid(),this.mybot.getMyGamePeer().getPlayer().getName(),planet.getId());
 												
 												String responseMessage=MessageSender.sendMessage(userip,userport,message.generateXmlMessageString());
 												
