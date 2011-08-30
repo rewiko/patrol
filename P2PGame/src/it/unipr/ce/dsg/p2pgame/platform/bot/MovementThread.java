@@ -456,6 +456,9 @@ public class MovementThread implements Runnable{
 									{
 										System.out.println("Ho vinto");
 										
+										this.mybot.setPlanetOwner(planet.getId(), "null", "null");//prima di conquistare il pianeta cancello
+																								  //il proprietario precedente
+										
 										if(this.mybot.createResource(planet.getId()))
 										{
 											System.out.println("CONQUISTO IL PIANETA "+planet.getId());
