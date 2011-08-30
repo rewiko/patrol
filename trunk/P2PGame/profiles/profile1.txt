@@ -1,5 +1,5 @@
-1000
-1
+2000
+5
 true
 0
 0
@@ -8,4 +8,6 @@ true
 0
 "GameResource","GameResourceMobile"
 3,7
-2
+5000
+500
+60
