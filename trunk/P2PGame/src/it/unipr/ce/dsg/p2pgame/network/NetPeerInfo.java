@@ -51,6 +51,8 @@ public class NetPeerInfo {
 	 *
 	 */
 	public String getIpAddress() {
+		
+		//System.out.println("#######NET PEER INFO GETIPADDRESS###########");
 		return ipAddress;
 	}
 

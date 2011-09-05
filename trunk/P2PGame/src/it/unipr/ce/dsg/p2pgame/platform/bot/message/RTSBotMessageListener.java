@@ -3,7 +3,7 @@ package it.unipr.ce.dsg.p2pgame.platform.bot.message;
 import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
 import it.simplexml.message.MessageReader;
-import it.unipr.ce.dsg.p2pgame.platform.bot.RTSGameBot2;
+import it.unipr.ce.dsg.p2pgame.platform.bot.RTSGameBot;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,9 +18,9 @@ public class RTSBotMessageListener implements Runnable{
 	private String listenerId;
 	private String listenerAddr;
 	
-	private RTSGameBot2 mybot;
+	private RTSGameBot mybot;
 	
-	public RTSBotMessageListener(RTSGameBot2 bot,String id,String address, int port)
+	public RTSBotMessageListener(RTSGameBot bot,String id,String address, int port)
 	{
 		this.mybot=bot;
 		this.port=port;
@@ -110,7 +110,7 @@ public class RTSBotMessageListener implements Runnable{
 		 String playerName=planetmessage.getNamePlayer();
 		 
 		 this.mybot.setPlanetOwner(planetID, playerID, playerName);
-		 
+		 System.out.println("GIOCATORE "+playerID+"HA CONQUISTATO "+planetID);
 		 
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.port, 0, "")).generateXmlMessageString().getBytes());
 		 

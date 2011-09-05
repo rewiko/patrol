@@ -46,7 +46,7 @@ public class GameResourceMobile extends GameResource {
 
 		this.owner = owner;
 		this.ownerId = ownerId;
-
+		this.threadId=ownerId;
 		this.resourceVision = new ArrayList<Object>();
 
 

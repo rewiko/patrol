@@ -169,6 +169,8 @@ public class GamePeer extends NetPeer {
 					MultiLog.println(GamePeer.class.toString(), "Created player " + this.player.getName() + " in position ( " +  this.player.getPosX() + ", " + this.player.getPosY() + ", " + this.player.getPosZ() + " )");
 					//System.out.println("Created player " + this.player.getName() + " in position ( " +  this.player.getPosX() + ", " + this.player.getPosY() + ", " + this.player.getPosZ() + " )");
                                         //System.out.println( "PARAMVISION"+userMessage.getVision());
+					
+					//saveOnCache(this.getMyId(), this.getMyPeer(), this.getMyThreadId());
 				}
 
 
@@ -894,9 +896,9 @@ public class GamePeer extends NetPeer {
 				System.exit(1);
 				return null;
 			}
-
+			this.getSharedInfos().printPeersInfo();
 			String addr = this.getSharedInfos().getInfoFor(threadReq).getIpAddress();
-			int port = this.getSharedInfos().getInfoFor(threadReq).getPortNumber() + 2;
+			int port = (this.getSharedInfos().getInfoFor(threadReq).getPortNumber() + 2);
 
 			FindResourceMessage findResourceMessage = new FindResourceMessage(this.getMyId(),this.getMyPeer().getIpAddress(),this.gameOutPort, this.username, id,x,y,z, this.player.getSpatialPosition());
 
@@ -1866,9 +1868,9 @@ public class GamePeer extends NetPeer {
 		MultiLog.println(GamePeer.class.toString(), "Difesa " + player.getName());
 		//System.out.println("Difesa " + player.getName());
 		//String oppositeId = this.findSuccessor(player.getId(), this.myThreadId);
-		String oppositeId = this.findSuccessor(player.getId(), threadId);
+		//String oppositeId = this.findSuccessor(player.getId(), threadId);
 		//NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(this.myThreadId);
-		NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(threadId);
+		//NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(threadId);
 
 		Defense defense = new Defense(quantity, idresource);
 
@@ -1879,7 +1881,7 @@ public class GamePeer extends NetPeer {
 			DefenseMatchMessage startMatch = new DefenseMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
 					this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), posx, posy, posz, defense.getType(), defense.getQuantity());
 
-			String responseDefenseMessage = MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, startMatch.generateXmlMessageString());
+			String responseDefenseMessage = MessageSender.sendMessage(ownerip, ownerport+2, startMatch.generateXmlMessageString());
 
 			if (responseDefenseMessage.contains("ERROR")){
 				MultiLog.println(GamePeer.class.toString(), "Sending DEFENSE MATCH ERROR !");

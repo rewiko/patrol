@@ -21,6 +21,8 @@ public class PlayerPositionUpdate implements Runnable {
 		this.peer = peer;
 		this.player = player;
 		this.world = world;
+		
+		this.threadId=peer.getMyThreadId();
 	}
 
 
