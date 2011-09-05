@@ -27,7 +27,7 @@ public class ManageNetUpdate implements Runnable {
 		this.periodPublish = periodPublish;
 
 		this.peer = gp;
-
+		this.threadId=gp.getMyThreadId();
 		this.orderedPeriod = new ArrayList<Integer>();
 		this.orderedString = new ArrayList<String>();
 	}

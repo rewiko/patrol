@@ -1,5 +1,7 @@
 package it.unipr.ce.dsg.p2pgame.network;
 
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -79,7 +81,7 @@ public class NetSharedResource {
 	 *
 	 */
 	public NetPeerInfo getInfoFor(String owner){
-
+		//System.out.println("############NET SHARED REOUSRCE GETINFOFOR#############à");
 		return this.peersInfo.get(owner);
 	}
 
@@ -102,6 +104,21 @@ public class NetSharedResource {
 		this.peersInfo.put(owner, npi);
 		this.peersId.put(owner, pId);
 
+	}
+	
+	public void printPeersInfo()
+	{
+		Set<String> key_set=peersInfo.keySet();
+		Iterator<String> iterator=key_set.iterator();
+		int i=0; 
+		while(iterator.hasNext())
+		{
+			
+			String key=iterator.next();
+			NetPeerInfo info=peersInfo.get(key);
+			System.out.println("PEER INFO "+i+" "+key +" : "+ info.getIpAddress()+" "+info.getPortNumber() );
+			i++;
+		}
 	}
 
 

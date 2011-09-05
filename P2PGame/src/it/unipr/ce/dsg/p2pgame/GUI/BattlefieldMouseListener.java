@@ -321,6 +321,7 @@ MouseMotionListener {
 						//double y_target = Y;
 
 						String threadId = new Long(Thread.currentThread().getId()).toString();
+						
 						String resId = mobRes;
 						public void run() {
 							try {
@@ -341,6 +342,8 @@ MouseMotionListener {
                                                                 /**********************/
 
                                                                 /**********************/
+								
+																threadId=request.getGamePeerId();
 
                                                                 request.MovementRequest(x_target, y_target, resId, threadId);
                                                                 GameResourceMobile res=null;

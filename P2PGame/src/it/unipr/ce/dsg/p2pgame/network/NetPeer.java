@@ -147,6 +147,7 @@ public class NetPeer {
 			MultiLog.println(NetPeer.class.toString(), "local Name : " + InetAddress.getLocalHost().getHostName());
 			//System.out.println("local Name : " + InetAddress.getLocalHost().getHostName());
 			this.myPeer = new NetPeerInfo(InetAddress.getLocalHost().getHostAddress(), this.inputPort, InetAddress.getLocalHost().getHostName());
+			
 
 		} catch (UnknownHostException e) {
 			System.err.println("Peer ins't online.");
@@ -411,7 +412,7 @@ public class NetPeer {
 	 * @param owner the identifier of thread for which must be saved information
 	 *
 	 */
-	private synchronized void saveOnCache(String id, NetPeerInfo npi, String owner) {
+	/*private*/public synchronized void saveOnCache(String id, NetPeerInfo npi, String owner) {
 
 		this.sharedInfos.saveInfo(owner, npi, id);
 
@@ -1647,6 +1648,7 @@ public class NetPeer {
 	 */
 	public /*synchronized*/ void setMyId(String id) {
 		this.myId = id;
+		this.myThreadId=id;
 	}
 
 
@@ -1722,6 +1724,8 @@ public class NetPeer {
 	 *
 	 */
 	public /*synchronized*/ NetSharedResource getSharedInfos() {
+		
+		//System.out.println("###########NETPEER GETSHARED INFOS#############");
 		return sharedInfos;
 	}
 

@@ -373,9 +373,10 @@ public class MovementThread implements Runnable{
 									HashMap<String,UserInfo> userslist=this.mybot.getLoggedUsers();
 									Set<String> key_set=userslist.keySet();
 									Iterator<String> iterator=key_set.iterator();
+									System.out.println("USERS "+userslist.size());
 									
 									while(iterator.hasNext())
-									{
+									{		
 											String iduser=iterator.next();
 											UserInfo info=userslist.get(iduser);	
 											
@@ -386,9 +387,10 @@ public class MovementThread implements Runnable{
 											
 											if(!this.mybot.getMyGamePeer().getMyId().equals(user_id))											
 											{
+												System.out.println("INVIO MESSAGGIO A "+user_id);	
 												PlanetConqueredMessage message=new PlanetConqueredMessage(this.mybot.getMyGamePeer().getMyId(),
 												this.mybot.getMyGamePeer().getMyPeer().getIpAddress(),
-												this.mybot.getMyGamePeer().getMyPeer().getPortNumber()+7,this.mybot.getOwnerid(),this.mybot.getMyGamePeer().getPlayer().getName(),planet.getId());
+												(this.mybot.getMyGamePeer().getMyPeer().getPortNumber()+7),this.mybot.getOwnerid(),this.mybot.getMyGamePeer().getPlayer().getName(),planet.getId());
 												
 												String responseMessage=MessageSender.sendMessage(userip,userport,message.generateXmlMessageString());
 												

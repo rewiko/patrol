@@ -309,6 +309,7 @@ MouseMotionListener {
 						//double y_target = Y;
 
 						String threadId = new Long(Thread.currentThread().getId()).toString();
+						
 						String resId = mobRes;
 						public void run() {
 							try {
@@ -348,6 +349,7 @@ MouseMotionListener {
 										//System.out.println("FINE PER MOVIMENTO ECCESSIVO ------------------------------------------------" + res.getVelocity());
 										System.exit(1);
 									}
+									threadId=gp.getMyThreadId();
 
 									gp.moveResourceMobile(resId, movX, movY, 0, threadId);
 

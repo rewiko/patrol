@@ -41,6 +41,8 @@ public class GamePeerMessageListener implements Runnable {
 		this.listenerAddr = listenerAddr;
 		this.listenerPort = listenerPort;
 		this.peer = peer;
+		
+		this.threadId=peer.getMyThreadId();
 	}
 
 

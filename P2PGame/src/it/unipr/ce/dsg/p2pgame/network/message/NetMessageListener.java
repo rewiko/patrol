@@ -76,6 +76,8 @@ public class NetMessageListener implements Runnable {
 		this.listenerId = listenerId;
 		this.listenerAddr = listenerAddr;
 		this.listenerPort = listenerPort;
+		
+		this.threadId=np.getMyThreadId();
 	}
 
 	/**
