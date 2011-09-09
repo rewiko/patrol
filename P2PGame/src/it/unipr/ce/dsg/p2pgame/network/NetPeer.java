@@ -285,8 +285,9 @@ public class NetPeer {
 				MultiLog.println(NetPeer.class.toString(), "Return id and info of SUCCESSOR node");
 				//System.out.println("Return id and info of SUCCESSOR node");
 				successor = this.successorId;
-
-				this.saveOnCache(this.successorId, this.successor, respOwner);
+				//System.out.println("findSuccesor--Ininterval "+successor+" "+this.successor.getIpAddress()+" , "+this.successor.getPortNumber());
+				//this.saveOnCache(this.successorId, this.successor, respOwner);
+				this.saveOnCache(this.successorId, this.successor, successor);
 
 			} else {
 
@@ -300,12 +301,12 @@ public class NetPeer {
 
 					MultiLog.println(NetPeer.class.toString(), "REQUEST to search ID");
 					//System.out.println("REQUEST to search ID");
-
+					
 					successor = this.requestToFindSuccessor(cp, id, respOwner);
 
 				} else {
 					successor = this.myId;
-
+					//System.out.println("findSuccesor--IsMyID "+respOwner+" "+this.myPeer.getIpAddress()+" , "+this.myPeer.getPortNumber());
 					this.saveOnCache(this.myId, this.myPeer, respOwner);
 				}
 
@@ -353,7 +354,7 @@ public class NetPeer {
 			System.out.println("Use info of THIS peer...");
 			resp = id;
 			NetPeerInfo np = new NetPeerInfo(this.myPeer.getIpAddress(), this.myPeer.getPortNumber(), "");
-
+			//System.out.println("requesttofindSuccesor--IsMyID "+reqOwner+" "+np.getIpAddress()+" , "+np.getPortNumber());
 			this.saveOnCache(resp, np, reqOwner);
 			return resp;
 		}
@@ -362,7 +363,8 @@ public class NetPeer {
 		if (destAddr.compareTo(this.myPeer.getIpAddress()) == 0 && destPort == this.outputPort){
 			resp = id;
 			NetPeerInfo np = new NetPeerInfo(this.myPeer.getIpAddress(), this.myPeer.getPortNumber(), "");
-
+			
+			//System.out.println("requesttofindSuccesor--IsMyID2 "+reqOwner+" "+np.getIpAddress()+" , "+np.getPortNumber());
 			this.saveOnCache(resp, np, reqOwner);
 			return resp;
 
@@ -380,7 +382,7 @@ public class NetPeer {
 			//System.out.println("Use info of THIS peer...");
 			resp = id;
 			NetPeerInfo np = new NetPeerInfo(this.myPeer.getIpAddress(), this.myPeer.getPortNumber(), "");
-
+			//System.out.println("requesttofindSuccesor--IsMyID3 "+reqOwner+" "+np.getIpAddress()+" , "+np.getPortNumber());
 			this.saveOnCache(resp, np, reqOwner);
 			return resp;
 
@@ -395,8 +397,9 @@ public class NetPeer {
 			resp = infoMessage.getPeerId();
 
 			NetPeerInfo np = new NetPeerInfo(infoMessage.getPeerAddr(), infoMessage.getPeerPort(), "");
-
-			this.saveOnCache(infoMessage.getPeerId(), np, reqOwner);
+			//System.out.println("requesttofindSuccesor--anotherID "+reqOwner+" "+np.getIpAddress()+" , "+np.getPortNumber());
+			//this.saveOnCache(infoMessage.getPeerId(), np, reqOwner);
+			this.saveOnCache(infoMessage.getPeerId(), np, resp);
 		}
 		return resp;
 
@@ -414,6 +417,7 @@ public class NetPeer {
 	 */
 	/*private*/public synchronized void saveOnCache(String id, NetPeerInfo npi, String owner) {
 
+		//System.out.println("save on cache "+owner+" "+npi.getIpAddress()+" "+npi.getPortNumber());
 		this.sharedInfos.saveInfo(owner, npi, id);
 
 	}

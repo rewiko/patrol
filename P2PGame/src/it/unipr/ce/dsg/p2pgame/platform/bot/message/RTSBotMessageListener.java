@@ -27,6 +27,8 @@ public class RTSBotMessageListener implements Runnable{
 		this.listenerId=id;
 		this.listenerAddr=address;
 		
+		
+		System.out.println("ip "+address+" , "+port);
 	}
 
 	@Override
@@ -41,7 +43,7 @@ public class RTSBotMessageListener implements Runnable{
 			e.printStackTrace();
 	    }
 	    
-	    
+	    System.out.println("-----------------RTSBotMessageListener-----------------");
 	    while(true)
 	    {
 	    	

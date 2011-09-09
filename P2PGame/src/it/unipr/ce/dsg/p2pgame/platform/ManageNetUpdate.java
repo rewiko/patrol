@@ -39,7 +39,7 @@ public class ManageNetUpdate implements Runnable {
 
 		this.printOrderedPeriod();
 
-
+		
 		this.peer.stabilize();
 		this.peer.fixFinger(threadId);
 		this.peer.checkPredecessor();

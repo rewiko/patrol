@@ -170,7 +170,7 @@ public class GamePeer extends NetPeer {
 					//System.out.println("Created player " + this.player.getName() + " in position ( " +  this.player.getPosX() + ", " + this.player.getPosY() + ", " + this.player.getPosZ() + " )");
                                         //System.out.println( "PARAMVISION"+userMessage.getVision());
 					
-					//saveOnCache(this.getMyId(), this.getMyPeer(), this.getMyThreadId());
+					saveOnCache(this.getMyId(), this.getMyPeer(), this.getMyThreadId());
 				}
 
 
@@ -896,7 +896,7 @@ public class GamePeer extends NetPeer {
 				System.exit(1);
 				return null;
 			}
-			this.getSharedInfos().printPeersInfo();
+			//this.getSharedInfos().printPeersInfo();
 			String addr = this.getSharedInfos().getInfoFor(threadReq).getIpAddress();
 			int port = (this.getSharedInfos().getInfoFor(threadReq).getPortNumber() + 2);
 
@@ -1210,7 +1210,7 @@ public class GamePeer extends NetPeer {
 			return false;
 		}
 
-
+		//System.out.println("Prima di findSuccessor");
 		//if (this.findSuccessor(resource.getSpatialPosition(), this.myThreadId).compareTo(getMyId()) == 0){
 		if (this.findSuccessor(resource.getSpatialPosition(), threadId).compareTo(getMyId()) == 0){
 

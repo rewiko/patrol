@@ -96,6 +96,7 @@ public class NetSharedResource {
 	 */
 	public synchronized void saveInfo(String owner, NetPeerInfo npi, String pId){
 
+		/*
 		if (this.peersInfo.containsKey(owner)){
 			this.peersInfo.remove(owner);
 			this.peersId.remove(pId);
@@ -103,6 +104,14 @@ public class NetSharedResource {
 
 		this.peersInfo.put(owner, npi);
 		this.peersId.put(owner, pId);
+		*/
+		if(!this.peersInfo.containsKey(owner))
+		{
+			this.peersInfo.put(owner, npi);
+			this.peersId.put(owner, pId);
+			
+			
+		}
 
 	}
 	
