@@ -113,7 +113,8 @@ public class MovementThread implements Runnable{
 				
 				me.clearParameters("rules/movementTheory.pl");
 				me.createMovementTheory((int)currentx, (int)currenty, (int)this.targetx, (int)this.targety,(int) previousx, (int)previousy, vis);
-								
+				
+				//System.out.println(grm.getId()+" "+currentx+" "+currenty);
 				
 				int movx=me.longitudeMovement();
 				int movy=me.latitudeMovement();
@@ -167,6 +168,9 @@ public class MovementThread implements Runnable{
 				//grm.setX(currentx);
 				//grm.setY(currenty);
 				this.mybot.getMyGamePeer().moveResourceMobile(grm.getId(), movX, movY, 0, this.mybot.getMyGamePeer().getMyThreadId());
+				currentx=grm.getX();
+				currenty=grm.getY();
+				
 				//System.out.println("\nCurrent position x: "+currentx+" y: "+currenty);
 				
 				/********************RICERCA DI NEMICI!!!********************************/
@@ -392,7 +396,8 @@ public class MovementThread implements Runnable{
 												this.mybot.getMyGamePeer().getMyPeer().getIpAddress(),
 												(this.mybot.getMyGamePeer().getMyPeer().getPortNumber()+7),this.mybot.getOwnerid(),this.mybot.getMyGamePeer().getPlayer().getName(),planet.getId());
 												
-												String responseMessage=MessageSender.sendMessage(userip,userport,message.generateXmlMessageString());
+												System.out.println("Invio messaggio a "+userip+" , "+(userport+7));
+												String responseMessage=MessageSender.sendMessage(userip,(userport+7),message.generateXmlMessageString());
 												
 												MultiLog.println(GamePeer.class.toString(), "Verify response...");
 												
