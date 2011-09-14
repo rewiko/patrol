@@ -170,7 +170,7 @@ public class GamePeer extends NetPeer {
 					//System.out.println("Created player " + this.player.getName() + " in position ( " +  this.player.getPosX() + ", " + this.player.getPosY() + ", " + this.player.getPosZ() + " )");
                                         //System.out.println( "PARAMVISION"+userMessage.getVision());
 					
-					saveOnCache(this.getMyId(), this.getMyPeer(), this.getMyThreadId());
+				//	saveOnCache(this.getMyId(), this.getMyPeer(), this.getMyThreadId());
 				}
 
 
@@ -1210,10 +1210,10 @@ public class GamePeer extends NetPeer {
 			return false;
 		}
 
-		//System.out.println("Prima di findSuccessor");
+		System.out.println(id +"###################################Prima di findSuccessor#######################################");
 		//if (this.findSuccessor(resource.getSpatialPosition(), this.myThreadId).compareTo(getMyId()) == 0){
 		if (this.findSuccessor(resource.getSpatialPosition(), threadId).compareTo(getMyId()) == 0){
-
+			System.out.println(id +"#################dopo findsuccessor##########################‡‡ ");
 			MultiLog.println(GamePeer.class.toString(), "New responsible is this");
 			//System.out.println("New responsible is this");
 			MultiLog.println(GamePeer.class.toString(), "Verifica di chi e' il vecchio respons per ... " + resResource.getOldPos());

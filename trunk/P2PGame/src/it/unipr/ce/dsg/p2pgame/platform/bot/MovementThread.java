@@ -171,7 +171,7 @@ public class MovementThread implements Runnable{
 				currentx=grm.getX();
 				currenty=grm.getY();
 				
-				//System.out.println("\nCurrent position x: "+currentx+" y: "+currenty);
+				System.out.println("\nCurrent position x: "+currentx+" y: "+currenty);
 				
 				/********************RICERCA DI NEMICI!!!********************************/
 				//controllo della visibilita'
