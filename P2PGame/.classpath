@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="inc/joone-engine.jar"/>
 	<classpathentry kind="lib" path="inc/log4j.jar"/>
 	<classpathentry kind="lib" path="inc/simpleXML.jar"/>
-	<classpathentry kind="lib" path="C:/Documents and Settings/jose.PC302014470238/Documenti/workspace/P2PGame/inc/2p.jar"/>
+	<classpathentry kind="lib" path="inc/2p.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
