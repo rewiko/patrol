@@ -300,7 +300,7 @@ public class NetPeer {
 					//System.out.println("CALL find on node cp: " + cp + " for " + id);
 
 					MultiLog.println(NetPeer.class.toString(), "REQUEST to search ID");
-					System.out.println("REQUEST to search ID");
+					//System.out.println("REQUEST to search ID");
 					
 					successor = this.requestToFindSuccessor(cp, id, respOwner);
 
