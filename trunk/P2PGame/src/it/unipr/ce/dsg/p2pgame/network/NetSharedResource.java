@@ -105,14 +105,14 @@ public class NetSharedResource {
 		this.peersInfo.put(owner, npi);
 		this.peersId.put(owner, pId);
 		
-		/*if(!this.peersInfo.containsKey(owner))
+	/*	if(!this.peersInfo.containsKey(owner))
 		{
 			this.peersInfo.put(owner, npi);
 			this.peersId.put(owner, pId);
 			
 			
-		}*/
-
+		}
+*/
 	}
 	
 	public void printPeersInfo()
