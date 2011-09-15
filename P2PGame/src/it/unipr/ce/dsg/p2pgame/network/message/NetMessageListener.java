@@ -255,7 +255,7 @@ public class NetMessageListener implements Runnable {
 			destAddr = this.netPeer.getMyPeer().getIpAddress();
 			destPort = this.netPeer.getMyPeer().getPortNumber();
 		}
-
+		//System.out.println("PEER "+this.netPeer.getMyId()+"FINDSUCCESSORMESSAGE");
 
 		os.write((new InfoPeerMessage(this.listenerId, this.listenerAddr, this.listenerPort, succ, destAddr, destPort)).generateXmlMessageString().getBytes());
 	}
