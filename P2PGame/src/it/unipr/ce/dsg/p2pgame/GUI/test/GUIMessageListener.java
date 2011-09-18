@@ -79,7 +79,12 @@ public class GUIMessageListener extends Thread{
 			}
                     }
 
-                    checkIncomingMessage(message, os);
+                    try {
+						checkIncomingMessage(message, os);
+					} catch (InterruptedException e) {
+						System.err.println("GUIMessageListener InterruptedException");
+						e.printStackTrace();
+					}
 
                     is.close();
 		    os.close();
@@ -96,7 +101,7 @@ public class GUIMessageListener extends Thread{
     }
 
 
-    public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException {
+    public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException, InterruptedException {
 
         MessageReader messageReader = new MessageReader();
 	Message receivedMessage = messageReader.readMessageFromString(messageString.trim());
@@ -217,7 +222,7 @@ public class GUIMessageListener extends Thread{
    }
 
 
-   public void MoveResourceMobileAction(Message receivedMessage, DataOutputStream os) throws IOException
+   public void MoveResourceMobileAction(Message receivedMessage, DataOutputStream os) throws IOException, InterruptedException
    {
             //MoveResourceMessage moveresourcemessage=(MoveResourceMessage)receivedMessage;
             MoveResourceMessage moveresourcemessage=new MoveResourceMessage(receivedMessage);

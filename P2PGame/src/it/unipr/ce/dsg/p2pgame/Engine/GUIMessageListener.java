@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import weka.gui.SysErrLog;
+
 /**
  *
  * @author jose murga
@@ -78,7 +80,13 @@ public class GUIMessageListener extends Thread{
 			}
                     }
 
-                    checkIncomingMessage(message, os);
+                    try {
+						checkIncomingMessage(message, os);
+					} catch (InterruptedException e) {
+						
+						System.err.println("GUIMessageListener InterruptedException");
+						e.printStackTrace();
+					}
 
                     is.close();
 		    os.close();
@@ -103,7 +111,7 @@ public class GUIMessageListener extends Thread{
      * os : DataOutputStream
      */
 
-    public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException {
+    public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException, InterruptedException {
 
         MessageReader messageReader = new MessageReader();
 	Message receivedMessage = messageReader.readMessageFromString(messageString.trim());
@@ -244,7 +252,7 @@ public class GUIMessageListener extends Thread{
     * receivedMessage: Message
     * os: DataOutputStream      *
     */
-   public void MoveResourceMobileAction(Message receivedMessage, DataOutputStream os) throws IOException
+   public void MoveResourceMobileAction(Message receivedMessage, DataOutputStream os) throws IOException, InterruptedException
    {
            
             MoveResourceMessage moveresourcemessage=new MoveResourceMessage(receivedMessage);

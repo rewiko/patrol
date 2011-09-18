@@ -196,7 +196,15 @@ public class GamePeerGUI extends javax.swing.JFrame {
         	public void actionPerformed(java.awt.event.ActionEvent evt) {
         		System.out.println("Player position: " + gp.getPlayer().getPosX() + ", " + gp.getPlayer().getPosY() + ", " + gp.getPlayer().getPosZ());
 				//gp.movePlayer(Double.parseDouble(xTextField.getText()), Double.parseDouble(yTextField.getText()), Double.parseDouble(zTextField.getText()));
-        		gp.movePlayer(Double.parseDouble(xTextField.getText()), Double.parseDouble(yTextField.getText()), Double.parseDouble(zTextField.getText()), threadId);
+        		try {
+					gp.movePlayer(Double.parseDouble(xTextField.getText()), Double.parseDouble(yTextField.getText()), Double.parseDouble(zTextField.getText()), threadId);
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					System.err.println("GamePeerGUI InterruptedException");
+					e.printStackTrace();
+				}
 				System.out.println("New Player position: " + gp.getPlayer().getPosX() + ", " + gp.getPlayer().getPosY() + ", " + gp.getPlayer().getPosZ());
         	}
         });
@@ -232,7 +240,15 @@ public class GamePeerGUI extends javax.swing.JFrame {
 				}
 
         		//gp.moveResourceMobile(id, Double.parseDouble(xRTextField.getText()), Double.parseDouble(yRTextField.getText()), Double.parseDouble(zRTextField.getText()));
-				gp.moveResourceMobile(id, Double.parseDouble(xRTextField.getText()), Double.parseDouble(yRTextField.getText()), Double.parseDouble(zRTextField.getText()), threadId);
+				try {
+					gp.moveResourceMobile(id, Double.parseDouble(xRTextField.getText()), Double.parseDouble(yRTextField.getText()), Double.parseDouble(zRTextField.getText()), threadId);
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					System.err.println("GamePeerGUI InterruptedException moveResourceMobile");
+					e.printStackTrace();
+				}
 
         		System.out.println("move della risorsa " + id);
         	}
@@ -255,7 +271,12 @@ public class GamePeerGUI extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 //pubResButtonActionPerformed(evt);
             	//gp.publishPosition();
-            	gp.publishPosition(threadId);
+            	try {
+					gp.publishPosition(threadId);
+				} catch (InterruptedException e) {
+					System.err.println("GamePeerGUI InterruptedException publishPosition");
+					e.printStackTrace();
+				}
             }
         });
 
@@ -265,7 +286,12 @@ public class GamePeerGUI extends javax.swing.JFrame {
                 //pubMobileButtonActionPerformed(evt);
             	System.out.println("Chiamata PUB MOBILE RESOURCE");
             	//gp.publishResourceMobile();
-            	gp.publishResourceMobile(threadId);
+            	try {
+					gp.publishResourceMobile(threadId);
+				} catch (InterruptedException e) {
+					System.err.println("GamePeerGUI InterruptedException publishResourceMobile");
+					e.printStackTrace();
+				}
             	System.out.println("POST - Chiamata PUB MOBILE RESOURCE");
             }
         });

@@ -108,7 +108,12 @@ public class ClusterPeerListener implements Runnable {
 						}
 					}
 
-					checkIncomingMessage(message, os);
+					try {
+						checkIncomingMessage(message, os);
+					} catch (InterruptedException e) {
+						System.err.println("ClusterPeerListener InterruptedException");
+						e.printStackTrace();
+					}
 
 					is.close();
 					System.out.println("connection closed");
@@ -136,9 +141,10 @@ public class ClusterPeerListener implements Runnable {
 	 * @param messageString  message received
 	 * @param os stream for reply to receiver
 	 * @throws IOException from reading to socket
+	 * @throws InterruptedException 
 	 *
 	 */
-	public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException {
+	public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException, InterruptedException {
 
 		MessageReader messageReader = new MessageReader();
 		Message receivedMessage = messageReader.readMessageFromString(messageString.trim());
@@ -211,9 +217,10 @@ public class ClusterPeerListener implements Runnable {
 	 * @param receivedMessage received message
 	 * @param os stream for reply to receiver
 	 * @throws IOException form reading to socket
+	 * @throws InterruptedException 
 	 *
 	 */
-	private void searchMessageAction(Message receivedMessage, DataOutputStream os) throws IOException {
+	private void searchMessageAction(Message receivedMessage, DataOutputStream os) throws IOException, InterruptedException {
 
 		System.out.println(LOG_TAG + "Handler for SEARCH MESSAGE");
 

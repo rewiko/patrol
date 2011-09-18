@@ -14,6 +14,38 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NetSharedResource {
 
+	private int readers = 0;
+	private int writers = 0;
+	private int writeRequests = 0;
+	
+	public synchronized void lockRead() throws InterruptedException{
+		while (writers > 0 || writeRequests > 0) {
+			wait();	
+		}
+		readers++;
+	}
+	
+	public synchronized void unlockedRead() {
+		readers--;
+		notifyAll();
+	}
+	
+	public synchronized void lockWrite() throws InterruptedException{
+		writeRequests++;
+		while(readers > 0 || writers > 0){
+			wait();
+		}
+		writeRequests--;
+		writers++;
+	}
+	
+	public synchronized void unlockWriter() throws InterruptedException{
+		writers--;
+		notifyAll();
+	}
+	
+	
+	
 	/**
 	 * Store peer's informations
 	 */
@@ -42,10 +74,18 @@ public class NetSharedResource {
 	 * Get all shared information about peer
 	 *
 	 * @return the HashMap with all peer info
+	 * @throws InterruptedException 
 	 *
 	 */
-	public ConcurrentHashMap<String, NetPeerInfo> getPeersInfo() {
-		return peersInfo;
+	public ConcurrentHashMap<String, NetPeerInfo> getPeersInfo() throws InterruptedException {
+		
+		lockRead();
+		ConcurrentHashMap<String, NetPeerInfo> pI = new ConcurrentHashMap<String, NetPeerInfo>(peersInfo);
+		unlockedRead();
+		return pI;
+		//return peersInfo;
+		
+		
 	}
 
 
@@ -54,10 +94,16 @@ public class NetSharedResource {
 	 * Get all shared identifier about peer
 	 *
 	 * @return the HashMap with all peer identifier
+	 * @throws InterruptedException 
 	 *
 	 */
-	public ConcurrentHashMap<String, String> getPeersId() {
-		return peersId;
+	public ConcurrentHashMap<String, String> getPeersId() throws InterruptedException {
+		
+		lockRead();
+		ConcurrentHashMap<String, String> pI = new ConcurrentHashMap<String, String>(peersId);
+		unlockedRead();
+		return pI;
+		//return peersId;
 	}
 
 	/**
@@ -66,10 +112,17 @@ public class NetSharedResource {
 	 *
 	 * @param owner the identifier of cache owner
 	 * @return the peer identifier saved
+	 * @throws InterruptedException 
 	 *
 	 */
-	public String getIdFor(String owner){
-		return this.peersId.get(owner);
+	public String getIdFor(String owner) throws InterruptedException{
+		
+		lockRead();
+		String id = new String(this.peersId.get(owner));
+		unlockedRead();
+		return id;
+		
+		//return this.peersId.get(owner);
 	}
 
 	/**
@@ -78,11 +131,18 @@ public class NetSharedResource {
 	 *
 	 * @param owner the identifier of cache owner
 	 * @return the peer information saved
+	 * @throws InterruptedException 
 	 *
 	 */
-	public NetPeerInfo getInfoFor(String owner){
+	public NetPeerInfo getInfoFor(String owner) throws InterruptedException{
+		
+		lockRead();
+		NetPeerInfo info = new NetPeerInfo(this.peersInfo.get(owner));
+		unlockedRead();
+		return info;
+		
 		//System.out.println("############NET SHARED REOUSRCE GETINFOFOR#############à");
-		return this.peersInfo.get(owner);
+		//return this.peersInfo.get(owner);
 	}
 
 	/**
@@ -92,10 +152,13 @@ public class NetSharedResource {
 	 * @param owner the owner of cache to update
 	 * @param npi the information about peer to save
 	 * @param pId the identifier about peer to save
+	 * @throws InterruptedException 
 	 *
 	 */
-	public synchronized void saveInfo(String owner, NetPeerInfo npi, String pId){
+	public synchronized void saveInfo(String owner, NetPeerInfo npi, String pId) throws InterruptedException{
 
+		
+		lockWrite();
 		
 		if (this.peersInfo.containsKey(owner)){
 			this.peersInfo.remove(owner);
@@ -104,6 +167,9 @@ public class NetSharedResource {
 
 		this.peersInfo.put(owner, npi);
 		this.peersId.put(owner, pId);
+		
+		
+		unlockWriter();
 		
 	/*	if(!this.peersInfo.containsKey(owner))
 		{
@@ -115,6 +181,9 @@ public class NetSharedResource {
 */
 	}
 	
+	
+	
+	//not protected against Read\Write concurrency
 	public void printPeersInfo()
 	{
 		Set<String> key_set=peersInfo.keySet();

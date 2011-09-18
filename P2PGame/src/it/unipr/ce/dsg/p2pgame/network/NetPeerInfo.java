@@ -43,6 +43,15 @@ public class NetPeerInfo {
 
 	}
 
+	public NetPeerInfo( NetPeerInfo npi){
+		
+		this.ipAddress = npi.ipAddress;
+		this.portNumber = npi.portNumber;
+		this.hostName = npi.hostName;
+		
+	}
+	
+	
 	/**
 	 *
 	 * Get IP Address of this peer

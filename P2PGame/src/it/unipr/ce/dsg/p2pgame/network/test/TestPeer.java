@@ -39,9 +39,10 @@ public class TestPeer {
 	 * @exception UnsupportedEncodingException on parameter that is passed on hash function
 	 *
 	 * @author Stefano Sebastio (stefano.sebastio@studenti.unipr.it)
+	 * @throws InterruptedException 
 	 *
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 
 		try {
 			System.out.println("CLIENT");

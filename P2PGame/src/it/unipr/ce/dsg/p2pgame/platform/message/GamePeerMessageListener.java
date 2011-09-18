@@ -92,7 +92,12 @@ public class GamePeerMessageListener implements Runnable {
 
 					}
 
-					checkIncomingMessage(message, os);
+					try {
+						checkIncomingMessage(message, os);
+					} catch (InterruptedException e) {
+						System.err.println("GamePeerMessageListener InterruptedException");
+						e.printStackTrace();
+					}
 
 					is.close();
 					//MultiLog.println(GamePeerMessageListener.class.toString(), "connection with game peer closed");
@@ -115,7 +120,7 @@ public class GamePeerMessageListener implements Runnable {
 	}
 
 
-	public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException {
+	public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException, InterruptedException {
 
 		MessageReader messageReader = new MessageReader();
 
@@ -173,7 +178,7 @@ public class GamePeerMessageListener implements Runnable {
 
 	}
 
-	private void positionMessageAction(Message receivedMessage, DataOutputStream os) throws IOException{
+	private void positionMessageAction(Message receivedMessage, DataOutputStream os) throws IOException, InterruptedException{
 
 		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for POSITION MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for POSITION MESSAGE");
@@ -365,7 +370,7 @@ public class GamePeerMessageListener implements Runnable {
 
 
 
-	private void findResourceMessageAction(Message receivedMessage, DataOutputStream os) throws IOException{
+	private void findResourceMessageAction(Message receivedMessage, DataOutputStream os) throws IOException, InterruptedException{
 
 		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler FIND RESOURCE MESSAGE");
 		//System.out.println(LOG_TAG + "Handler FIND RESOURCE MESSAGE");
@@ -710,7 +715,7 @@ public class GamePeerMessageListener implements Runnable {
 	}
 
 
-	private void mobileResourceMessageAction(Message messageReceived, DataOutputStream os) throws IOException{
+	private void mobileResourceMessageAction(Message messageReceived, DataOutputStream os) throws IOException, InterruptedException{
 		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for MOBILE RESOURCE MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for MOBILE RESOURCE MESSAGE");
 
