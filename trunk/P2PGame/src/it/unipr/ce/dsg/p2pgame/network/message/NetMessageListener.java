@@ -128,7 +128,12 @@ public class NetMessageListener implements Runnable {
 						}
 					}
 
-					checkIncomingMessage(message, os);
+					try {
+						checkIncomingMessage(message, os);
+					} catch (InterruptedException e) {
+						System.err.println("NetMessageListener InterruptException");
+						e.printStackTrace();
+					}
 
 					is.close();
 					os.close();
@@ -155,9 +160,10 @@ public class NetMessageListener implements Runnable {
 	 * @param messageString
 	 * @param os stream for reply to receiver
 	 * @throws IOException from reading to socket
+	 * @throws InterruptedException 
 	 *
 	 */
-	public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException {
+	public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException, InterruptedException {
 
 		MessageReader messageReader = new MessageReader();
 		Message receivedMessage = messageReader.readMessageFromString(messageString.trim());
@@ -216,9 +222,10 @@ public class NetMessageListener implements Runnable {
 	 * @param receivedMessage received message
 	 * @param os stream for reply to receiver
 	 * @throws IOException form reading to socket
+	 * @throws InterruptedException 
 	 *
 	 */
-	private void findSuccessorMessageAction(Message receivedMessage, DataOutputStream os) throws IOException {
+	private void findSuccessorMessageAction(Message receivedMessage, DataOutputStream os) throws IOException, InterruptedException {
 
 		MultiLog.println(NetMessageListener.class.toString(), LOG_TAG + "Handler for FINDSUCC MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for FINDSUCC MESSAGE");

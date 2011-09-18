@@ -325,7 +325,7 @@ public class GamePeer extends NetPeer {
 	}
 
 
-	public void logoutOnServer(String threadId){
+	public void logoutOnServer(String threadId) throws InterruptedException{
 
 		if (this.username == null || this.password == null){
 			MultiLog.println(GamePeer.class.toString(), "User not logged. There aren't username and/or password");
@@ -467,7 +467,7 @@ public class GamePeer extends NetPeer {
 
 
 	//iterazione con l'utente
-	public /*synchronized*/ boolean movePlayer( double relMovX, double relMovY, double relMovZ, String threadId ) {
+	public /*synchronized*/ boolean movePlayer( double relMovX, double relMovY, double relMovZ, String threadId ) throws InterruptedException {
 
 		//TODO: vedere se la posizione nuova ï¿½ diversa dalla precedente allora informare il nuovo responsabile di cancellare la vecchia
 
@@ -635,7 +635,7 @@ public class GamePeer extends NetPeer {
 
 	}
 
-	public /*synchronized*/ void publishPosition(String threadId) {
+	public /*synchronized*/ void publishPosition(String threadId) throws InterruptedException {
 
 		MultiLog.println(GamePeer.class.toString(), "Publish Position on cache...");
 		//System.out.println("Publish Position on cache...");
@@ -873,7 +873,7 @@ public class GamePeer extends NetPeer {
 
 
 	//TODO: non void. Richiesta della risorsa
-	public Object requestResource(String id, double x, double y, double z, String threadReq){
+	public Object requestResource(String id, double x, double y, double z, String threadReq) throws InterruptedException{
 
 		//non si puï¿½ usare la ricerca di Chord non usando la sua cache
 		//NetResourceInfo resInfo = this.searchResource(id);
@@ -898,6 +898,20 @@ public class GamePeer extends NetPeer {
 			}
 			//this.getSharedInfos().printPeersInfo();
 			String addr = this.getSharedInfos().getInfoFor(threadReq).getIpAddress();
+		
+			/*
+			//test block
+			if (this.getSharedInfos() == null){
+				System.out.println("sharedInfos Null");
+				System.out.println("threadReq: " + threadReq);
+				System.out.println("sharedInfos: " +  this.getSharedInfos());
+			}
+			else if (this.getSharedInfos().getInfoFor(threadReq) == null)
+				System.out.println("getInfoFor");
+			//end test block
+			*/
+			
+			
 			int port = (this.getSharedInfos().getInfoFor(threadReq).getPortNumber() + 2);
 
 			FindResourceMessage findResourceMessage = new FindResourceMessage(this.getMyId(),this.getMyPeer().getIpAddress(),this.gameOutPort, this.username, id,x,y,z, this.player.getSpatialPosition());
@@ -1155,7 +1169,7 @@ public class GamePeer extends NetPeer {
 	}
 
 	//identificativo univoco della risorsa mobile
-	public /*synchronized*/ boolean moveResourceMobile(String id, double relMovX, double relMovY, double relMovZ, String threadId ){
+	public /*synchronized*/ boolean moveResourceMobile(String id, double relMovX, double relMovY, double relMovZ, String threadId ) throws InterruptedException{
 
 
 		GameResourceMobile resource = this.getMyMobileResourceFromId(id);
@@ -1336,7 +1350,7 @@ public class GamePeer extends NetPeer {
 		return true;
 	}
 
-	public /*synchronized*/ void publishResourceMobile(String threadId){
+	public /*synchronized*/ void publishResourceMobile(String threadId) throws InterruptedException{
 		MultiLog.println(GamePeer.class.toString(), "Publish RESOURCE MOBILE on cache...");
 		//System.out.println("Publish RESOURCE MOBILE on cache...");
 
@@ -1607,9 +1621,10 @@ public class GamePeer extends NetPeer {
 	}
 
 	
-	/******/
+	/**
+	 * @throws InterruptedException ****/
 //attacca //TODO: utile o da eliminare
-	public void startMatch(/*GamePlayerResponsible player*/String ownerId,String ownerName, String resource,String myresource ,double quantity, String threadId,double posx, double posy, double posz){
+	public void startMatch(/*GamePlayerResponsible player*/String ownerId,String ownerName, String resource,String myresource ,double quantity, String threadId,double posx, double posy, double posz) throws InterruptedException{
 		MultiLog.println(GamePeer.class.toString(), "Attacco " + player.getName());
 		//System.out.println("Attacco " + player.getName());
 		//String oppositeId = this.findSuccessor(player.getId(), this.myThreadId);
@@ -1782,7 +1797,7 @@ public class GamePeer extends NetPeer {
 
 	//difendi //TODO: salvare la risposta della difesa
 	
-	public void defenseMatch(/*GamePlayerResponsible player*/String ownerId,String ownerName, String resource, double quantity, String threadId,double posx,double posy,double posz){
+	public void defenseMatch(/*GamePlayerResponsible player*/String ownerId,String ownerName, String resource, double quantity, String threadId,double posx,double posy,double posz) throws InterruptedException{
 		MultiLog.println(GamePeer.class.toString(), "Difesa " + player.getName());
 		//System.out.println("Difesa " + player.getName());
 		//String oppositeId = this.findSuccessor(player.getId(), this.myThreadId);

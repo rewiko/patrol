@@ -96,7 +96,7 @@ public class GameResourceMobile extends GameResource {
 	}
 
 
-	private void searchObjectNearToResource(){
+	private void searchObjectNearToResource() throws InterruptedException{
 		//TODO:: ricercare gli oggetti in un intorno
 		//double vis = this.vision;
 		MultiLog.println(GameResourceMobile.class.toString(), "Lunched SEARCH Object Near To RESOURCE MOBILE");

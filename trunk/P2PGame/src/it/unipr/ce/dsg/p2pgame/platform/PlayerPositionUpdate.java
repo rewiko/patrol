@@ -56,7 +56,7 @@ public class PlayerPositionUpdate implements Runnable {
 	}
 
 
-	private void searchNearObject(){
+	private void searchNearObject() throws InterruptedException{
 		//TODO:: ricercare gli oggetti in un intorno
 		double vis = this.player.getVisibility();
 		MultiLog.println(PlayerPositionUpdate.class.toString(),"Lunched SEARCH Near Object");

@@ -2,6 +2,8 @@ package it.unipr.ce.dsg.p2pgame.platform;
 
 import java.util.ArrayList;
 
+import weka.gui.SysErrLog;
+
 public class ManageNetUpdate implements Runnable {
 
 	private int periodStabilize;
@@ -41,9 +43,19 @@ public class ManageNetUpdate implements Runnable {
 
 		
 		this.peer.stabilize();
-		this.peer.fixFinger(threadId);
+		try {
+			this.peer.fixFinger(threadId);
+		} catch (InterruptedException e1) {
+			System.err.println("ManageNetUpdate InterruptedException fixFinger");
+			e1.printStackTrace();
+		}
 		this.peer.checkPredecessor();
-		this.peer.publishResource(threadId);
+		try {
+			this.peer.publishResource(threadId);
+		} catch (InterruptedException e1) {
+			System.err.println("ManageNetUpdate InterruptedException publishResource");
+			e1.printStackTrace();
+		}
 
 
 		//load hyper-period
@@ -89,7 +101,7 @@ public class ManageNetUpdate implements Runnable {
 
 	}
 
-	private void lunchFunction(int num){
+	private void lunchFunction(int num) throws InterruptedException{
 
 		if (this.orderedString.get(num).compareTo("Stabilize") == 0){
 			//System.out.println("Lunching periodic stabilize");

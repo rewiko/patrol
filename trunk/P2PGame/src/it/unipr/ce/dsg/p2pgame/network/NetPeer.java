@@ -272,9 +272,10 @@ public class NetPeer {
 	 * @param id the id of peer / resource for which is required the successor
 	 * @param respOwner which peer forward the request
 	 * @return the identifier of successor peer
+	 * @throws InterruptedException 
 	 *
 	 */
-	public String findSuccessor(String id, String respOwner){
+	public String findSuccessor(String id, String respOwner) throws InterruptedException{
 		String successor = "";
 
 		if (id != null && this.successorId != null && id.compareTo("") != 0 && this.successorId.compareTo("") != 0){
@@ -324,9 +325,10 @@ public class NetPeer {
 	 * @param id identifier by which is requested the successor
 	 * @param reqOwner the identifier of thread for which save response
 	 * @return id received on response
+	 * @throws InterruptedException 
 	 *
 	 */
-	private String requestToFindSuccessor(String to, String id, String reqOwner) {
+	private String requestToFindSuccessor(String to, String id, String reqOwner) throws InterruptedException {
 		FindSuccMessage findSuccMessage = new FindSuccMessage(this.myId, this.myPeer.getIpAddress(), this.outputPort, id);
 
 		String destAddr = "";
@@ -413,9 +415,10 @@ public class NetPeer {
 	 * @param id the identifier of peer to be saved
 	 * @param npi the information about peer to be saved
 	 * @param owner the identifier of thread for which must be saved information
+	 * @throws InterruptedException 
 	 *
 	 */
-	/*private*/public synchronized void saveOnCache(String id, NetPeerInfo npi, String owner) {
+	/*private*/public synchronized void saveOnCache(String id, NetPeerInfo npi, String owner) throws InterruptedException {
 
 		//System.out.println("save on cache "+owner+" "+npi.getIpAddress()+" "+npi.getPortNumber());
 		this.sharedInfos.saveInfo(owner, npi, id);
@@ -669,9 +672,10 @@ public class NetPeer {
 	 * and try to fix it.
 	 * At position 'next' of finger table should be successor of: id + 2^(next-1)
 	 * Must be called periodically.
+	 * @throws InterruptedException 
 	 *
 	 */
-	public /*synchronized*/ void fixFinger(String threadId){
+	public /*synchronized*/ void fixFinger(String threadId) throws InterruptedException{
 
 		MultiLog.println(NetPeer.class.toString(), "select NEXT entry of finger table and fix it");
 		//System.out.println("select NEXT entry of finger table and fix it");
@@ -1125,9 +1129,10 @@ public class NetPeer {
 	 *
 	 * Publish all resource on cache to successor peer of key of resource.
 	 * Must be called periodically for verify that resource are on correct peer.
+	 * @throws InterruptedException 
 	 *
 	 */
-	public /*synchronized*/ void publishResource(String threadId){
+	public /*synchronized*/ void publishResource(String threadId) throws InterruptedException{
 
 		       //System.out.println("CACHE1");
 		       MultiLog.println(NetPeer.class.toString(),"CACHE1");
@@ -1248,9 +1253,10 @@ public class NetPeer {
 	 *
 	 * @param key identifier of resource on ring
 	 * @return the required resource if is received. Null otherwise
+	 * @throws InterruptedException 
 	 *
 	 */
-	public NetResourceInfo searchResource(String key, String threadId) {
+	public NetResourceInfo searchResource(String key, String threadId) throws InterruptedException {
 
 
 		if (this.resourceOnCache.containsKey(key)){
@@ -1289,9 +1295,10 @@ public class NetPeer {
 	 * @param id the key of resource
 	 * @param to the responsible of wanted resource
 	 * @return the resource required
+	 * @throws InterruptedException 
 	 *
 	 */
-	private NetResourceInfo reqResource(String id, String to, String threadId){
+	private NetResourceInfo reqResource(String id, String to, String threadId) throws InterruptedException{
 
 		GetResourceMessage getResourceMessage = new GetResourceMessage(this.myId, this.myPeer.getIpAddress(), this.outputPort, id);
 
@@ -1454,9 +1461,10 @@ public class NetPeer {
 	 * First of all publish all resource on successor node, close ring
 	 * send new successor and predecessor information respectively to predecessor
 	 * and successor. Later interrupt thread message listener
+	 * @throws InterruptedException 
 	 *
 	 */
-	public void disconnectPeer(String threadId){
+	public void disconnectPeer(String threadId) throws InterruptedException{
 		MultiLog.println(NetPeer.class.toString(), "Publish all resource to successor...");
 		//System.out.println("Publish all resource to successor...");
 		//this.publishResource();

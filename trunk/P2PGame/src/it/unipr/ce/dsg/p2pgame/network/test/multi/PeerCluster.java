@@ -302,8 +302,9 @@ public class PeerCluster {
 	 *
 	 * @param time timestamp of resource search
 	 * @param threadId identifier of thread which manage the search
+	 * @throws InterruptedException 
 	 */
-	public static void search(String time, String threadId) {
+	public static void search(String time, String threadId) throws InterruptedException {
 		Random rand = new Random();
 		int num = rand.nextInt(10000);
 		String key = BigInteger.valueOf(num).toString(16);

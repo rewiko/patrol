@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class GamePeerTest {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, NumberFormatException, InterruptedException {
 
 		System.out.println("GAME PEER");
 
