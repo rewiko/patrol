@@ -131,13 +131,29 @@ public class GameResourceMobile extends GameResource {
 							MultiLog.println(GameResourceMobile.class.toString(), "dopo ricerca mobile");
 							if (resp instanceof GamePlayerResponsible){
 								//System.out.println("RICERCA MOBILE Ricevuto un giocatore per " + x + "," + y + "," + z);
-
+								
+								GamePlayerResponsible gpr=(GamePlayerResponsible)resp;
+								if(!gpr.getId().equals(this.ownerId))
+								{
+									System.out.println(this.getId());
+									System.out.println("BASE NEMICA");
+									System.out.println("RICERCA MOBILE Ricevuto un giocatore per " + x + "," + y + "," + z);
+								}	
 								//this.peer.addToVision(resp, i);
 								this.addToResourceVision(resp, i);
 
 							}
 							else if (resp instanceof GameResourceMobileResponsible){
 								//System.out.println("RICERCA MOBILE Ricevuta una risorsa MOBILE per " + x + "," + y + "," + z);
+								
+								GameResourceMobileResponsible grmr=(GameResourceMobileResponsible)resp;
+								
+								if(!grmr.getOwnerId().equals(this.ownerId))
+								{
+									System.out.println(this.getId());
+									System.out.println("RISORSA NEMICA");
+									System.out.println("RICERCA MOBILE Ricevuta una risorsa MOBILE per " + x + "," + y + "," + z);
+								}
 
 								//this.peer.addToVision(resp, i);
 								this.addToResourceVision(resp, i);
@@ -301,7 +317,7 @@ public class GameResourceMobile extends GameResource {
 		return clone;
 	}
 
-	public ArrayList<Object> getResourceVision() {
+	public /*synchronized*/ ArrayList<Object> getResourceVision() {
 		return resourceVision;
 	}
 

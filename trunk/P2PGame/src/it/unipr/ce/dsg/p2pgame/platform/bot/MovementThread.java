@@ -171,7 +171,7 @@ public class MovementThread implements Runnable{
 				currentx=grm.getX();
 				currenty=grm.getY();
 				
-				System.out.println("\nCurrent position x: "+currentx+" y: "+currenty);
+			//	System.out.println("\nCurrent position x: "+currentx+" y: "+currenty);
 				
 				/********************RICERCA DI NEMICI!!!********************************/
 				//controllo della visibilita'
@@ -200,7 +200,7 @@ public class MovementThread implements Runnable{
 					x=(int)xx;
 					y=(int)yy;
 					
-					/***/
+					/***
 					
 					//ottengo il campo visivo della risorsa mobile
 					ArrayList<Object> vision=grm.getResourceVision(); 
@@ -341,6 +341,8 @@ public class MovementThread implements Runnable{
 						//decision
 				       	}
 					
+					
+					
 				    /********/
 					
 					
@@ -351,6 +353,8 @@ public class MovementThread implements Runnable{
 					
 					ArrayList<VirtualResource> planets=this.mybot.getPlanets();
 					//System.out.println("£££planets "+planets.size());
+					
+					/*******
 					for(int k=0;k<planets.size();k++)
 					{
 						
@@ -448,7 +452,7 @@ public class MovementThread implements Runnable{
 								}
 								
 								String threadId=new Long(Thread.currentThread().getId()).toString();
-								this.mybot.getMyGamePeer().startMatch(planet.getOwnerID(), planet.getOwnerName(),info.getIp(),info.getPort(), planet.getId(),grm.getId(),grm.getQuantity() , threadId, planet.getX(), planet.getY(), planet.getZ());
+								this.mybot.getMyGamePeer().startMatch(planet.getOwnerID(), planet.getOwnerName(),info.getIp(),info.getPort(), planet.getOwnerID(),grm.getId(),grm.getQuantity() , threadId, planet.getX(), planet.getY(), planet.getZ());
 								// se vinco conquisto il pianeta
 								// se perdo perdo la mia risorsa
 								do{
@@ -544,6 +548,7 @@ public class MovementThread implements Runnable{
 					   }
 					
 					}
+					/**********/
 					/*******
 					
 											

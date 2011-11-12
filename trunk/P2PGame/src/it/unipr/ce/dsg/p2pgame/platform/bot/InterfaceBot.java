@@ -38,4 +38,8 @@ public interface InterfaceBot {
 	
 	UserInfo getLoggedUserInfo(String id);
 	
+	void setResourceStatus(String id,boolean status);
+	
+	void moveResourceMobile(String resid, int movX,int  movY, int movZ);
+	
 }

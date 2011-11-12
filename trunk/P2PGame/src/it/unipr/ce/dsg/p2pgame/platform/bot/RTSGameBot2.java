@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import it.unipr.ce.dsg.p2pgame.GUI.MessageSender;
+
+import it.unipr.ce.dsg.p2pgame.GUI.message.content.Point;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.BuyResourceEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.ExtractionEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.GameEngine;
@@ -25,9 +26,9 @@ import it.unipr.ce.dsg.p2pgame.platform.GameResource;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
-import it.unipr.ce.dsg.p2pgame.platform.bot.message.RTSBotMessageListener;
+import it.unipr.ce.dsg.p2pgame.platform.bot.message.*;
 
-public class RTSGameBot implements Runnable,InterfaceBot{
+public class RTSGameBot2 implements Runnable,InterfaceBot{
 	
 	
 	private BuyResourceEngine bre;
@@ -54,6 +55,8 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	private int probattack;
 	private int probdefense;
 	
+	private MessageSender sender;
+	
 	//attrbuti per la configurazione, mi serviranno dopo???
 	
 	//minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran
@@ -66,6 +69,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	private double vel;
 	private double vis;
 	private double gran;
+	private int portReq;
 	//atruttura dati che rappresenta i pianeti nello spazio
 	
 	ArrayList<VirtualResource> planets;
@@ -79,7 +83,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	
 
 
-	public RTSGameBot(String profile,String conf,int portmin,String usr)
+	public RTSGameBot2(String profile,String conf,int portmin,String usr,int portReq)
 	{
 		
 		gee=new GameEvolutionEngine("rules/evolutionTheory.pl");
@@ -101,6 +105,9 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 		this.nrmobile=0;
 		this.portMin=portmin;
 		
+		
+		this.sender=new MessageSender(portReq);
+		this.portReq=portReq;
 	}
 
 	@Override
@@ -126,8 +133,8 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 		//int portMin = 6891;
 		int portMin = this.portMin;
     	int serverPort = 1235;
-    	String serverAdd="127.0.0.1";
-    	//String serverAdd="160.78.28.72";
+    	//String serverAdd="127.0.0.1";
+    	String serverAdd="160.78.28.72";
     	//String username="user1";
     	String username=this.usr;
     	String password="password";
@@ -210,23 +217,28 @@ public class RTSGameBot implements Runnable,InterfaceBot{
     	//L è pari alla lunghezza massima fratto due
 		
 		
-		this.gp = new GamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,1000,64000,2000);
+		//this.gp = new GamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,1000,64000,2000);
+		sender.CreateGamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,1000,64000,2000);
 		
-		this.gp.registerOnServer(username, password);
+		//this.gp.registerOnServer(username, password);
+		sender.registerOnServer(username, password);
 		//0,575,0,575,0,0, 1,10, 5
 		//minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran
 		//startgame
-		this.gp.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
+		//this.gp.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
+		sender.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
 		
 		
-		this.owner=gp.getMyId();
-		this.ownerid=gp.getMyId();
-		
-		
+		//this.owner=gp.getMyId();
+		//this.ownerid=gp.getMyId();
+		this.owner=sender.getGamePeerId();
+		this.ownerid=sender.getGamePeerId();
 		//thread d'ascolto
-		Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,this.gp.getMyPeer().getIpAddress(),(this.gp.getMyPeer().getPortNumber()+7)));
+		//Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,this.gp.getMyPeer().getIpAddress(),(this.gp.getMyPeer().getPortNumber()+7)));
+		Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,sender.getIpAddress(),((portMin+1)+7)));
 		botListener.start();
-		System.out.println("STARTGAME POSX "+this.gp.getPlayer().getPosX()+" POSY "+this.gp.getPlayer().getPosY());
+		//System.out.println("STARTGAME POSX "+this.gp.getPlayer().getPosX()+" POSY "+this.gp.getPlayer().getPosY());
+		System.out.println("STARTGAME POSX "+this.sender.getGamePlayerPosition().getX()+" POSY "+this.sender.getGamePlayerPosition().getY());
 		
 		//apro il file di profilo
 		//carico profilo del giocatore
@@ -342,16 +354,19 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 		double money_in_deposit=0;
 		if(ee.isInfinite()) // se e' infinito lasciamo che il thread di resource evolve accumuli risorse
 		{
-			revolve=new GameResourceEvolve("moneyEvolveble", "Money", 0, period, offset);
+			//revolve=new GameResourceEvolve("moneyEvolveble", "Money", 0, period, offset);
+			this.sender.addResourceEvolve("moneyEvolveble", "Money", 0, period, offset);
 		}
 		else //altrimenti l'accumulo lo gestiamo noi
 		{
-			revolve=new GameResourceEvolve("moneyEvolveble", "Money", 0, period, 0);
+			//revolve=new GameResourceEvolve("moneyEvolveble", "Money", 0, period, 0);
+			this.sender.addResourceEvolve("moneyEvolveble", "Money", 0, period, 0);
 			money_in_deposit=(double)this.ee.getCurrentResource();
 		}
 		
 		
-		this.gp.addToMyResource(revolve);
+		//this.gp.addToMyResource(revolve);
+		
 		
 		//////
 		ArrayList<Resource> buyresources = new ArrayList<Resource>();
@@ -401,8 +416,8 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 				currentqres.add(new Integer(this.nrmobile));
 				
 				
-				currentmoney=this.gp.getMyResourceFromId("moneyEvolveble").getQuantity();
-				
+				//currentmoney=this.gp.getMyResourceFromId("moneyEvolveble").getQuantity();
+				currentmoney=this.sender.getMyResourceFromId("moneyEvolveble").getQuantity();
 				
 				gee=new GameEvolutionEngine("rules/evolutionTheory.pl");
 				
@@ -415,8 +430,8 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 				
 				System.out.println("&&&&&&&&&& FASE "+fase+" @@@@@@@@@@@");
 				
-				GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
-				double val=evolve.getQuantity();
+				//GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+				double val=currentmoney;//evolve.getQuantity();
 				
 				System.out.println("Soldi: "+val);
 				
@@ -476,7 +491,8 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 								this.nrmobile++;						
 								
 								
-								this.gp.createMobileResource("Attack" + timestamp, qt);
+								//this.gp.createMobileResource("Attack" + timestamp, qt);
+								this.sender.createMobileResource("Attack" + timestamp, qt);
 								//lo status per default è false
 								
 								
@@ -493,57 +509,14 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 							System.out.println("NON HO ABBASTANZA SOLDI");
 							
 						}
-						/*****
-						int multiplicity=(int) (qt/this.resmincost);
-						if(multiplicity>0)
-						{
-							qt=multiplicity*this.resmincost; //uso la stessa variabile
-							
-							//compro risorsa mobile
-							String timestamp = Long.toString(System.currentTimeMillis());
-							this.nrmobile++;						
-							
-							
-							this.gp.createMobileResource("Attack" + timestamp, qt);
-							//lo status per default è false
-							
-							
-							//status.put("m"+timestamp, new Boolean(false)); // devo salvare anche l'ID
-							//currentmoney-=resmobcost;
-							this.decrementMoney(qt);
-							System.out.println("###################nuova risorsa mobile##################");
-							
-							
-						}
-						
-						/*****/
-							
+												
 						
 						
 					}
 					else
 					{
 						//compro risorsa di difesa
-						
-						/*****
-						double qt=this.getCurrentMoney();
-						int multiplicity=(int) (qt/this.resmincost);
-						if(multiplicity>0)
-						{
-							qt=multiplicity*this.resmincost; //uso la stessa variabile
-							String timestamp = Long.toString(System.currentTimeMillis());
-							this.nres++;
-							//res.add(new GameResource("id"+this.nres,"defense",1.0));
-							
-							GameResource dif = new GameResource("def" + timestamp, "Defense" + timestamp, qt);
-			                this.gp.addToMyResource(dif);
-							//currentmoney-=1000;
-							this.decrementMoney(qt);
-							System.out.println("###########nuova risorsa di difesa####################");
-							
-						}
-						
-						/*****/
+												
 						
 						this.bre=new BuyResourceEngine("rules/buyResourceTheory.pl");					
 						double qt=this.getCurrentMoney();					
@@ -559,8 +532,11 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 								this.nres++;
 								//res.add(new GameResource("id"+this.nres,"defense",1.0));
 								
-								GameResource dif = new GameResource("def" + timestamp, "Defense" + timestamp, qt);
-				                this.gp.addToMyResource(dif);
+								//GameResource dif = new GameResource("def" + timestamp, "Defense" + timestamp, qt);
+								
+				                //this.gp.addToMyResource(dif);
+				                this.sender.addResource("def" + timestamp, "Defense" + timestamp, qt);
+				                
 								//currentmoney-=1000;
 								this.decrementMoney(qt);
 								System.out.println("###########nuova risorsa di difesa####################");
@@ -586,7 +562,9 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 				
 				//decido se spostare ogni risorsa mobile e determino la destinazione
 				
-				ArrayList<Object> res=this.gp.getMyResources(); 
+				//ArrayList<Object> res=this.gp.getMyResources();
+				ArrayList<Object> res=this.sender.getResources();
+				
 				int sr=res.size();
 				
 				for(int i=0;i<sr;i++)
@@ -598,7 +576,8 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 						
 						GameResourceMobile grm=(GameResourceMobile)res.get(i);
 						String id=grm.getId();
-						boolean st=grm.getStatus();
+						//metodo per ottenere lo status
+						boolean st=sender.getResourceMobileStatus(id);//grm.getStatus();
 						//String id=grm.getDescription();
 						
 						if(!st) // se non è in movimento
@@ -637,9 +616,9 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 										my*=-1;
 										//x rimane uguale
 									}
-									
-									mx=mx+this.gp.getPlayer().getPosX();
-									my=my+this.gp.getPlayer().getPosY();
+									Point position=this.sender.getGamePlayerPosition();
+									mx=mx+position.getX();//this.gp.getPlayer().getPosX();
+									my=my+position.getY();//this.gp.getPlayer().getPosY();
 									
 									if((mx>=this.minX&&mx<=this.maxX)&&(my>=this.minY&&my<=this.maxY))
 									{
@@ -650,11 +629,14 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 								
 								int tx=(int)mx;
 								int ty=(int)my;
-								
+								id=grm.getId();
 								System.out.println("move "+id+": x=" +tx+" y= "+ty);
 								
-								//MovementThread move=new MovementThread(this,id,tx,ty,period_movement);
-								//MovementThread2 move=new MovementThread2(this,id,tx,ty,period_movement);
+									//MovementThread move=new MovementThread(this,id,tx,ty,period_movement);
+									MovementThread2 move=new MovementThread2(this,id,tx,ty,period_movement,this.portReq);
+									Thread movThread=new Thread(move);
+									movThread.start();
+								
 							}
 							
 						}
@@ -677,13 +659,13 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 				verifyVisibility();
 				//devo calcolare quanti pianeti sono stati conquistati da ogni giocatore
 				//aggiorno elenco dei giocatori
-				this.UpdateLoggedUsers();
+				//this.UpdateLoggedUsers();
 				
 				//dopo aver aggiornato l'elenco dei giocatori ottengo il loro numero
 				
 				
 				//ottengo un arrayList di tutti i giocatori loggati
-				ArrayList<String> players=new ArrayList<String>();
+				/*ArrayList<String> players=new ArrayList<String>();
 				
 				Set<String> key_set=loggedusers.keySet();
 				Iterator<String> iterator=key_set.iterator();
@@ -731,7 +713,8 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 					 String idwinner=winner.substring(6);
 					 
 					 System.out.println("Gioco finito");
-					 if(gp.getMyId().equals(idwinner)) //se sono io il vincitore ....
+					 //if(gp.getMyId().equals(idwinner)) //se sono io il vincitore ....
+				     if(this.sender.getGamePeerId().equals(idwinner)) 
 					 {
 						 System.out.println(" HO VINTO");
 						 
@@ -747,7 +730,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 				 
 				 //ora devo verificare se ho ancora delle risorse, se non ho più nessuna risorsa vuol dire che sono stato annientato e quindi devo usicre del gioco
 				 //faccio una teori per verificarlo in casi piu' complessi????
-				 int nresources=this.gp.getMyResources().size();
+				 int nresources=this.sender.getResourcesSize();//this.gp.getMyResources().size();
 				 
 				 if(nresources==0)
 				 {
@@ -757,7 +740,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 				
 				//da  fare
 		
-				
+				*/
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -783,7 +766,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	public GameResourceMobile getResourceMobilebyID(String id)
 	{
 		
-		GameResourceMobile grm=this.gp.getMyMobileResourceFromId(id);
+		GameResourceMobile grm=this.sender.getMobileResource(id);//this.gp.getMyMobileResourceFromId(id);
 		return grm;
 	}
 	
@@ -792,7 +775,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	{
 		
 		
-		ArrayList<Object> res=this.gp.getMyResources();
+		ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
 		System.out.println("Resource:");
 		for(int i=0;i<res.size();i++)
 		{
@@ -854,30 +837,34 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	private void incrementMoney(double inc)
 	{
 		
-		GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		//GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		GameResourceEvolve evolve=(GameResourceEvolve)this.sender.getMyResourceFromId("moneyEvolveble");
 		double val=evolve.getQuantity();
 			
 		double qt=val+inc;
 		//evolve.setQuantity(qt);
-		gp.getMyResourceFromId("moneyEvolveble").setQuantity(qt);
+		//gp.getMyResourceFromId("moneyEvolveble").setQuantity(qt);
+		this.sender.UpdateResourceEvolve(qt);
 		
 	}
 	
 	private void decrementMoney(double dec)
 	{
 		
-		GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		//GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		GameResourceEvolve evolve=(GameResourceEvolve)this.sender.getMyResourceFromId("moneyEvolveble");
 		double val=evolve.getQuantity();
 		
 		double qt=val-dec;
 		//evolve.setQuantity(qt);
-		gp.getMyResourceFromId("moneyEvolveble").setQuantity(qt);
-		
+		//gp.getMyResourceFromId("moneyEvolveble").setQuantity(qt);
+		this.sender.UpdateResourceEvolve(qt);
 	}
 	
 	public double getCurrentMoney()
 	{
-		GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		//GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		GameResourceEvolve evolve=(GameResourceEvolve)this.sender.getMyResourceFromId("moneyEvolveble");
 		double qt=evolve.getQuantity();
 		
 		return qt;
@@ -1022,8 +1009,9 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 			this.nres++;
 			//res.add(new GameResource("id"+this.nres,"defense",1.0));
 			
-			GameResource dif = new GameResource(idRes, "Defense" + timestamp, resmincost);
-            this.gp.addToMyResource(dif);
+			//GameResource dif = new GameResource(idRes, "Defense" + timestamp, resmincost);
+            //this.gp.addToMyResource(dif);
+            this.sender.addResource(idRes, "Defense" + timestamp, resmincost);
 			//currentmoney-=1000;
 			this.decrementMoney(qt);
 			System.out.println("###########nuova risorsa di difesa####################");
@@ -1042,7 +1030,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	public GameResource getLastGameResource()
 	{
 		GameResource res=null;
-		ArrayList<Object> resources=this.gp.getMyResources();
+		ArrayList<Object> resources=this.sender.getResources();//this.gp.getMyResources();
 		
 		int i=resources.size()-1;
 		
@@ -1072,10 +1060,11 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	public void UpdateLoggedUsers()
 	{
 		this.loggedusers=new HashMap<String,UserInfo>();
-		ArrayList<String> usersList=this.getMyGamePeer().getLoggedUsersList();
+		ArrayList<String> usersList=this.sender.getLoggedUsersList();//this.getMyGamePeer().getLoggedUsersList();
 		if(!usersList.isEmpty())// se ci sono degli utenti nella lista invio i messaggi
 		{
 			System.out.println("NUMBER OF USERS: "+usersList.size());
+			
 			for(int u=0;u<usersList.size();u++)
 			{
 				String str_user=usersList.get(u);
@@ -1125,7 +1114,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 
 	public void verifyVisibility()
 	{
-		ArrayList<Object> res=this.gp.getMyResources();
+		ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
 		
 		for(int i=0;i<res.size();i++)
 		{
@@ -1142,7 +1131,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 					{
 						
 						GamePlayerResponsible gpr=(GamePlayerResponsible)vis.get(j);
-						if(!gpr.getId().equals(this.gp.getMyId()))
+						if(!gpr.getId().equals(this.ownerid))
 						{
 							System.out.println(j+". BASE NEMICA "+gpr.getId()+" X="+gpr.getPosX()+" Y="+gpr.getPosY());
 							
@@ -1158,7 +1147,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 					{
 						GameResourceMobileResponsible grmr=(GameResourceMobileResponsible)vis.get(j);
 						
-						if(!grmr.getOwnerId().equals(this.gp.getMyId()))
+						if(!grmr.getOwnerId().equals(this.ownerid))
 						{
 							System.out.println(j+". RISORSA NEMICA "+grmr.getId()+" di "+grmr.getOwnerId()+" X="+grmr.getX()+" Y="+grmr.getY());
 							
@@ -1171,7 +1160,7 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 					}
 					else
 					{
-						System.out.println(j+". NULL");
+					//	System.out.println(j+". NULL");
 						
 					}
 				  }
@@ -1188,10 +1177,12 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 	@Override
 	public synchronized void setResourceStatus(String id, boolean status) {
 		
-		GameResourceMobile grm=this.gp.getMyMobileResourceFromId(id);
+		//GameResourceMobile grm=this.gp.getMyMobileResourceFromId(id);
 		
-		grm.setStatus(status);
+		//grm.setStatus(status);
 		
+		
+		this.sender.setMobileReourceStatus(id, status);
 	}
 
 	@Override
