@@ -133,8 +133,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//int portMin = 6891;
 		int portMin = this.portMin;
     	int serverPort = 1235;
-    	//String serverAdd="127.0.0.1";
-    	String serverAdd="160.78.28.72";
+    	String serverAdd="127.0.0.1";
+    	//String serverAdd="160.78.28.72";
     	//String username="user1";
     	String username=this.usr;
     	String password="password";
