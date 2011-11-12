@@ -1048,7 +1048,7 @@ public class GamePeer extends NetPeer {
 	}
 
 	//TODO: da testare restituisce solo la prima ma l'id dovrebbe essere univoco
-	public GameResourceMobile getMyMobileResourceFromId(String id) {
+	public /*synchronized*/ GameResourceMobile getMyMobileResourceFromId(String id) {
 		//GameResourceMobile resource = null;
 		for (int i=0; i < this.myResources.size(); i++){
 			if (this.myResources.get(i) instanceof GameResourceMobile){
@@ -1096,7 +1096,7 @@ public class GamePeer extends NetPeer {
 	}
 
 
-	public ArrayList<Object> getMyResources() {
+	public /*synchronized*/ ArrayList<Object> getMyResources() {
 		return myResources;
 	}
 
@@ -1224,10 +1224,10 @@ public class GamePeer extends NetPeer {
 			return false;
 		}
 
-		System.out.println(id +"###################################Prima di findSuccessor#######################################");
+	//	System.out.println(id +"###################################Prima di findSuccessor#######################################");
 		//if (this.findSuccessor(resource.getSpatialPosition(), this.myThreadId).compareTo(getMyId()) == 0){
 		if (this.findSuccessor(resource.getSpatialPosition(), threadId).compareTo(getMyId()) == 0){
-			System.out.println(id +"#################dopo findsuccessor##########################‡‡ ");
+		//	System.out.println(id +"#################dopo findsuccessor##########################‡‡ ");
 			MultiLog.println(GamePeer.class.toString(), "New responsible is this");
 			//System.out.println("New responsible is this");
 			MultiLog.println(GamePeer.class.toString(), "Verifica di chi e' il vecchio respons per ... " + resResource.getOldPos());

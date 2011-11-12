@@ -33,13 +33,13 @@ public class GUIMessageListener extends Thread{
     private ServerSocket server;
     private GamePeer gp;
     private CheckOutput check;
-    
+    private int port;
 
-    public GUIMessageListener(GamePeer gp)
+    public GUIMessageListener(GamePeer gp,int port)
     {
         super();
         this.gp=gp;
-        
+        this.port=port;
         this.server=null;
         check=new CheckOutput("output.txt");
     }
@@ -53,7 +53,7 @@ public class GUIMessageListener extends Thread{
 
         try {
 		if (this.server == null)
-                	this.server = new ServerSocket(2424);
+                	this.server = new ServerSocket(this.port);//2424);
 
             } catch (IOException e) {
 		e.printStackTrace();
@@ -164,8 +164,6 @@ public class GUIMessageListener extends Thread{
         else if(receivedMessage.getMessageType().equals("GPVISIONSREQ"))
         {
             this.GamePeerVisionAction(receivedMessage, os);
-
-
         }
         else if(receivedMessage.getMessageType().equals("RESOURCEBYIDREQUEST"))
         {
@@ -201,6 +199,27 @@ public class GUIMessageListener extends Thread{
         {
             this.IpAddresRequestAction(receivedMessage, os);
         }
+        else if(receivedMessage.getMessageType().equals("SETMOBILERESOURCESTATUSREQUEST"))
+        {
+        	this.SetMobileResourceStatusAction(receivedMessage, os);
+        	
+        }
+        else if(receivedMessage.getMessageType().equals("MOVEMOBILERESOURCEREQUEST"))
+        {
+        	this.MoveMobileResourceAction(receivedMessage, os);
+        	
+        }
+        else if(receivedMessage.getMessageType().equals("LOGGEDUSERSREQUEST"))
+        {
+        	this.LoggedUsersRequestAction(receivedMessage, os);
+        	
+        }
+        else if(receivedMessage.getMessageType().equals("GRMSTATUSREQUEST"))
+        {
+        	this.ResuorceMobileStatusAction(receivedMessage, os);
+        	
+        }
+        	
 
 
 
@@ -592,7 +611,11 @@ public class GUIMessageListener extends Thread{
                         long vtime=gpr.getTimestamp();
                         String poshash=gpr.getPositionHash();
                         String oldpos=gpr.getOldPos();
-
+                        if(oldpos==null||oldpos.equals(""))
+                        {
+                        	oldpos="x"+vx+"y"+vy+"z"+vz;
+                        	
+                        }
 
 
 
@@ -652,6 +675,11 @@ public class GUIMessageListener extends Thread{
                         long vtime=grmr.getTimestamp();
                         String poshash=grmr.getPositionHash();
                         String oldpos=grmr.getOldPos();
+                        if(oldpos==null||oldpos.equals(""))
+                        {
+                        	oldpos="x"+vx+"y"+vy+"z"+vz;
+                        	
+                        }
 
 
                         str_rvision+="GameResourceMobileResponsible";
@@ -856,6 +884,10 @@ public class GUIMessageListener extends Thread{
                         long vtime=gpr.getTimestamp();
                         String poshash=gpr.getPositionHash();
                         String oldpos=gpr.getOldPos();
+                        if(oldpos.equals("")||oldpos==null)
+                        {
+                        	oldpos="x"+vx+"y"+vy+"z"+vz;
+                        }
 
                         str_rvision+="GamePlayerResponsible";
                         str_rvision+=";";
@@ -913,7 +945,10 @@ public class GUIMessageListener extends Thread{
                         long vtime=grmr.getTimestamp();
                         String poshash=grmr.getPositionHash();
                         String oldpos=grmr.getOldPos();
-
+                        if(oldpos.equals("")||oldpos==null)
+                        {
+                        	oldpos="x"+vx+"y"+vy+"z"+vz;
+                        }
 
                         str_rvision+="GameResourceMobileResponsible";
                         str_rvision+=";";
@@ -1550,7 +1585,7 @@ public class GUIMessageListener extends Thread{
                         String threadId=request.getThreadID(); // thread id
 
                         GameResourceMobile res = gp.getMyMobileResourceFromId(resId);
-
+                        
                         while((res.getX()!=target_x )|| (res.getY()!=target_y)) //while the current resource mobile postion is different form the target position
                         {
                             Thread.sleep(500);
@@ -1629,15 +1664,131 @@ public class GUIMessageListener extends Thread{
 
 
    }
+   
+   
+   
+   public void SetMobileResourceStatusAction(Message receivedMessage, DataOutputStream os)throws IOException
+   {
+	   SetMobileResourceStatusRequestMessage message=new SetMobileResourceStatusRequestMessage(receivedMessage);
+	   
+	   String id=message.getId();
+	   String strstatus=message.getStatus();
+	   
+	   //ora imposto lo status della risorssa mobile
+	   
+	   GameResourceMobile grm=this.gp.getMyMobileResourceFromId(id);
+	   boolean status;
+	   
+	   if(strstatus.equals("true"))
+	   {
+		   status=true;
+		   
+	   }
+	   else
+	   {
+		   status=false;
+		   
+	   }
+	   	   
+	   grm.setStatus(status);
+	   
+	   SuccessMessage msg=new SuccessMessage(true);
 
+       os.write(msg.generateXmlMessageString().getBytes());
 
+	   
+   }
+   
+   
+   public void MoveMobileResourceAction(Message receivedMessage, DataOutputStream os)throws IOException
+   {
+	   MoveMobileResourceRequestMessage msg=new MoveMobileResourceRequestMessage(receivedMessage);
+	   
+	   String id=msg.getResID();
+	   int movX=msg.getMovX();
+	   int movY=msg.getMovY();
+	   
+	  try {
+		this.gp.moveResourceMobile(id, movX,movY , 0, this.gp.getMyThreadId());
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	   
+	SuccessMessage message=new SuccessMessage(true);
+
+    os.write(message.generateXmlMessageString().getBytes());
+
+	  
+	   
+   }
+   
+   public void LoggedUsersRequestAction(Message receivedMessage, DataOutputStream os)throws IOException
+   {
+	  //arriva una richiesta allora la devo servire
+	   
+	   ArrayList<String> users=this.gp.getLoggedUsersList();
+	   
+	   //ottengo la lista degli utenti loggati
+	   
+	   String strUsers="";
+	   
+	   for(int i=0;i<users.size();i++)
+	   {
+		   strUsers+=users.get(i);
+		   
+		   if(i<(users.size()-1))
+		   {
+			   strUsers+="#";
+			   
+		   }
+		   
+	   }
+	   
+	   LoggedUsersMessage message=new LoggedUsersMessage(strUsers);
+	   
+	   os.write(message.generateXmlMessageString().getBytes());
+	   
+	   
+   }
+   
+   public void ResuorceMobileStatusAction(Message receivedMessage, DataOutputStream os)throws IOException
+   {
+	   ResourceMobileStatusRequestMessage msg=new ResourceMobileStatusRequestMessage(receivedMessage);
+	   
+	  String id=msg.getId();
+	  
+	  GameResourceMobile grm=this.gp.getMyMobileResourceFromId(id);
+	  boolean status=grm.getStatus();
+	  
+	  String str="";
+	  
+	  if(status)
+	  {
+		  str="true";
+		  
+	  }
+	  else
+	  {
+		  str="false";
+		  
+	  }
+	  
+	  ResourceMobileStatusMessage message=new ResourceMobileStatusMessage(str);
+	  
+	  os.write(message.generateXmlMessageString().getBytes());
+	 
+	   
+   }
 
 public static void main(String [] arg)
 {
-    GUIMessageListener listener=new GUIMessageListener(null);
+    GUIMessageListener listener=new GUIMessageListener(null,2424);
     listener.start();
 
 }
+
+
 
 
 

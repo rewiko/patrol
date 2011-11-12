@@ -33,13 +33,13 @@ public class MainGamePeer extends Thread{
     private GamePeer gp = null;
     ServerSocket server=null;
     private GUIMessageListener message_listener;
+    private int portnumber;
     
-
     
-    public MainGamePeer()
+    public MainGamePeer(int port)
     {
     	this.gp=null;
-    	
+    	this.portnumber=port;
     	
     }
     @Override
@@ -51,7 +51,7 @@ public class MainGamePeer extends Thread{
 
         try {
 		if (server == null)
-                	server = new ServerSocket(9999);
+                	server = new ServerSocket(this.portnumber);//(9999);
 
             } catch (IOException e) {
 		e.printStackTrace();
@@ -159,7 +159,7 @@ public class MainGamePeer extends Thread{
 
         this.gp=new GamePeer(inPort,outPort,idBitLength,id,serverAddr,serverPort,gameInPort,gameOutPort,gameServerAddr,gameServerPort, stab,fix,check, pub);
 
-        this.message_listener=new GUIMessageListener(gp);
+        this.message_listener=new GUIMessageListener(gp,(this.portnumber+5));
         this.message_listener.start();
 
         // System.out.println("creato gamepeer e messagelistener");
@@ -263,7 +263,7 @@ public class MainGamePeer extends Thread{
      */
     public static void main(String [] arg)
     {
-        MainGamePeer main=new MainGamePeer();
+        MainGamePeer main=new MainGamePeer(9999);
         main.start();
 
 

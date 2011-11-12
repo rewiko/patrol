@@ -3,7 +3,9 @@ package it.unipr.ce.dsg.p2pgame.platform.bot.message;
 import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
 import it.simplexml.message.MessageReader;
+import it.unipr.ce.dsg.p2pgame.platform.bot.InterfaceBot;
 import it.unipr.ce.dsg.p2pgame.platform.bot.RTSGameBot;
+import it.unipr.ce.dsg.p2pgame.platform.bot.RTSGameBot2;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,11 +20,11 @@ public class RTSBotMessageListener implements Runnable{
 	private String listenerId;
 	private String listenerAddr;
 	
-	private RTSGameBot mybot;
+	private RTSGameBot2 mybot;
 	
-	public RTSBotMessageListener(RTSGameBot bot,String id,String address, int port)
+	public RTSBotMessageListener(InterfaceBot bot,String id,String address, int port)
 	{
-		this.mybot=bot;
+		this.mybot=(RTSGameBot2)bot;
 		this.port=port;
 		this.listenerId=id;
 		this.listenerAddr=address;
