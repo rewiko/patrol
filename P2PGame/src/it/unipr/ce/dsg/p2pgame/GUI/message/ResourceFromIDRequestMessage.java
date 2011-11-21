@@ -14,17 +14,26 @@ import it.simplexml.message.Parameter;
 public class ResourceFromIDRequestMessage extends Message{
 
     private String id;
-
+   // private String msgid;
     
-    public ResourceFromIDRequestMessage(String id)
+  //  public String getMsgid() {
+	//	return msgid;
+//	}
+
+//	public void setMsgid(String msgid) {
+//		this.msgid = msgid;
+//	}
+
+	public ResourceFromIDRequestMessage(String id)
     {
          super("","",0);
         this.setMessageType("RESOURCEBYIDREQUEST");
         this.PARAMETERS_NUM=4;
 
         this.id=id;
+        //this.msgid=msgid;
         this.getParametersList().add(new Parameter("resourceid",id));
-
+       // this.getParametersList().add(new Parameter("msgid",msgid));
 
     }
 
@@ -39,7 +48,7 @@ public class ResourceFromIDRequestMessage extends Message{
 		}
 
         this.id=this.getParametersList().get(3).getValue();
-
+       // this.msgid=this.getParametersList().get(4).getValue();
     }
 
 

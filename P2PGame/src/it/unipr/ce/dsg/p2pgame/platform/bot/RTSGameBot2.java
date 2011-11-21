@@ -12,6 +12,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 
+import it.simplexml.message.AckMessage;
+import it.simplexml.message.Message;
+import it.simplexml.message.MessageReader;
 import it.unipr.ce.dsg.p2pgame.GUI.message.content.Point;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.BuyResourceEngine;
 import it.unipr.ce.dsg.p2pgame.GUI.prolog.ExtractionEngine;
@@ -27,6 +30,7 @@ import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
 import it.unipr.ce.dsg.p2pgame.platform.bot.message.*;
+import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 
 public class RTSGameBot2 implements Runnable,InterfaceBot{
 	
@@ -54,6 +58,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	private int prob_buy_mobile_resource;
 	private int probattack;
 	private int probdefense;
+	private double visResource=5;
+	private double radiusPlanet=10;
 	
 	private MessageSender sender;
 	
@@ -218,14 +224,17 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 		
 		//this.gp = new GamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,1000,64000,2000);
-		sender.CreateGamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,1000,64000,2000);
+		//System.out.println("1");
+		sender.CreateGamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,500,64000,2000);
 		
 		//this.gp.registerOnServer(username, password);
+		
 		sender.registerOnServer(username, password);
 		//0,575,0,575,0,0, 1,10, 5
 		//minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran
 		//startgame
 		//this.gp.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
+		//System.out.println("1");
 		sender.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
 		
 		
@@ -235,11 +244,11 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		this.ownerid=sender.getGamePeerId();
 		//thread d'ascolto
 		//Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,this.gp.getMyPeer().getIpAddress(),(this.gp.getMyPeer().getPortNumber()+7)));
-		Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,sender.getIpAddress(),((portMin+1)+7)));
+		Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,sender.getIpAddress(),((this.portMin+1)+7)));
 		botListener.start();
 		//System.out.println("STARTGAME POSX "+this.gp.getPlayer().getPosX()+" POSY "+this.gp.getPlayer().getPosY());
 		System.out.println("STARTGAME POSX "+this.sender.getGamePlayerPosition().getX()+" POSY "+this.sender.getGamePlayerPosition().getY());
-		
+		System.out.println("GAMEPEER ID "+this.ownerid);
 		//apro il file di profilo
 		//carico profilo del giocatore
 		
@@ -417,6 +426,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				
 				//currentmoney=this.gp.getMyResourceFromId("moneyEvolveble").getQuantity();
+				//System.out.println("1");
 				currentmoney=this.sender.getMyResourceFromId("moneyEvolveble").getQuantity();
 				
 				gee=new GameEvolutionEngine("rules/evolutionTheory.pl");
@@ -492,6 +502,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 								
 								
 								//this.gp.createMobileResource("Attack" + timestamp, qt);
+								//System.out.println("2");
 								this.sender.createMobileResource("Attack" + timestamp, qt);
 								//lo status per default è false
 								
@@ -499,6 +510,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 								//status.put("m"+timestamp, new Boolean(false)); // devo salvare anche l'ID
 								//currentmoney-=resmobcost;
 								this.decrementMoney(qt);
+								//this.sender.publishResourceMobile();
 								System.out.println("###################nuova risorsa mobile##################");
 								
 								
@@ -539,6 +551,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				                
 								//currentmoney-=1000;
 								this.decrementMoney(qt);
+								//this.sender.publishResourceMobile();
 								System.out.println("###########nuova risorsa di difesa####################");
 								
 								
@@ -563,6 +576,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				//decido se spostare ogni risorsa mobile e determino la destinazione
 				
 				//ArrayList<Object> res=this.gp.getMyResources();
+				//System.out.println("3");
 				ArrayList<Object> res=this.sender.getResources();
 				
 				int sr=res.size();
@@ -577,6 +591,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						GameResourceMobile grm=(GameResourceMobile)res.get(i);
 						String id=grm.getId();
 						//metodo per ottenere lo status
+						//System.out.println("1");
 						boolean st=sender.getResourceMobileStatus(id);//grm.getStatus();
 						//String id=grm.getDescription();
 						
@@ -616,6 +631,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 										my*=-1;
 										//x rimane uguale
 									}
+									//System.out.println("4");
 									Point position=this.sender.getGamePlayerPosition();
 									mx=mx+position.getX();//this.gp.getPlayer().getPosX();
 									my=my+position.getY();//this.gp.getPlayer().getPosY();
@@ -657,15 +673,28 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				this.printMyPlanets();
 				
 				verifyVisibility();
+				
+				this.verifySpace();
+				
+				//this.printResources();
+				
+				
+				//pubblico le mie risorse mobili
+				
+				//this.sender.publishResourceMobile();
+				
+				//da verificare
+				
+				
 				//devo calcolare quanti pianeti sono stati conquistati da ogni giocatore
 				//aggiorno elenco dei giocatori
-				//this.UpdateLoggedUsers();
+				this.UpdateLoggedUsers();
 				
 				//dopo aver aggiornato l'elenco dei giocatori ottengo il loro numero
 				
 				
 				//ottengo un arrayList di tutti i giocatori loggati
-				/*ArrayList<String> players=new ArrayList<String>();
+				ArrayList<String> players=new ArrayList<String>();
 				
 				Set<String> key_set=loggedusers.keySet();
 				Iterator<String> iterator=key_set.iterator();
@@ -740,7 +769,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				//da  fare
 		
-				*/
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -765,7 +794,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	
 	public GameResourceMobile getResourceMobilebyID(String id)
 	{
-		
+		System.out.println("getResByID");
 		GameResourceMobile grm=this.sender.getMobileResource(id);//this.gp.getMyMobileResourceFromId(id);
 		return grm;
 	}
@@ -774,7 +803,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	public void printResources()
 	{
 		
-		
+		System.out.println("printRes");
 		ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
 		System.out.println("Resource:");
 		for(int i=0;i<res.size();i++)
@@ -838,6 +867,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	{
 		
 		//GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		System.out.println("incmoney");
 		GameResourceEvolve evolve=(GameResourceEvolve)this.sender.getMyResourceFromId("moneyEvolveble");
 		double val=evolve.getQuantity();
 			
@@ -852,6 +882,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	{
 		
 		//GameResourceEvolve evolve=(GameResourceEvolve)gp.getMyResourceFromId("moneyEvolveble");
+		
+		System.out.println("decmoney");
 		GameResourceEvolve evolve=(GameResourceEvolve)this.sender.getMyResourceFromId("moneyEvolveble");
 		double val=evolve.getQuantity();
 		
@@ -1111,6 +1143,22 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		}
 		
 	}
+	
+	public void verifySpace()
+	{
+		ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
+		
+		for(int i=0;i<res.size();i++)
+		{
+			if(res.get(i) instanceof GameResourceMobile)
+			{
+				GameResourceMobile grm=(GameResourceMobile)res.get(i);
+				this.verifyPlanets(grm);
+				//this.verifyEnemies(grm);
+			}
+			
+		}
+	}
 
 	public void verifyVisibility()
 	{
@@ -1131,32 +1179,19 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					{
 						
 						GamePlayerResponsible gpr=(GamePlayerResponsible)vis.get(j);
-						if(!gpr.getId().equals(this.ownerid))
-						{
-							System.out.println(j+". BASE NEMICA "+gpr.getId()+" X="+gpr.getPosX()+" Y="+gpr.getPosY());
+						
+						System.out.println(j+".  BASE di "+gpr.getId()+" X="+gpr.getPosX()+" Y="+gpr.getPosY());
 							
-						}
-						else
-						{
-							System.out.println(j+". MIA BASE "+" X="+gpr.getPosX()+" Y="+gpr.getPosY());
-							
-						}
+						
 						
 					}
 					if(vis.get(j) instanceof GameResourceMobileResponsible)
 					{
 						GameResourceMobileResponsible grmr=(GameResourceMobileResponsible)vis.get(j);
 						
-						if(!grmr.getOwnerId().equals(this.ownerid))
-						{
-							System.out.println(j+". RISORSA NEMICA "+grmr.getId()+" di "+grmr.getOwnerId()+" X="+grmr.getX()+" Y="+grmr.getY());
+						
+						System.out.println(j+". RISORSA MOBILE "+grmr.getId()+" di "+grmr.getOwnerId()+" X="+grmr.getX()+" Y="+grmr.getY());
 							
-						}
-						else
-						{
-							System.out.println(j+". MIA RISORSA "+grmr.getId()+" X="+grmr.getX()+" Y="+grmr.getY());
-							
-						}
 					}
 					else
 					{
@@ -1175,7 +1210,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		}
 
 	@Override
-	public synchronized void setResourceStatus(String id, boolean status) {
+	public void setResourceStatus(String id, boolean status) {
 		
 		//GameResourceMobile grm=this.gp.getMyMobileResourceFromId(id);
 		
@@ -1186,7 +1221,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	}
 
 	@Override
-	public synchronized void moveResourceMobile(String resid, int movX, int movY, int movZ) {
+	public  void moveResourceMobile(String resid, int movX, int movY, int movZ) {
 		// TODO Auto-generated method stub
 		try {
 			this.gp.moveResourceMobile(resid, movX, movY, movZ, this.gp.getMyThreadId());
@@ -1196,9 +1231,370 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		}
 		
 	}
+	
+	public void verifyPlanets(GameResourceMobile grm)
+	{
+		//*PIANETI: RICERCA DI PIANETI**//
+		//verifica pianeti
+		
+		//ottengo lista di pianeti
+		
+		double x=grm.getX();
+		double y=grm.getY();
+		ArrayList<VirtualResource> planets=this.getPlanets();
+		//System.out.println("£££planets "+planets.size());
+		
+		
+		for(int k=0;k<planets.size();k++)
+		{
+			
+			VirtualResource planet=planets.get(k); // per ogni pianeta, verifico se le sue coordinate sono dentro una finestra visiva della mia risorsa mobile
+			//System.out.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
+			//System.out.println("My coordinates x = "+x+ "y = "+y);
+			if((x>=(planet.getX()-(this.visResource+this.radiusPlanet))) &&(x<=(planet.getX()+(this.visResource+this.radiusPlanet)))&&(y>=(planet.getY()-(this.visResource+this.radiusPlanet)))&&(y<(planet.getY()+(this.visResource+this.radiusPlanet))))
+			{
+				System.out.println("PIANETA");
+				System.out.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
+				//ps.println("PIANETA");
+				//ps.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
+				
+				if(planet.getOwnerID().equals("null")) // se il pianeta non è stato conquistato da qualcuno
+				{
+													
+					if(this.createResource(planet.getId())) //se ho abbastanza soldi per creare una diffesa
+					{ //conquisto il pianeta
+						System.out.println("CONQUISTO IL PIANETA "+planet.getId());
+						this.setPlanetOwner(planet.getId(), this.getOwnerid(),this.owner); //lo conquisto
+						
+						//invio un messaggio in broadcast a tutti peer nel gioco
+						this.UpdateLoggedUsers();
+						HashMap<String,UserInfo> userslist=this.getLoggedUsers();
+						Set<String> key_set=userslist.keySet();
+						Iterator<String> iterator=key_set.iterator();
+						System.out.println("USERS "+userslist.size());
+						
+						while(iterator.hasNext())
+						{		
+								String iduser=iterator.next();
+								UserInfo info=userslist.get(iduser);	
+								
+							    String user_id=info.getId();
+							    String userip=info.getIp();
+							    int userport=info.getPort();
+							
+								
+								if(!this.ownerid.equals(user_id))											
+								{
+									System.out.println("INVIO MESSAGGIO A "+user_id);	
+									PlanetConqueredMessage message=new PlanetConqueredMessage(this.ownerid,
+									this.sender.getIpAddress(),
+									((this.portMin)+7),this.ownerid,this.owner,planet.getId());
+									
+									System.out.println("Invio messaggio a "+userip+" , "+((userport+1)+7));
+									String responseMessage=it.simplexml.sender.MessageSender.sendMessage(userip,((userport)+7),message.generateXmlMessageString());
+									
+									//System.out.println(GamePeer.class.toString()+ "Verify response...");
+									
+									if(responseMessage.contains("ERROR"))
+									{
+										
+										System.out.println(" Sending Message ERROR!");
+										
+									}
+									else
+									{
+										//ack message
+										MessageReader responseStartMessageReader = new MessageReader();
+										Message receivedStartMessageReader = responseStartMessageReader.readMessageFromString(responseMessage.trim());
+
+										AckMessage ackMessage = new AckMessage(receivedStartMessageReader);
+										if (ackMessage.getAckStatus() == 0){
+											System.out.println(" Message received");
+											//System.out.println("Now Match is started");
+										}
+									}
+								  }
+								  
+								 
+								  
+								
+								
+							}
+							
+							
+
+					}
+					
+										
+					
+				}
+				else if(!planet.getOwnerID().equals(this.ownerid))
+				{
+					//gestione di clash
+					//un pianeta deve avere una risorsa associata. Al conquistare un pianeta devo acquistare una risorsa che difende questo pianeta. Da fare
+					//quando trovo un pianeta nemicom inizio uno scontro con questa risorsa
+					//ricavo id e port number del nemico
+					UserInfo info=this.getLoggedUserInfo(planet.getOwnerID());
+					if(info==null)
+					{
+						this.UpdateLoggedUsers();
+						info=this.getLoggedUserInfo(planet.getOwnerID());
+					}
+					
+					//String threadId=new Long(Thread.currentThread().getId()).toString();
+					System.out.println("###########SCONTRO#############");
+					System.out.println(planet.getOwnerID());
+					boolean result=sender.startMatch(planet.getOwnerID(), planet.getOwnerName(),info.getIp(),info.getPort(), planet.getId(),grm.getId(),grm.getQuantity() , planet.getX(), planet.getY(), planet.getZ());
+					// se vinco conquisto il pianeta
+					// se perdo perdo la mia risorsa
+					
+					if(result)
+					{
+						//ho vinto conquisto pianeta
+						this.setPlanetOwner(planet.getId(), "null", "null");//prima di conquistare il pianeta cancello
+						  //il proprietario precedente
+						
+						if(this.createResource(planet.getId()))
+						{
+							System.out.println("CONQUISTO IL PIANETA "+planet.getId());
+							this.setPlanetOwner(planet.getId(), this.getOwnerid(),this.owner); //lo conquisto
+
+							//		ora devo comunicarlo a gli altri giocatori
+							this.UpdateLoggedUsers();
+							HashMap<String,UserInfo> userslist=this.getLoggedUsers();
+
+							Set<String> key_set=userslist.keySet();
+							Iterator<String> iterator=key_set.iterator();
+
+							while(iterator.hasNext())
+							{
+
+								String iduser=iterator.next();
+								UserInfo info2=userslist.get(iduser);	
+								String user_id=info2.getId();
+								String userip=info2.getIp();
+								int userport=info2.getPort();
+
+
+								if(!this.ownerid.equals(user_id))											
+								{
+									System.out.println("Invio messaggio a "+user_id);
+									PlanetConqueredMessage message=new PlanetConqueredMessage(this.ownerid,
+											this.sender.getIpAddress(),
+											((this.portMin+1)+7),this.ownerid,this.owner,planet.getId());
+																	
+									String responseMessage=it.simplexml.sender.MessageSender.sendMessage(userip,(userport+7),message.generateXmlMessageString());
+																	
+									
+									if(responseMessage.contains("ERROR"))
+									{
+										
+										System.out.println(GamePeer.class.toString()+ "Sending Message ERROR!");
+										
+									}	
+									else
+									{
+										//	ack message
+										MessageReader responseStartMessageReader = new MessageReader();
+										Message receivedStartMessageReader = responseStartMessageReader.readMessageFromString(responseMessage.trim());
+
+										AckMessage ackMessage = new AckMessage(receivedStartMessageReader);
+										if (ackMessage.getAckStatus() == 0){
+											System.out.println("Messaggio ricevuto da "+user_id);
+											//	System.out.println("Now Match is started");
+										}
+									}
+								}	
+
+
+
+
+
+							}
+
+						}
+
+						
+					}
+					else
+					{
+						//ho perso elimino risorsa
+						//e' stata eliminata la risorsa 
+						
+					}
+					
+
+
+					
+				}
+				// se il pianeta è mio non faccio niente
+			
+			
+			
+		   }
+		
+		}
+		/**********/
+
 		
 		
 	}
+		
+		
+	
+	public void verifyEnemies(GameResourceMobile grm)
+	{
+		double xx,yy,zz;
+		
+		xx=grm.getX();
+		yy=grm.getY();
+		zz=grm.getZ();
+		
+		int x,y;
+		x=(int)xx;
+		y=(int)yy;
+		
+		ArrayList<Integer> posx=new ArrayList<Integer>();
+		ArrayList<Integer> posy=new ArrayList<Integer>();
+		ArrayList<String> owner=new ArrayList<String>();
+		ArrayList<String> type=new ArrayList<String>();
+		
+		ArrayList<Integer> pattack=new ArrayList<Integer>();
+		ArrayList<String> restypes=new ArrayList<String>();
+		
+		restypes.add("GameResourceMobile");
+		restypes.add("GameResource");
+		
+		pattack.add(new Integer(this.getProbattack()));
+		pattack.add(new Integer(this.getProbattack()));
+		
+		System.out.println("RM"+grm.getId()+" X="+grm.getX()+" Y="+grm.getY());
+		//controllo visibilità del grm
+		ArrayList<Object> vision=grm.getResourceVision();
+		
+		double v=grm.getVision();
+		//creo un arraylist dove salvo la posizione dentro l'array della visibilita' della risorsa mobile
+		ArrayList<Integer> array_pos=new ArrayList<Integer>();
+		
+		for(int z=0;z<vision.size();z++)
+		{
+			if(vision.get(z) instanceof GamePlayerResponsible)
+			{
+				GamePlayerResponsible gpr=(GamePlayerResponsible)vision.get(z);
+				if(((gpr.getPosX()>=xx-v)&&(gpr.getPosX()<=xx-v))&&((gpr.getPosY()>=yy-v)&&(gpr.getPosY()<=yy-v)))
+				{
+					int k=(int)gpr.getPosX();
+					int j=(int)gpr.getPosY();
+					posx.add(new Integer(k));
+					posy.add(new Integer(j));
+					owner.add("USER"+gpr.getId());
+					type.add("GameResource");
+					array_pos.add(new Integer(z));
+					
+				}
+			}
+			else if(vision.get(z) instanceof GameResourceMobileResponsible)
+			{
+				
+				GameResourceMobileResponsible grmr=(GameResourceMobileResponsible)vision.get(z);
+				if(((grmr.getX()>=xx-v)&&(grmr.getX()<=xx-v))&&((grmr.getY()>=yy-v)&&(grmr.getY()<=yy-v)))
+				{
+					int k=(int)grmr.getX();
+					int j=(int)grmr.getY();
+					posx.add(new Integer(k));
+					posy.add(new Integer(j));
+					owner.add("USER"+grmr.getOwnerId());
+					type.add("GameResourceMobile");
+					array_pos.add(new Integer(z));
+				}
+			}
+			
+		}
+		
+		String myid="USER"+this.ownerid;
+		VisibilityEngine ve=new VisibilityEngine("rules/visibilityTheory.pl");
+		ve.createVisibilityTheory(posx, posy, owner, type, myid, pattack, restypes);
+		
+		//ottengo la posizione dell'arraylist che corrisponde all'elemento da attacare
+		int pos=ve.attack(); 
+		
+		if(pos!=0) // se c'e' qualcuno da attaccare 
+	       {  
+				//DEVO OTTENERE L'ID DEL THREAD DEL RESPONSABILE 
+				//recupero l'object
+				int posres=array_pos.get(pos-1);
+			
+				Object res=vision.get(posres);
+			
+				if(res instanceof GamePlayerResponsible)
+				{
+					//ho trovato la base di un giocatore
+				
+					//String threadID=new Long(Thread.currentThread().getId()).toString();
+					GamePlayerResponsible player=(GamePlayerResponsible)res;
+					
+					//ricavo id e port number del nemico
+					UserInfo info=this.getLoggedUserInfo(player.getId());
+					if(info==null)
+					{
+						this.UpdateLoggedUsers();
+						info=this.getLoggedUserInfo(player.getId());
+					}
+					
+										
+					boolean result=sender.startMatch(player.getId(), player.getName(),info.getIp(),info.getPort(), player.getId(),grm.getId(),grm.getQuantity() , player.getPosX(), player.getPosY(), player.getPosZ());
+					//attendere esito dello scontro
+					if(result)
+					{
+						System.out.println("Ho vinto");
+						
+					}
+					else
+					{
+						System.out.println("Ho perso");
+						
+						
+					}
+					
+					
+				}
+				else if(res instanceof GameResourceMobileResponsible)
+				{
+					//String threadID=new Long(Thread.currentThread().getId()).toString();//devo cambiare questa linea
+					GameResourceMobileResponsible res_grm=(GameResourceMobileResponsible)res;
+					
+					//ricavo id e port number del nemico
+					UserInfo info=this.getLoggedUserInfo(res_grm.getOwnerId());
+					if(info==null)
+					{
+						this.UpdateLoggedUsers();
+						info=this.getLoggedUserInfo(res_grm.getOwnerId());
+					}
+					 
+					boolean result=sender.startMatch(res_grm.getOwnerId(), res_grm.getOwner(),info.getIp(),info.getPort(), res_grm.getId(),grm.getId(),grm.getQuantity() , res_grm.getX(),res_grm.getY(),res_grm.getZ());
+										
+					if(result)
+					{
+						System.out.println("Ho vinto");
+						
+					}
+					else
+					{
+						System.out.println("Ho perso");
+						
+						
+					}
+					
+				}
+			
+			
+			
+			//decision
+	       	}
+		
+	}
+	
+}
 	
 
 

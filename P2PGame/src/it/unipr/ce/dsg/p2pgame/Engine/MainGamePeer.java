@@ -160,8 +160,10 @@ public class MainGamePeer extends Thread{
         this.gp=new GamePeer(inPort,outPort,idBitLength,id,serverAddr,serverPort,gameInPort,gameOutPort,gameServerAddr,gameServerPort, stab,fix,check, pub);
 
         this.message_listener=new GUIMessageListener(gp,(this.portnumber+5));
-        this.message_listener.start();
+        //this.message_listener.start();
 
+        Thread listenerThread=new Thread(this.message_listener);
+        listenerThread.start();
         // System.out.println("creato gamepeer e messagelistener");
 
         SuccessMessage success=new SuccessMessage(true);

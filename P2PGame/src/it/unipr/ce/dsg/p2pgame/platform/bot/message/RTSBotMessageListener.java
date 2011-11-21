@@ -114,7 +114,7 @@ public class RTSBotMessageListener implements Runnable{
 		 String playerName=planetmessage.getNamePlayer();
 		 
 		 this.mybot.setPlanetOwner(planetID, playerID, playerName);
-		 System.out.println("GIOCATORE "+playerID+"HA CONQUISTATO "+planetID);
+		 System.out.println("GIOCATORE "+playerID+" HA CONQUISTATO "+planetID);
 		 
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.port, 0, "")).generateXmlMessageString().getBytes());
 		 

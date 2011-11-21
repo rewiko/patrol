@@ -19,7 +19,7 @@ public class MobileResourceFromIDMessage extends Message{
     public MobileResourceFromIDMessage(String resource)
     {
 
-         super("","",0);
+        super("","",0);
         this.setMessageType("GPRESOURCEMOBILE");
         this.PARAMETERS_NUM=4;
 

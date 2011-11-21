@@ -15,7 +15,7 @@ public class PositionRequestMessage extends Message{
 
     public PositionRequestMessage()
     {
-         super("","",0);
+        super("","",0);
         this.setMessageType("POSITIONREQUEST");
         this.PARAMETERS_NUM=3;
     }

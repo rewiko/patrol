@@ -108,8 +108,8 @@ public class ManageNetUpdate implements Runnable {
 			this.peer.stabilize();
 		}
 		else if (this.orderedString.get(num).compareTo("FixFinger") == 0) {
-			//System.out.println("Lunching periodic fixFinger");
-			this.peer.fixFinger(threadId);
+			//System.out.println("ManageNetUpdate--->Lunching periodic fixFinger");
+			//this.peer.fixFinger(threadId);
 		}
 		else if (this.orderedString.get(num).compareTo("CheckPredecessor") == 0){
 			//System.out.println("Lunching periodic checkPredecessor");
@@ -118,6 +118,8 @@ public class ManageNetUpdate implements Runnable {
 		else if (this.orderedString.get(num).compareTo("Publish") == 0){
 			//System.out.println("Lunching periodic publish");
 			this.peer.publishPosition(this.threadId);
+			//this.peer.publishResourceMobile(threadId);
+			//this.peer.publishResource(threadId);
 
 		}
 	}

@@ -45,6 +45,7 @@ public	enum Result {
 		this.otherPlayerMoves = new ArrayList<Object>();
 		this.results = new ArrayList<Result>();
 		this.hash = new ArrayList<String>();
+		this.timing=new ArrayList<String>();
 
 	}
 
@@ -145,7 +146,7 @@ public	enum Result {
 	//Jose' Murga 05/08/2011
 	//si calcola in base alla quantità di risorsa coinvolta nello scontro. Se la quantità è uguale entrambi perdono
 	public void closeClash(){
-		int pos = this.myMoves.size();
+		int pos = this.myMoves.size()-1;
 
 		if (this.otherPlayerMoves.get(pos) instanceof Attack){
 			Attack other = (Attack) this.otherPlayerMoves.get(pos);
@@ -170,8 +171,8 @@ public	enum Result {
 
 		}
 		else{
-			Attack my = (Attack) this.otherPlayerMoves.get(pos);
-			Defense other = (Defense) this.myMoves.get(pos);
+			Defense other = (Defense) this.otherPlayerMoves.get(pos);
+			Attack my = (Attack) this.myMoves.get(pos);
 
 			//TODO: calcolo del vincitore
 			double otherquantity=other.getQuantity();
@@ -191,7 +192,7 @@ public	enum Result {
 
 	//TODO: verificare l'attacco che si era ricevuto precedentemente
 	public boolean verifyAttack(){
-		int pos = this.myMoves.size();
+		int pos = this.myMoves.size()-1;
 		Attack attack = (Attack) this.otherPlayerMoves.get(pos);
 		if (attack.getHash().compareTo(this.getHash().get(pos)) == 0)
 			return true;
