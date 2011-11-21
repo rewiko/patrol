@@ -235,8 +235,11 @@ public class NetMessageListener implements Runnable {
 		String id = findMessage.getPeerId();
 
 		MultiLog.println(NetMessageListener.class.toString(), "Received findSuccessor request for " + id);
-		//System.out.println("Received findSuccessor request for " + id);
+		//System.out.println("#######################NetMessageListener########################");
+		//System.out.println("NetPeerMessageListener peerId="+this.netPeer.getMyId()+" Method=FindSuccessoMesageAction");
+		//System.out.println("Received findSuccessor request for " + id+" sourceName="+findMessage.getSourceName());
 
+		
 		String succ = this.netPeer.findSuccessor(id, this.threadId);
 		String destAddr = "";
 		int destPort = -1;

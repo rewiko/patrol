@@ -273,6 +273,7 @@ public class GamePeerMessageListener implements Runnable {
 		}
 
 		//Richiesta di consistenza all'altro
+		//System.out.println("GamePeerMessageListener----PositionMessageAction");
 		String responsible = this.peer.findSuccessor(posMessage.getOldPos(), this.threadId);
 
 		String destAddr = this.peer.getSharedInfos().getInfoFor(this.threadId).getIpAddress();
@@ -378,14 +379,17 @@ public class GamePeerMessageListener implements Runnable {
 		//TODO: prima di rispondere con la risorsa richiesta vedere se chi chiede ha i privilegi sufficienti
 		//MultiLog.println(GamePeerMessageListener.class.toString(), "Verify source privileges. Sending check message to reponsible");
 		//System.out.println("Verify source privileges. Sending check message to reponsible");
-
+		//System.out.println("GamePeerMessageListener---->findResourceMessageAction");
 		FindResourceMessage findResourceMessage = new FindResourceMessage(receivedMessage);
+		
+		//System.out.println(findResourceMessage.generateXmlMessageString());
 
 		//per efficienza prima di vedere se ha i privilegi vedere se si dispone la risorsa. Altrimenti si invia direttamente NACK
 		//verificare anche nella cache delle risorse e non solo dei giocatori
 		if ( !this.peer.getResPlayers().containsKey(findResourceMessage.getPositionHash()) &&
 				!this.peer.getResResources().containsKey(findResourceMessage.getPositionHash()) )
 		{
+			//System.out.println("NON ho la risorsa");
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 			//MultiLog.println(GamePeerMessageListener.class.toString(), "NON ho la risorsa");
 			//System.out.println("NON ho la risorsa");
@@ -399,6 +403,7 @@ public class GamePeerMessageListener implements Runnable {
 
 		//se ho la risorsa Vedo se la richiesta ricevuta ï¿½ ammissibile
 		//richiesta al responsabile del richiedente
+		//System.out.println("GamePeerMessageListener---->FindeResourceMessageAction");
 		String resp = this.peer.findSuccessor(findResourceMessage.getOldPos(), this.threadId);
 		//TODO: modifica per evitare deadlock il caso che chi deve possedere la risorsa e chi esegue il check ï¿½ lo stesso
 		//if (resp.compareTo(this.peer.getMyId()) != 0){
@@ -447,6 +452,8 @@ public class GamePeerMessageListener implements Runnable {
 
 							//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
 							//System.out.println("invio informazioni risorsa richieste");
+							//System.out.println(posPlayer.generateXmlMessageString());
+							//System.out.println("1");
 							os.write(posPlayer.generateXmlMessageString().getBytes());
 
 						}
@@ -460,6 +467,8 @@ public class GamePeerMessageListener implements Runnable {
 
 							//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa MOBILE richieste");
 							//System.out.println("invio informazioni risorsa MOBILE richieste");
+							//System.out.println(posResource.generateXmlMessageString());
+							//System.out.println("2");
 							os.write(posResource.generateXmlMessageString().getBytes());
 						}
 					}
@@ -505,6 +514,7 @@ public class GamePeerMessageListener implements Runnable {
 
 							//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
 							//System.out.println("invio informazioni risorsa richieste");
+							//System.out.println("3");
 							os.write(posPlayer.generateXmlMessageString().getBytes());
 
 						}
@@ -518,6 +528,7 @@ public class GamePeerMessageListener implements Runnable {
 
 							//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa MOBILE richieste");
 							//System.out.println("invio informazioni risorsa MOBILE richieste");
+							//System.out.println("4");
 							os.write(posResource.generateXmlMessageString().getBytes());
 						}
 
@@ -581,6 +592,7 @@ public class GamePeerMessageListener implements Runnable {
 
 					//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni risorsa richieste");
 					//System.out.println("invio informazioni risorsa richieste");
+					//System.out.println("5");
 					os.write(posPlayer.generateXmlMessageString().getBytes());
 				}
 				else if (this.peer.getResResources().containsKey(findResourceMessage.getPositionHash())){
@@ -594,6 +606,7 @@ public class GamePeerMessageListener implements Runnable {
 
 					//MultiLog.println(GamePeerMessageListener.class.toString(), "invio informazioni sulla RISORSA MOBILE richieste");
 					//System.out.println("invio informazioni sulla RISORSA MOBILE richieste");
+					//System.out.println("6");
 					os.write(posResource.generateXmlMessageString().getBytes());
 				}
 
@@ -789,6 +802,7 @@ public class GamePeerMessageListener implements Runnable {
 		}
 
 		//richiesta di consistenza a quello che dovrebbe essere il vecchio propietario
+		//System.out.println("GamePeerMessageListener-------mobileResourceMessageAction");
 		String responsible = this.peer.findSuccessor(resMessage.getOldPos(), this.threadId);
 		String destAddr = this.peer.getSharedInfos().getInfoFor(this.threadId).getIpAddress();
 		int destPort = this.peer.getSharedInfos().getInfoFor(this.threadId).getPortNumber() + 2;
@@ -902,7 +916,10 @@ public class GamePeerMessageListener implements Runnable {
 
 		//TODO: mettere controlli per verificare la posizione dell'altro avversario
 		StartMatchMessage startMatch = new StartMatchMessage(messageReceived);
-
+		System.out.println("##################STARTMATCH#########################");
+		System.out.println("Ricevuto messaggio da"+startMatch.getId());
+		System.out.println(startMatch.generateXmlMessageString());
+		System.out.println("Creo AttackReceived: id: "+startMatch.getId());	
 		if (this.peer.addAttackReceived(startMatch.getId(), startMatch.getUserName(), startMatch.getHash())){
 
 			//MultiLog.println(GamePeerMessageListener.class.toString(), "Attack RECEIVED");
@@ -911,9 +928,12 @@ public class GamePeerMessageListener implements Runnable {
 			
 			
 			String resource=startMatch.getResourceId();
+			
+			System.out.println("Attaccano la mia risorsa: "+resource);
 			if(resource.equals(this.peer.getMyId()))
 			{
 				//ottengo il primo GameResource
+				System.out.println("ATTACANO LA MIA BASE");
 				GameResource res=null;
 				ArrayList<Object> resources=this.peer.getMyResources();
 				
@@ -949,7 +969,7 @@ public class GamePeerMessageListener implements Runnable {
 			}
 			else
 			{
-				GameResourceMobile res=this.peer.getMyMobileResourceFromId(resource);
+				GameResource res=this.peer.getMyResourceFromId(resource);
 				
 
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
@@ -979,9 +999,10 @@ public class GamePeerMessageListener implements Runnable {
 		//System.out.println(LOG_TAG + "Handler for DEFENSE MESSAGE");
 
 		DefenseMatchMessage defenseMessage = new DefenseMatchMessage(messageReceived);
-
+		System.out.println(defenseMessage.generateXmlMessageString());
+		System.out.println("creo defense received: "+defenseMessage.getResource()+" --> "+defenseMessage.getQuantity() );
 		Defense defense = new Defense(defenseMessage.getQuantity(), defenseMessage.getResource());
-
+		
 		if (this.peer.addDefenseReceived(defenseMessage.getId(), defenseMessage.getUserName(), defense)){
 
 			Attack clearAttack =  (Attack) this.peer.getAttackClear(defenseMessage.getId());
@@ -989,12 +1010,17 @@ public class GamePeerMessageListener implements Runnable {
 			ClearAttackMatchMessage clearMessage = new ClearAttackMatchMessage("","",-1, this.peer.getPlayer().getId(), this.peer.getPlayer().getName(),
 					this.peer.getPlayer().getSpatialPosition(), this.peer.getPlayer().getPosX(), this.peer.getPlayer().getPosY(), this.peer.getPlayer().getPosZ(),
 					clearAttack.getHash(), clearAttack.getType(), clearAttack.getQuantity(), clearAttack.getNonce());
-
+			System.out.println("###########################DEFENSEMATCH ACTION####################");
+			System.out.println("Creo clearAttackMessage e lo invio");
+			System.out.println(clearMessage.generateXmlMessageString());
+			
 			os.write(clearMessage.generateXmlMessageString().getBytes());
 
+			System.out.println("Chiudo Match");
 			this.peer.closeMatch(defenseMessage.getId());
-			
+			System.out.println("###CLOSE MATCH####");
 			//so che lo scontro e' finito, quindi controllo l'esito
+			System.out.println("ID nemico: "+defenseMessage.getId());
 			ArrayList<Result> results=this.peer.getClashes().get(defenseMessage.getId()).getResults();
 			int sz=results.size();
 			Result result=results.get(sz-1);
@@ -1007,31 +1033,46 @@ public class GamePeerMessageListener implements Runnable {
 			{
 				System.out.println("Ho perso");
 				//tolgo il gameresource coinvolto nello scontro
-				GameResource res=null;
+			/*	GameResource res=null;
 				ArrayList<Object> resources=this.peer.getMyResources();
 				
-				int i=resources.size()-1;
+				String myres=defenseMessage.getResource();
 				
-				while(i>=0)
+				if(myres.equals(this.peer.getMyId()))
 				{
-					Object aux=resources.get(i);
-					if(aux instanceof GameResourceMobile)
+					int i=resources.size()-1;
+					
+					while(i>=0)
 					{
-						i--;
+						Object aux=resources.get(i);
+						if(aux instanceof GameResourceMobile)
+						{
+							i--;
+						}
+						else if(aux instanceof GameResourceEvolve)
+						{
+							i--;
+						}
+						else
+						{
+							res=(GameResource)aux;
+							i=-1;
+						}
+						
 					}
-					else if(aux instanceof GameResourceEvolve)
-					{
-						i--;
-					}
-					else
-					{
-						res=(GameResource)aux;
-						i=-1;
-					}
+					this.peer.removeToMyResources(res);
+					
+
 					
 				}
-				this.peer.removeToMyResources(res);
-				
+				else
+					
+				{
+					GameResource gres=this.peer.getMyResourceFromId(defenseMessage.getResource());
+					this.peer.removeToMyResources(gres);
+					
+				}
+				*/
 			}
 
 		}

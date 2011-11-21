@@ -911,7 +911,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
 						Thread.sleep(100);
 
 						if (gp != null) {
-
+							Thread.sleep(100);
 							if (gp.getPlayer() != null){
 
 								peerGUI.getXPositionLabel().setText(new Double(gp.getPlayer().getPosX()).toString());

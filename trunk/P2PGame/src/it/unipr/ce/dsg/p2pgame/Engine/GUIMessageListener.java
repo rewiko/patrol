@@ -1,9 +1,12 @@
 
 package it.unipr.ce.dsg.p2pgame.Engine;
 
+import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
 import it.simplexml.message.MessageReader;
 import it.unipr.ce.dsg.p2pgame.GUI.message.*;
+import it.unipr.ce.dsg.p2pgame.platform.Clash.Phase;
+import it.unipr.ce.dsg.p2pgame.platform.Clash.Result;
 import it.unipr.ce.dsg.p2pgame.platform.GamePeer;
 import it.unipr.ce.dsg.p2pgame.platform.GamePlayer;
 import it.unipr.ce.dsg.p2pgame.platform.GamePlayerResponsible;
@@ -11,6 +14,10 @@ import it.unipr.ce.dsg.p2pgame.platform.GameResource;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceEvolve;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
+//import it.unipr.ce.dsg.p2pgame.platform.bot.Result;
+import it.unipr.ce.dsg.p2pgame.platform.bot.UserInfo;
+import it.unipr.ce.dsg.p2pgame.platform.bot.message.MessageSender;
+import it.unipr.ce.dsg.p2pgame.platform.bot.message.PlanetConqueredMessage;
 import it.unipr.ce.dsg.p2pgame.util.CheckOutput;
 import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 import java.io.DataInputStream;
@@ -19,8 +26,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import it.unipr.ce.dsg.p2pgame.platform.Attack;
+import it.unipr.ce.dsg.p2pgame.platform.Clash;
 
 import weka.gui.SysErrLog;
 
@@ -28,7 +40,7 @@ import weka.gui.SysErrLog;
  *
  * @author jose murga
  */
-public class GUIMessageListener extends Thread{
+public class GUIMessageListener implements Runnable{
 
     private ServerSocket server;
     private GamePeer gp;
@@ -48,8 +60,6 @@ public class GUIMessageListener extends Thread{
     public void run() {
 
         Socket clientSocket = null;
-
-
 
         try {
 		if (this.server == null)
@@ -81,7 +91,9 @@ public class GUIMessageListener extends Thread{
                     }
 
                     try {
+                    	//System.out.print("GUIMessageListener");
 						checkIncomingMessage(message, os);
+						
 					} catch (InterruptedException e) {
 						
 						System.err.println("GUIMessageListener InterruptedException");
@@ -93,13 +105,14 @@ public class GUIMessageListener extends Thread{
 		    clientSocket.close();
 		    break;
                 }
-
+                
             } catch (IOException ex) {
+            	System.out.println("GUIMessageListener InterruptedException");
                 Logger.getLogger(GUIMessageListener.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
-
+        
     }
 
     /*
@@ -115,7 +128,7 @@ public class GUIMessageListener extends Thread{
 
         MessageReader messageReader = new MessageReader();
 	Message receivedMessage = messageReader.readMessageFromString(messageString.trim());
-
+		//System.out.print(".checkIncomingMessage");
         if(receivedMessage.getMessageType().equals("IDREQUEST"))
         {
             this.GamePeerIDAction(receivedMessage, os);
@@ -206,6 +219,7 @@ public class GUIMessageListener extends Thread{
         }
         else if(receivedMessage.getMessageType().equals("MOVEMOBILERESOURCEREQUEST"))
         {
+        	//System.out.print(" message type=MOVEMOBILERESOURCEREQUEST");
         	this.MoveMobileResourceAction(receivedMessage, os);
         	
         }
@@ -217,6 +231,17 @@ public class GUIMessageListener extends Thread{
         else if(receivedMessage.getMessageType().equals("GRMSTATUSREQUEST"))
         {
         	this.ResuorceMobileStatusAction(receivedMessage, os);
+        	
+        }
+        else if(receivedMessage.getMessageType().equals("PUBLISHRESOURCEREQUEST"))
+        {
+        	
+        	this.publishMobileResourceAction(receivedMessage, os);
+        	
+        }
+        else if(receivedMessage.getMessageType().equals("STARTMATCHREQUEST"))
+        {
+        	this.startMatchAction(receivedMessage, os);
         	
         }
         	
@@ -805,6 +830,7 @@ public class GUIMessageListener extends Thread{
         MobileResourceFromIDRequestMessage request=new MobileResourceFromIDRequestMessage(receivedMessage);
 
         String id=request.getResourceID();
+        
         String str_resources="";
         GameResourceMobile grm=this.gp.getMyMobileResourceFromId(id);
 
@@ -1043,12 +1069,12 @@ public class GUIMessageListener extends Thread{
             ResourceFromIDRequestMessage req=new ResourceFromIDRequestMessage(receivedMessage);
 
             String r_id=req.getResourceID();
-
+           
             GameResource resource=this.gp.getMyResourceFromId(r_id);
             /*
              * creates a String with the resource's structure
              */
-
+           
             String str_resources="";
             if(resource instanceof GameResourceEvolve)
             {
@@ -1305,10 +1331,12 @@ public class GUIMessageListener extends Thread{
             }
 
            // System.out.println(str_resources);
-
+            
             ResourceFromIDMessage response=new ResourceFromIDMessage(str_resources);
-
+            
+            
             os.write(response.generateXmlMessageString().getBytes());
+            
    }
 
    /*
@@ -1702,6 +1730,8 @@ public class GUIMessageListener extends Thread{
    
    public void MoveMobileResourceAction(Message receivedMessage, DataOutputStream os)throws IOException
    {
+	   
+	   
 	   MoveMobileResourceRequestMessage msg=new MoveMobileResourceRequestMessage(receivedMessage);
 	   
 	   String id=msg.getResID();
@@ -1780,11 +1810,101 @@ public class GUIMessageListener extends Thread{
 	 
 	   
    }
+   
+   
+   public void publishMobileResourceAction(Message receivedMessage, DataOutputStream os)throws IOException
+   {
+	   
+	   //devo pubblicare le mie risorse mobili in cache
+	   
+	   try {
+		   
+		this.gp.publishResourceMobile(gp.getMyThreadId());
+		
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	SuccessMessage message=new SuccessMessage(true);
+
+    os.write(message.generateXmlMessageString().getBytes());
+    
+    
+   }
+   
+   public void startMatchAction(Message receivedMessage, DataOutputStream os)throws IOException
+   {
+	   StartMatchRequestMessage msg=new StartMatchRequestMessage(receivedMessage);
+	   
+	    String resownerId=msg.getResownerId();
+		String resownerName=msg.getResownerName();
+		String ipAdd=msg.getIpAdd();
+		int portNumber=msg.getPortNumber();
+		String otherresourceID=msg.getOtherresourceID();
+		String myrousrceID=msg.getMyrousrceID();
+		double resourceQuantity=msg.getResourceQuantity();
+		double posX=msg.getPosX();
+		double posY=msg.getPosY();
+		double posZ=msg.getPosZ();
+		
+		System.out.println("INIZIO SCONTRO CON "+resownerId);
+		System.out.println(" Invio il Messaggio");
+		System.out.println(msg.generateXmlMessageString());
+		
+		//chiamo a startmacth di gp
+		this.gp.startMatch(resownerId, resownerName,ipAdd,portNumber,otherresourceID,myrousrceID,resourceQuantity ,this.gp.getMyThreadId() ,posX, posY, posZ);
+	   
+		do{
+			//attendo la fine dello scontro
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			}while(this.gp.getClashes().get(resownerId).getStatusLast()!=Phase.END);
+			//quando lo scontro finisco controllo il suo esito
+			System.out.println("######GUIMESSAGELISTENER######");
+			System.out.println("Lo scontro e' finito correttamente\nRisultato:");
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			System.out.println("ID nemico: "+resownerId);
+			ArrayList<Result> results=this.gp.getClashes().get(resownerId).getResults();
+			int sz=results.size();
+			Result result=results.get(sz-1);
+			
+			SuccessMessage message;
+			if(result==Result.WIN)
+			{
+				System.out.println("Ho vinto");
+				message=new SuccessMessage(true);
+								
+			}
+			else
+			{
+				System.out.println("Ho perso");
+				//GameResource gr=this.gp.getMyResourceFromId(myrousrceID);
+				//this.gp.removeToMyResources(gr);
+				message=new SuccessMessage(false);
+				
+			}
+			
+			os.write(message.generateXmlMessageString().getBytes());
+
+	   
+   }
 
 public static void main(String [] arg)
 {
-    GUIMessageListener listener=new GUIMessageListener(null,2424);
-    listener.start();
+    //GUIMessageListener listener=new GUIMessageListener(null,2424);
+    //listener.start();
 
 }
 

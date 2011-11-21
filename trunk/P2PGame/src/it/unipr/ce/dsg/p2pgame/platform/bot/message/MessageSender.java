@@ -747,23 +747,27 @@ response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumb
  */
 public GameResource getMyResourceFromId(String r_id) 
 {
-    Message message=new ResourceFromIDRequestMessage(r_id);
-
+    
+	//String msgid=Long.toString(System.currentTimeMillis());
+	Message message=new ResourceFromIDRequestMessage(r_id);
+    
     String response = null;
-   
+    
+    
 response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumber+5, message.generateXmlMessageString());
 
+//System.out.println(msgid);
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
-
+    //System.out.println("GPRESOURCE2");	
     if(receivedMessage.getMessageType().equals("GPRESOURCE"))
     {
         ResourceFromIDMessage res=new ResourceFromIDMessage(receivedMessage);
-
+        
         String str_resource=res.getResource();
 
         GameResource game_resource=null;
-
+       // System.out.println("GPRESOURCE3");
        String []tmp=str_resource.split("\\#");
 
                 if(tmp[0].equals("GameResource"))
@@ -871,7 +875,7 @@ response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumb
                    game_resource=grm;
 
                 }
-
+               // System.out.println("GPRESOURCE4");
                 return game_resource;
     }
 
@@ -1245,6 +1249,7 @@ public void setMobileReourceStatus(String resid, boolean status)
 public boolean moveMobileResource(String resid,int movX, int movY)
 {
 	String response=null;
+	//System.out.println("MessageSender--->moveMobileResource");
 	Message message=new MoveMobileResourceRequestMessage(resid,movX,movY);
 	response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumber+5, message.generateXmlMessageString());
 
@@ -1336,6 +1341,47 @@ public boolean getResourceMobileStatus(String resid)
 	
 	return false;
 }
+
+public void publishResourceMobile()
+{
+	Message message=new PublishResourceMobileRequestMessage();
+	
+	String response =it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumber+5, message.generateXmlMessageString());
+
+    MessageReader messageReader=new MessageReader();
+
+	Message receivedMessage = messageReader.readMessageFromString(response.trim());
+
+	if(receivedMessage.getMessageType().equals("SUCCESSMESSAGE"))
+    {
+		
+		//...
+    }
+}
+
+public boolean startMatch(String resourceOwnerID, String resourceOwnerName,String ip,int port,String otherresourceID,String myrousrceID,double resourceQuantity , double posX, double posY, double posZ)
+{
+	Message message=new StartMatchRequestMessage(resourceOwnerID,resourceOwnerName,ip,port,otherresourceID,myrousrceID,resourceQuantity ,posX,  posY, posZ);
+	
+	String response =it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumber+5, message.generateXmlMessageString());
+
+    MessageReader messageReader=new MessageReader();
+
+	Message receivedMessage = messageReader.readMessageFromString(response.trim());
+	
+	if(receivedMessage.getMessageType().equals("SUCCESSMESSAGE"))
+    {
+		SuccessMessage msg=new SuccessMessage(receivedMessage);
+		boolean result=msg.getSuccess();
+		
+		return result;
+    }
+	
+	return false;
+}
+	
+
+
 
 
 }
