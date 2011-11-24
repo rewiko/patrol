@@ -275,8 +275,9 @@ public class NetPeer {
 	 * @throws InterruptedException 
 	 *
 	 */
-	public String findSuccessor(String id, String respOwner) throws InterruptedException{
+	public InfoPassing findSuccessor(String id, String respOwner) throws InterruptedException{
 		String successor = "";
+		InfoPassing succ = null;
 		//System.out.println("NetPeer--->findSuccessor id="+id+" respOwner="+respOwner);
 		if (id != null && this.successorId != null && id.compareTo("") != 0 && this.successorId.compareTo("") != 0){
 			MultiLog.println(NetPeer.class.toString(), "FindSucc test se: " + id + " ï¿½( " + this.myId + " , " + this.successorId + " ]");
@@ -288,7 +289,8 @@ public class NetPeer {
 				successor = this.successorId;
 				//System.out.println("findSuccesor--Ininterval "+successor+" "+this.successor.getIpAddress()+" , "+this.successor.getPortNumber());
 				//System.out.println("findSucessor1");
-				this.saveOnCache(this.successorId, this.successor, respOwner);
+				//this.saveOnCache(this.successorId, this.successor, respOwner);
+				succ = new InfoPassing(this.successor, this.successorId);
 				//this.saveOnCache(this.successorId, this.successor, successor);
 
 			} else {
@@ -304,20 +306,25 @@ public class NetPeer {
 					MultiLog.println(NetPeer.class.toString(), "REQUEST to search ID");
 					//System.out.println("REQUEST to search ID");
 					//System.out.println("findSucessor2");
-					successor = this.requestToFindSuccessor(cp, id, respOwner);
+					
+					///XXX: cambio con struttura
+					//successor = this.requestToFindSuccessor(cp, id, respOwner);
+					succ = this.requestToFindSuccessor(cp, id, respOwner);
 
 				} else {
 					successor = this.myId;
 					//System.out.println("findSuccesor--IsMyID "+respOwner+" "+this.myPeer.getIpAddress()+" , "+this.myPeer.getPortNumber());
 					//System.out.println("findSucessor3");
-					this.saveOnCache(this.myId, this.myPeer, respOwner);
+					//this.saveOnCache(this.myId, this.myPeer, respOwner);
+					succ = new InfoPassing(this.myPeer, this.myId);
 				}
 
 			}
 		}
 		//System.out.println("NetPeer--->findSuccessor "+id+" successor= "+successor);
 		
-		return successor;
+		//return successor;
+		return succ;
 	}
 
 	/**
@@ -332,13 +339,14 @@ public class NetPeer {
 	 * @throws InterruptedException 
 	 *
 	 */
-	private String requestToFindSuccessor(String to, String id, String reqOwner) throws InterruptedException {
+	private InfoPassing requestToFindSuccessor(String to, String id, String reqOwner) throws InterruptedException {
 		FindSuccMessage findSuccMessage = new FindSuccMessage(this.myId, this.myPeer.getIpAddress(), this.outputPort, id);
 		//System.out.println("NetPeer--->RequestToFindSuccessor to="+to+" id="+id+" reqOwner="+reqOwner);
 		String destAddr = "";
 		int destPort = -1;
 
-		String resp = "";
+		//String resp = "";
+		InfoPassing resp = null;
 
 		if (this.fingerTable.containsKey(to)) {
 			//System.out.println("--->close Pred in finger table");
@@ -363,20 +371,23 @@ public class NetPeer {
 			//System.out.println("Unable to contact " + to);
 			MultiLog.println(NetPeer.class.toString(), "Use info of THIS peer...");
 			//System.out.println("Use info of THIS peer...");
-			resp = id;
+			//resp = id;
 			NetPeerInfo np = new NetPeerInfo(this.myPeer.getIpAddress(), this.myPeer.getPortNumber(), "");
 			//System.out.println("requesttofindSuccesor--IsMyID "+reqOwner+" "+np.getIpAddress()+" , "+np.getPortNumber());
-			this.saveOnCache(resp, np, reqOwner);
+			//this.saveOnCache(resp, np, reqOwner);
+			resp = new InfoPassing(np, id);
+			
 			return resp;
 		}
 
 		//loop avoidance
 		if (destAddr.compareTo(this.myPeer.getIpAddress()) == 0 && destPort == this.outputPort){
-			resp = id;
+			//resp = id;
 			NetPeerInfo np = new NetPeerInfo(this.myPeer.getIpAddress(), this.myPeer.getPortNumber(), "");
 			
 			//System.out.println("requesttofindSuccesor--IsMyID2 "+reqOwner+" "+np.getIpAddress()+" , "+np.getPortNumber());
-			this.saveOnCache(resp, np, reqOwner);
+			//this.saveOnCache(resp, np, reqOwner);
+			resp = new InfoPassing(np, id);
 			return resp;
 
 		}
@@ -392,10 +403,11 @@ public class NetPeer {
 			System.err.println("Sending Ping Message ERROR !");
 			MultiLog.println(NetPeer.class.toString(), "Use info of THIS peer...");
 			System.out.println("Use info of THIS peer...");
-			resp = id;
+			//resp = id;
 			NetPeerInfo np = new NetPeerInfo(this.myPeer.getIpAddress(), this.myPeer.getPortNumber(), "");
 			//System.out.println("requesttofindSuccesor--IsMyID3 "+reqOwner+" "+np.getIpAddress()+" , "+np.getPortNumber());
-			this.saveOnCache(resp, np, reqOwner);
+			//this.saveOnCache(resp, np, reqOwner);
+			resp = new InfoPassing(np, id);
 			return resp;
 
 		}
@@ -406,17 +418,19 @@ public class NetPeer {
 
 			InfoPeerMessage infoMessage = new InfoPeerMessage(receivedMessage);
 
-			resp = infoMessage.getPeerId();
+			//resp = infoMessage.getPeerId();
 
 			NetPeerInfo np = new NetPeerInfo(infoMessage.getPeerAddr(), infoMessage.getPeerPort(), "");
 			//System.out.println("requesttofindSuccesor--anotherID "+reqOwner+" "+np.getIpAddress()+" , "+np.getPortNumber());
-			this.saveOnCache(infoMessage.getPeerId(), np, reqOwner);
+			//this.saveOnCache(infoMessage.getPeerId(), np, reqOwner);
+			
+			resp = new InfoPassing(np, infoMessage.getPeerId());
 			//this.saveOnCache(infoMessage.getPeerId(), np, resp);
 		}
 		return resp;
 
 	}
-
+/*
 	/**
 	 *
 	 * Save the information about peer (id, npi) on relative cache. 'owner'
@@ -428,14 +442,14 @@ public class NetPeer {
 	 * @throws InterruptedException 
 	 *
 	 */
-	/*private*/public synchronized void saveOnCache(String id, NetPeerInfo npi, String owner) throws InterruptedException {
+	/*private*//*public synchronized void saveOnCache(String id, NetPeerInfo npi, String owner) throws InterruptedException {
 
 		//System.out.println("save on cache "+owner+" "+npi.getIpAddress()+" "+npi.getPortNumber());
 		this.sharedInfos.saveInfo(owner, npi, id);
 
 	}
 
-
+*/
 	/**
 	 *
 	 * Search in the local finger table for the highest predecessor of 'id'
@@ -718,13 +732,15 @@ public class NetPeer {
 
 		//String elementId = this.findSuccessor(toFind.toString(16), this.myThreadId);
 		//System.out.println("NetPeer---->fixFinger");
-		String elementId = this.findSuccessor(toFind.toString(16), threadId);
+		InfoPassing info = this.findSuccessor(toFind.toString(16), threadId);
+		String elementId = info.getPeerID();
 		if (elementId != null && elementId.compareTo("") != 0){
 			MultiLog.println(NetPeer.class.toString(), "elementId for next: " + elementId);
 			//System.out.println("elementId for next: " + elementId );
 
 			//System.out.println("info element: " + this.sharedInfos.getInfoFor(this.myThreadId).getIpAddress() + ":" + this.sharedInfos.getInfoFor(this.myThreadId).getPortNumber());
-			MultiLog.println(NetPeer.class.toString(), "info element: " + this.sharedInfos.getInfoFor(threadId).getIpAddress() + ":" + this.sharedInfos.getInfoFor(threadId).getPortNumber());
+			//MultiLog.println(NetPeer.class.toString(), "info element: " + this.sharedInfos.getInfoFor(threadId).getIpAddress() + ":" + this.sharedInfos.getInfoFor(threadId).getPortNumber());
+			MultiLog.println(NetPeer.class.toString(), "info element: " + info.getPeerData().getIpAddress() + ":" + info.getPeerData().getPortNumber());
 			//System.out.println("info element: " + this.sharedInfos.getInfoFor(threadId).getIpAddress() + ":" + this.sharedInfos.getInfoFor(threadId).getPortNumber());
 
 			MultiLog.println(NetPeer.class.toString(),"PRE-Finger ENTRY");
@@ -743,7 +759,8 @@ public class NetPeer {
 			if (this.fingerTable.containsKey(oldNext))
 				this.fingerTable.remove(oldNext);
 			//this.fingerTable.put(elementId, this.sharedInfos.getInfoFor(this.myThreadId));
-			this.fingerTable.put(elementId, this.sharedInfos.getInfoFor(threadId));
+			//this.fingerTable.put(elementId, this.sharedInfos.getInfoFor(threadId));
+			this.fingerTable.put(elementId, info.getPeerData());
 
 			MultiLog.println(NetPeer.class.toString(), "Post - FIX");
 			//System.out.println("Post - FIX");
@@ -1159,15 +1176,19 @@ public class NetPeer {
                          //System.out.println("CACHE : "+key);
 			//String responsible = this.findSuccessor(key, this.myThreadId);
 			//System.out.println("NetPeer--->PublishResource");
-			String responsible = this.findSuccessor(key, threadId);
+			InfoPassing resp = this.findSuccessor(key, threadId);
+			String responsible = resp.getPeerID();
+			
 
 			if (responsible.compareTo(this.myId) != 0){
 
 				//String destAddr = this.sharedInfos.getInfoFor(this.myThreadId).getIpAddress();
-				String destAddr = this.sharedInfos.getInfoFor(threadId).getIpAddress();
+				//String destAddr = this.sharedInfos.getInfoFor(threadId).getIpAddress();
+				String destAddr = resp.getPeerData().getIpAddress();
 
 				//int destPort = this.sharedInfos.getInfoFor(this.myThreadId).getPortNumber();
-				int destPort = this.sharedInfos.getInfoFor(threadId).getPortNumber();
+				//int destPort = this.sharedInfos.getInfoFor(threadId).getPortNumber();
+				int destPort = resp.getPeerData().getPortNumber();
 
 				NetResourceInfo resource = this.resourceOnCache.get(key);
 				NetPeerInfo owner = resource.getOwner();
@@ -1283,7 +1304,12 @@ public class NetPeer {
 
 			//String responsible = this.findSuccessor(key, this.myThreadId);
 			//System.out.println("NetPeer---->searchResource");
-			String responsible = this.findSuccessor(key, threadId);
+			
+			InfoPassing resp = this.findSuccessor(key, threadId);
+			String responsible = resp.getPeerID();
+			
+			
+			
 			MultiLog.println(NetPeer.class.toString(), "RESOURCE " + key + " may be on cache of " + responsible);
 			//System.out.println("RESOURCE " + key + " may be on cache of " + responsible);
 			if (responsible.compareTo(this.myId) == 0){
@@ -1295,7 +1321,7 @@ public class NetPeer {
 				MultiLog.println(NetPeer.class.toString(), "Require resource to responsible...");
 				//System.out.println("Require resource to responsible...");
 				//return this.reqResource(key, responsible);
-				return this.reqResource(key, responsible, threadId);
+				return this.reqResource(key, responsible, threadId, resp);
 			}
 		}
 
@@ -1311,7 +1337,7 @@ public class NetPeer {
 	 * @throws InterruptedException 
 	 *
 	 */
-	private NetResourceInfo reqResource(String id, String to, String threadId) throws InterruptedException{
+	private NetResourceInfo reqResource(String id, String to, String threadId, InfoPassing resp) throws InterruptedException{
 
 		GetResourceMessage getResourceMessage = new GetResourceMessage(this.myId, this.myPeer.getIpAddress(), this.outputPort, id);
 
@@ -1320,11 +1346,14 @@ public class NetPeer {
 
 
 		//if (this.sharedInfos.getIdFor(this.myThreadId).compareTo(to) == 0) {
-		if (this.sharedInfos.getIdFor(threadId).compareTo(to) == 0) {
+		//if (this.sharedInfos.getIdFor(threadId).compareTo(to) == 0) {
+		if (resp.getPeerID().compareTo(to) == 0) {
 			//destAddr = this.sharedInfos.getInfoFor(this.myThreadId).getIpAddress();
-			destAddr = this.sharedInfos.getInfoFor(threadId).getIpAddress();
+			//destAddr = this.sharedInfos.getInfoFor(threadId).getIpAddress();
+			destAddr = resp.getPeerData().getIpAddress();
 			//destPort = this.sharedInfos.getInfoFor(this.myThreadId).getPortNumber();
-			destPort = this.sharedInfos.getInfoFor(threadId).getPortNumber();
+			//destPort = this.sharedInfos.getInfoFor(threadId).getPortNumber();
+			destPort = resp.getPeerData().getPortNumber();
 		} else if (this.fingerTable.containsKey(to)) {
 			destAddr = this.fingerTable.get(to).getIpAddress();
 			destPort = this.fingerTable.get(to).getPortNumber();

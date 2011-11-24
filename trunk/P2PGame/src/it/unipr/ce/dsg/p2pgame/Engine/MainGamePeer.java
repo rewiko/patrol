@@ -153,7 +153,10 @@ public class MainGamePeer extends Thread{
         int gameOutPort=request.getGameOutPort();
         int gameServerPort=request.getGameServerPort();
         int stab=request.getStab();
-        int fix=request.getFix();
+        
+        //int fix=request.getFix();
+        int fix=50;
+        System.out.println("fix " + fix);
         int check=request.getCheck();
         int pub=request.getPub();
 
