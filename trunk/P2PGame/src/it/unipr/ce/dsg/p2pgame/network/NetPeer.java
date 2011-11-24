@@ -59,7 +59,7 @@ public class NetPeer {
 	/**
 	 * Shared resource between all thread
 	 */
-	private NetSharedResource sharedInfos = null;
+//	private NetSharedResource sharedInfos = null;
 
 	/**
 	 * Identifier of this thread
@@ -166,7 +166,7 @@ public class NetPeer {
 
 		this.resourceOnCache = new ConcurrentHashMap<String, NetResourceInfo>();
 
-		this.sharedInfos = new NetSharedResource();
+	//	this.sharedInfos = new NetSharedResource();
 	}
 
 
@@ -360,11 +360,11 @@ public class NetPeer {
 			//System.out.println("--->close Pred is my predecessor");
 			destAddr = this.predecessor.getIpAddress();
 			destPort = this.predecessor.getPortNumber();
-		} else if (this.sharedInfos.getPeersId().get(reqOwner) != null
+	/*	} else if (this.sharedInfos.getPeersId().get(reqOwner) != null
 				&& this.sharedInfos.getPeersId().get(reqOwner).compareTo(to) == 0) {
 			//System.out.println("--->close Pred is in cache");
 			destAddr = this.sharedInfos.getPeersInfo().get(reqOwner).getIpAddress();
-			destPort = this.sharedInfos.getPeersInfo().get(reqOwner).getPortNumber();
+			destPort = this.sharedInfos.getPeersInfo().get(reqOwner).getPortNumber();*/
 		} else {
 			//System.out.println("--->this Peer");
 			MultiLog.println(NetPeer.class.toString(), "Unable to contact " + to);
@@ -1777,11 +1777,11 @@ public class NetPeer {
 	 * @return the shared resource
 	 *
 	 */
-	public /*synchronized*/ NetSharedResource getSharedInfos() {
+	//public /*synchronized*/ NetSharedResource getSharedInfos() {
 		
 		//System.out.println("###########NETPEER GETSHARED INFOS#############");
-		return sharedInfos;
-	}
+		//return sharedInfos;
+//	}
 
 
 	/**
