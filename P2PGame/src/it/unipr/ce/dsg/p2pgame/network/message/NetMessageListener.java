@@ -3,6 +3,7 @@ package it.unipr.ce.dsg.p2pgame.network.message;
 import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
 import it.simplexml.message.MessageReader;
+import it.unipr.ce.dsg.p2pgame.network.InfoPassing;
 import it.unipr.ce.dsg.p2pgame.network.NetPeer;
 import it.unipr.ce.dsg.p2pgame.network.NetPeerInfo;
 import it.unipr.ce.dsg.p2pgame.network.NetResourceInfo;
@@ -237,7 +238,8 @@ public class NetMessageListener implements Runnable {
 		MultiLog.println(NetMessageListener.class.toString(), "Received findSuccessor request for " + id);
 		//System.out.println("Received findSuccessor request for " + id);
 
-		String succ = this.netPeer.findSuccessor(id, this.threadId).getPeerID();
+		InfoPassing successor = this.netPeer.findSuccessor(id, this.threadId);
+		String succ = successor.getPeerID();
 		String destAddr = "";
 		int destPort = -1;
 		//read where are stored info for 'succ' peer
@@ -250,10 +252,11 @@ public class NetMessageListener implements Runnable {
 		} else if (this.netPeer.getPredecessorId() != null && this.netPeer.getPredecessorId().compareTo(succ)== 0) {
 			destAddr = this.netPeer.getPredecessor().getIpAddress();
 			destPort = this.netPeer.getPredecessor().getPortNumber();
-		} else if (this.netPeer.getSharedInfos().getIdFor(this.threadId) != null
-				&& this.netPeer.getSharedInfos().getIdFor(this.threadId).compareTo(succ) == 0) {
-			destAddr = this.netPeer.getSharedInfos().getInfoFor(this.threadId).getIpAddress();
-			destPort = this.netPeer.getSharedInfos().getInfoFor(this.threadId).getPortNumber();
+		//} else if (this.netPeer.getSharedInfos().getIdFor(this.threadId) != null
+		} else if (successor != null
+				&& successor.getPeerID().compareTo(succ) == 0) {
+			destAddr = successor.getPeerData().getIpAddress();
+			destPort = successor.getPeerData().getPortNumber();
 
 		} else {
 			MultiLog.println(NetMessageListener.class.toString(), "Unable to contact " + succ);
