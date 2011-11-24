@@ -1,0 +1,4 @@
+X=145.0 Y=410.0
+PRIMA DI RULE
+DOPO DI RULE
+***********THREAD c3bf26e909b6b7d581ace6ec2ac27b1b4462dc4f movX=1 movY=-1
