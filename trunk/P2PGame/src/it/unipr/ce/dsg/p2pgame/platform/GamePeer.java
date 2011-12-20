@@ -20,6 +20,7 @@ import it.unipr.ce.dsg.p2pgame.platform.message.CheckPositionPlayerMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.ClearAttackMatchMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.DefenseMatchMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.FindResourceMessage;
+import it.unipr.ce.dsg.p2pgame.platform.message.FindResourceMessage2;
 import it.unipr.ce.dsg.p2pgame.platform.message.GamePeerMessageListener;
 import it.unipr.ce.dsg.p2pgame.platform.message.LoginPeerMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.LogoutPeerMessage;
@@ -48,6 +49,8 @@ public class GamePeer extends NetPeer {
 	private Thread playerMovement = null;
 
 	private ArrayList<Object> vision = null;
+	
+	public ArrayList<String> users=null;
 
 	//ownerId
 	private ArrayList<Object> myResources = new ArrayList<Object>(); //info sulle mie risorse mobili e NON (TODO: da verificare se funziona)
@@ -962,6 +965,10 @@ public class GamePeer extends NetPeer {
 							posMessage.getVel(), posMessage.getVis(), System.currentTimeMillis(), posMessage.getPositionHash(), posMessage.getOldPos());
 					MultiLog.println(GamePeer.class.toString(), "RICEVUTO GIOCATORE " + resp.getName() + " pos " + resp.getPosX() + ", " + resp.getPosY() + ", " + resp.getPosZ());
 					//System.out.println("RICEVUTO GIOCATORE " + resp.getName() + " pos " + resp.getPosX() + ", " + resp.getPosY() + ", " + resp.getPosZ());
+					if(!resp.getId().equals(this.getMyId()))
+					{
+						System.out.println("si");
+					}
 					return resp;
 				}
 				//TODO: aggiungere il caso delle risorse mobili
@@ -978,6 +985,10 @@ public class GamePeer extends NetPeer {
 					GameResourceMobileResponsible resp = new GameResourceMobileResponsible(resMessage.getId(),resMessage.getUserName(), resMessage.getOwner(),
 							resMessage.getOwnerId(), resMessage.getQuantity(),resMessage.getPosX(),resMessage.getPosY(), resMessage.getPosZ(),
 							resMessage.getVel(),resMessage.getVis(), System.currentTimeMillis(), resMessage.getPositionHash(), resMessage.getOldPos());
+					if(!resp.getOwnerId().equals(this.getMyId()))
+					{
+						System.out.println("si");
+					}
 					return resp;
 				}
 			}
@@ -988,7 +999,76 @@ public class GamePeer extends NetPeer {
 		return null;
 
 	}
+	
+	public Object requestResource2(String id, double x, double y, double z, String threadReq) throws InterruptedException{
+	
+		//chiedo la risorsa a tutti gli altri nodi
+		ArrayList<String> users=this.users;//this.getLoggedUsersList();
+		
+		for(int u=0;u<users.size();u++)
+		{
+			String str_user=users.get(u);
+			
+			String[] array_user=str_user.split(",");
+			String userid=array_user[0]; // mi serve ???
+			String userip=array_user[1];
+			String userport=array_user[2];
+			
+			FindResourceMessage2 findResourceMessage = new FindResourceMessage2(this.getMyId(),this.getMyPeer().getIpAddress(),this.gameOutPort, this.username, id,x,y,z, this.player.getSpatialPosition());
 
+			String responseMessage = MessageSender.sendMessage(userip,Integer.parseInt(userport), findResourceMessage.generateXmlMessageString());
+
+			if (responseMessage.contains("ERROR")) {
+				System.err.println("Sending Find Resource request ERROR!");
+				MultiLog.println(GamePeer.class.toString(), "Not enough privileges for obtain the resource");
+				
+				return null;
+			}
+			else {
+				MessageReader messageReader = new MessageReader();
+				Message receivedMessage = messageReader.readMessageFromString(responseMessage.trim());
+
+				
+				if (receivedMessage.getMessageType().equals("ACK")){
+					MultiLog.println(GamePeer.class.toString(), "Impossible to obtain resource");
+					
+					MultiLog.println(GamePeer.class.toString(), "Risorsa INESISTENTE o non autorizzato");
+					
+					return null;
+				}
+				else if (receivedMessage.getMessageType().equals("POSITION")){
+					MultiLog.println(GamePeer.class.toString(), "Esiste un giocatore... ");
+					
+
+					PositionPlayerMessage posMessage = new PositionPlayerMessage(receivedMessage);
+
+					GamePlayerResponsible resp = new GamePlayerResponsible(posMessage.getId(),posMessage.getUserName(), posMessage.getPosX(), posMessage.getPosY(), posMessage.getPosZ(),
+							posMessage.getVel(), posMessage.getVis(), System.currentTimeMillis(), posMessage.getPositionHash(), posMessage.getOldPos());
+					MultiLog.println(GamePeer.class.toString(), "RICEVUTO GIOCATORE " + resp.getName() + " pos " + resp.getPosX() + ", " + resp.getPosY() + ", " + resp.getPosZ());
+					
+					return resp;
+				}
+				//TODO: aggiungere il caso delle risorse mobili
+				else if(receivedMessage.getMessageType().equals("MOBILERESOURCE")){
+
+					MultiLog.println(GamePeer.class.toString(), "Esiste una risorsa...");
+					
+
+					MobileResourceMessage resMessage = new MobileResourceMessage(receivedMessage);
+//					
+					GameResourceMobileResponsible resp = new GameResourceMobileResponsible(resMessage.getId(),resMessage.getUserName(), resMessage.getOwner(),
+							resMessage.getOwnerId(), resMessage.getQuantity(),resMessage.getPosX(),resMessage.getPosY(), resMessage.getPosZ(),
+							resMessage.getVel(),resMessage.getVis(), System.currentTimeMillis(), resMessage.getPositionHash(), resMessage.getOldPos());
+					return resp;
+				}
+			}
+
+			
+		}
+		
+		
+		return null;
+	}
 
 
 	//TODO: in fase di costruzione

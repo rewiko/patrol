@@ -96,12 +96,12 @@ public class MovementThread2 implements Runnable{
 		{
 			
 				Thread.sleep(this.period);
-				ps.println("X="+currentx+" Y="+currenty);
-				ps.println("PRIMA DI RULE");
+				//ps.println("X="+currentx+" Y="+currenty);
+				//ps.println("PRIMA DI RULE");
 				MovementEngine me=new MovementEngine("rules/movementTheory.pl");
 				//me.clearParameters("rules/movementTheory.pl");
 				me.createMovementTheory((int)currentx, (int)currenty, (int)this.targetx, (int)this.targety,(int) previousx, (int)previousy, vis);
-				ps.println("DOPO DI RULE");
+				//ps.println("DOPO DI RULE");
 				//System.out.println(grm.getId()+" "+currentx+" "+currenty);
 				
 				int movx=me.longitudeMovement();
@@ -152,7 +152,7 @@ public class MovementThread2 implements Runnable{
 					
 				}
 					
-				ps.println("***********THREAD "+this.resid+" movX="+movX+" movY="+movY);
+				//ps.println("***********THREAD "+this.resid+" movX="+movX+" movY="+movY);
 				//grm.setX(currentx);
 				//grm.setY(currenty);
 				//this.mybot.getMyGamePeer().moveResourceMobile(grm.getId(), movX, movY, 0, this.mybot.getMyGamePeer().getMyThreadId());
