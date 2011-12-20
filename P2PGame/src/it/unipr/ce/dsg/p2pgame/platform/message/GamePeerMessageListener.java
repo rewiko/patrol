@@ -142,6 +142,8 @@ public class GamePeerMessageListener implements Runnable {
 
 		if (receivedMessage.getMessageType().equals("FINDRESOURCE"))
 			this.findResourceMessageAction(receivedMessage, os);
+		if(receivedMessage.getMessageType().equals("FINDRESOURCE2"))
+			this.findResource2MessageAction(receivedMessage, os);
 		if (receivedMessage.getMessageType().equals("CHECKFINDRESOURCE"))
 			this.checkFindResourceMessageAction(receivedMessage, os);
 
@@ -622,7 +624,46 @@ public class GamePeerMessageListener implements Runnable {
 
 	}
 
+	private void findResource2MessageAction(Message receivedMessage, DataOutputStream os) throws IOException, InterruptedException{
+		
+		FindResourceMessage2 findResourceMessage = new FindResourceMessage2(receivedMessage);
+		
+		if ( !this.peer.getResPlayers().containsKey(findResourceMessage.getPositionHash()) &&
+				!this.peer.getResResources().containsKey(findResourceMessage.getPositionHash()) )
+		{
+			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
+			
+			return;
+		}
+		else if(this.peer.getResPlayers().containsKey(findResourceMessage.getPositionHash()))
+		{
+			GamePlayerResponsible infoRequested = this.peer.getResPlayers().get(findResourceMessage.getPositionHash());
 
+			PositionPlayerMessage posPlayer = new PositionPlayerMessage("","",-1, infoRequested.getId(),infoRequested.getName(),
+					infoRequested.getPositionHash(), infoRequested.getPosX(), infoRequested.getPosY(), infoRequested.getPosZ(),
+					infoRequested.getVelocity(), infoRequested.getVisibility(), infoRequested.getOldPos());
+
+			
+			os.write(posPlayer.generateXmlMessageString().getBytes());
+			return;
+			
+		}
+		else if(this.peer.getResResources().containsKey(findResourceMessage.getPositionHash()))
+		{
+			GameResourceMobileResponsible infoRequested = this.peer.getResResources().get(findResourceMessage.getPositionHash());
+
+			MobileResourceMessage posResource = new MobileResourceMessage("","",-1, infoRequested.getId(), infoRequested.getDescription(),
+					infoRequested.getPositionHash(), infoRequested.getX(), infoRequested.getY(), infoRequested.getZ(), infoRequested.getVelocity(), infoRequested.getVision(),
+					infoRequested.getOldPos(), infoRequested.getOwner(), infoRequested.getOwnerId(), infoRequested.getQuantity());
+
+			
+			os.write(posResource.generateXmlMessageString().getBytes());
+			
+			return;
+		}
+
+		
+	}
 	private void checkFindResourceMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
 
 		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler CHECK FIND RESOURCE MESSAGE");

@@ -475,6 +475,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				//decido se comprare una nuova risorsa
 				int randombuy=(int)(Math.random()*100);
 				
+				this.UpdateLoggedUsers();
+				
 				System.out.println("probabilità di acquistare una nuova risorsa: "+randombuy + "%");
 				if(randombuy<probbuy)
 				{
@@ -1542,7 +1544,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						this.UpdateLoggedUsers();
 						info=this.getLoggedUserInfo(player.getId());
 					}
-					System.out.println("#################TROVATA BASE NEMICA #################");
+					System.out.println("#################TROVATA BASE NEMICA+"+player.getId()+"+ #################");
 					/*					
 					boolean result=sender.startMatch(player.getId(), player.getName(),info.getIp(),info.getPort(), player.getId(),grm.getId(),grm.getQuantity() , player.getPosX(), player.getPosY(), player.getPosZ());
 					//attendere esito dello scontro
@@ -1573,7 +1575,11 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						info=this.getLoggedUserInfo(res_grm.getOwnerId());
 					}
 					
-					System.out.println("###################### TROVATA RISORSA NEMICA  #################");
+					System.out.println("###################### TROVATA RISORSA NEMICA+"+res_grm.getOwnerId()+"+  #################");
+					if(this.ownerid.compareTo(res_grm.getOwnerId())>0 )
+					{
+						
+					}
 					/* 
 					boolean result=sender.startMatch(res_grm.getOwnerId(), res_grm.getOwner(),info.getIp(),info.getPort(), res_grm.getId(),grm.getId(),grm.getQuantity() , res_grm.getX(),res_grm.getY(),res_grm.getZ());
 										
