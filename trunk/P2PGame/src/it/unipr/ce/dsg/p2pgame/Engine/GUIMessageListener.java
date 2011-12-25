@@ -1758,7 +1758,7 @@ public class GUIMessageListener implements Runnable{
 	  //arriva una richiesta allora la devo servire
 	   
 	   ArrayList<String> users=this.gp.getLoggedUsersList();
-	   
+	   this.gp.users=users;
 	   //ottengo la lista degli utenti loggati
 	   
 	   String strUsers="";
