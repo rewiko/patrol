@@ -395,6 +395,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//////////////////////////////////////CICLO INFINITO///////////////////////////////////////
 		//poi entro nel ciclo infinito
 		int c=0;
+		int periodbase=this.period_loop;
 		while(true)
 		{
 			try {
@@ -579,9 +580,13 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				//ArrayList<Object> res=this.gp.getMyResources();
 				//System.out.println("3");
-				ArrayList<Object> res=this.sender.getResources();
+				res=this.sender.getResources();
 				
 				int sr=res.size();
+				
+				//modifico periodo di ciclo
+				this.period_loop=periodbase+2000*(sr/10); //aumenta di 2.5 secondi per ogni 10 nuove risorse
+				
 				
 				for(int i=0;i<sr;i++)
 				{
@@ -670,7 +675,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					
 					
 				}
-				
+				res=this.sender.getResources();
 				
 				this.printMyPlanets();
 				
@@ -690,7 +695,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				//devo calcolare quanti pianeti sono stati conquistati da ogni giocatore
 				//aggiorno elenco dei giocatori
-				this.UpdateLoggedUsers();
+				//this.UpdateLoggedUsers();
 				
 				//dopo aver aggiornato l'elenco dei giocatori ottengo il loro numero
 				
@@ -806,7 +811,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	{
 		
 		System.out.println("printRes");
-		ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
+		//ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
 		System.out.println("Resource:");
 		for(int i=0;i<res.size();i++)
 		{
@@ -1064,7 +1069,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	public GameResource getLastGameResource()
 	{
 		GameResource res=null;
-		ArrayList<Object> resources=this.sender.getResources();//this.gp.getMyResources();
+		ArrayList<Object> resources=this.res;//this.sender.getResources();//this.gp.getMyResources();
 		
 		int i=resources.size()-1;
 		
@@ -1148,7 +1153,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	
 	public void verifySpace()
 	{
-		ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
+		//ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
 		
 		for(int i=0;i<res.size();i++)
 		{
@@ -1164,7 +1169,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 
 	public void verifyVisibility()
 	{
-		ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
+		//ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
 		
 		for(int i=0;i<res.size();i++)
 		{
@@ -1269,7 +1274,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						this.setPlanetOwner(planet.getId(), this.getOwnerid(),this.owner); //lo conquisto
 						
 						//invio un messaggio in broadcast a tutti peer nel gioco
-						this.UpdateLoggedUsers();
+						//this.UpdateLoggedUsers();
 						HashMap<String,UserInfo> userslist=this.getLoggedUsers();
 						Set<String> key_set=userslist.keySet();
 						Iterator<String> iterator=key_set.iterator();
@@ -1476,7 +1481,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//controllo visibilità del grm
 		ArrayList<Object> vision=grm.getResourceVision();
 		
-		double v=grm.getVision();
+		double v=grm.getVision()+10;
 		//creo un arraylist dove salvo la posizione dentro l'array della visibilita' della risorsa mobile
 		ArrayList<Integer> array_pos=new ArrayList<Integer>();
 		
@@ -1491,10 +1496,14 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					int j=(int)gpr.getPosY();
 					posx.add(new Integer(k));
 					posy.add(new Integer(j));
-					owner.add("USER"+gpr.getId());
+					owner.add("u"+gpr.getId());
 					type.add("GameResource");
 					array_pos.add(new Integer(z));
-					
+					if(!this.ownerid.equals(gpr.getId()))
+					{
+						System.out.println("@@@@@@@@@@@@@@@@@@@@base nemica@@@@@@@@@@@@@@@@@@@");
+						
+					}
 				}
 			}
 			else if(vision.get(z) instanceof GameResourceMobileResponsible)
@@ -1507,15 +1516,20 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					int j=(int)grmr.getY();
 					posx.add(new Integer(k));
 					posy.add(new Integer(j));
-					owner.add("USER"+grmr.getOwnerId());
+					owner.add("u"+grmr.getOwnerId());
 					type.add("GameResourceMobile");
 					array_pos.add(new Integer(z));
+					if(!this.ownerid.equals(grmr.getOwnerId()))
+					{
+						System.out.println("@@@@@@@@@@@@@@@@@@@@nave nemica@@@@@@@@@@@@@@@@@@@");
+						
+					}
 				}
 			}
 			
 		}
 		
-		String myid="USER"+this.ownerid;
+		String myid="u"+this.ownerid;
 		VisibilityEngine ve=new VisibilityEngine("rules/visibilityTheory.pl");
 		ve.createVisibilityTheory(posx, posy, owner, type, myid, pattack, restypes);
 		
