@@ -1153,14 +1153,25 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	
 	public void verifySpace()
 	{
-		//ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
-		
+		ArrayList<Object> res=this.sender.getResources();//this.gp.getMyResources();
+		System.out.println("######################verify planets############################");
 		for(int i=0;i<res.size();i++)
 		{
 			if(res.get(i) instanceof GameResourceMobile)
 			{
 				GameResourceMobile grm=(GameResourceMobile)res.get(i);
 				this.verifyPlanets(grm);
+				
+			}
+			
+		}
+		System.out.println("######################verify enemies############################");
+		for(int i=0;i<res.size();i++)
+		{
+			if(res.get(i) instanceof GameResourceMobile)
+			{
+				GameResourceMobile grm=(GameResourceMobile)res.get(i);
+				
 				this.verifyEnemies(grm);
 			}
 			
@@ -1490,8 +1501,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			if(vision.get(z) instanceof GamePlayerResponsible)
 			{
 				GamePlayerResponsible gpr=(GamePlayerResponsible)vision.get(z);
-				if(((gpr.getPosX()>=xx-v)&&(gpr.getPosX()<=xx-v))&&((gpr.getPosY()>=yy-v)&&(gpr.getPosY()<=yy-v)))
-				{
+				//if(((gpr.getPosX()>=xx-v)&&(gpr.getPosX()<=xx-v))&&((gpr.getPosY()>=yy-v)&&(gpr.getPosY()<=yy-v)))
+				//{
 					int k=(int)gpr.getPosX();
 					int j=(int)gpr.getPosY();
 					posx.add(new Integer(k));
@@ -1504,14 +1515,14 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						System.out.println("@@@@@@@@@@@@@@@@@@@@base nemica@@@@@@@@@@@@@@@@@@@");
 						
 					}
-				}
+				//}
 			}
 			else if(vision.get(z) instanceof GameResourceMobileResponsible)
 			{
 				
 				GameResourceMobileResponsible grmr=(GameResourceMobileResponsible)vision.get(z);
-				if(((grmr.getX()>=xx-v)&&(grmr.getX()<=xx-v))&&((grmr.getY()>=yy-v)&&(grmr.getY()<=yy-v)))
-				{
+				//if(((grmr.getX()>=xx-v)&&(grmr.getX()<=xx-v))&&((grmr.getY()>=yy-v)&&(grmr.getY()<=yy-v)))
+				//{
 					int k=(int)grmr.getX();
 					int j=(int)grmr.getY();
 					posx.add(new Integer(k));
@@ -1524,7 +1535,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						System.out.println("@@@@@@@@@@@@@@@@@@@@nave nemica@@@@@@@@@@@@@@@@@@@");
 						
 					}
-				}
+				//}
 			}
 			
 		}
