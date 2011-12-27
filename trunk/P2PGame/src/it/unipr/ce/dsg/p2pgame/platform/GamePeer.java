@@ -987,7 +987,7 @@ public class GamePeer extends NetPeer {
 							resMessage.getVel(),resMessage.getVis(), System.currentTimeMillis(), resMessage.getPositionHash(), resMessage.getOldPos());
 					if(!resp.getOwnerId().equals(this.getMyId()))
 					{
-						System.out.println("si");
+						System.out.println("Risorsa nemica");
 					}
 					return resp;
 				}

@@ -1006,15 +1006,31 @@ public class GamePeerMessageListener implements Runnable {
 			}
 			else
 			{
-				GameResourceMobile res=this.peer.getMyMobileResourceFromId(resource);
+				GameResource objres=this.peer.getMyResourceFromId(resource);
+				
+				if(objres instanceof GameResourceMobile)
+				{
+					GameResourceMobile res=(GameResourceMobile)objres;
+					
+					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
+					
+				}
+				else
+				{
+					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),objres.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
+					
+				}
+				
+				
 				
 
 				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 				
+				
 				//dopo aver inviato l'ack, inizio la risposta
 				//threadId del nemico
 				//this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),res.getId(),res.getQuantity() , threadId,res.getX(),res.getY(),res.getZ());
-				System.out.println("-----STARTMATCH--------");
+				/*System.out.println("-----STARTMATCH--------");
 				System.out.println(startMatch);
 				System.out.println("(startMatch.getId() "+ startMatch.getId());
 				System.out.println("startMatch.getUserName() " + startMatch.getUserName());
@@ -1031,8 +1047,8 @@ public class GamePeerMessageListener implements Runnable {
 				System.out.println("res " + res);
 				System.out.println("res.getQuantity() " + res.getQuantity());
 				
-				System.out.println("threadId " + threadId);
-				this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
+				System.out.println("threadId " + threadId);*/
+				//this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 			}
 			
 		    
