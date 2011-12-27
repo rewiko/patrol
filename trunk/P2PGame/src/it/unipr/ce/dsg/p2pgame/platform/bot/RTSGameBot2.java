@@ -1362,13 +1362,13 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					//String threadId=new Long(Thread.currentThread().getId()).toString();
 					System.out.println("###########SCONTRO#############");
 					System.out.println(planet.getOwnerID());
-					//boolean result=sender.startMatch(planet.getOwnerID(), planet.getOwnerName(),info.getIp(),info.getPort(), planet.getId(),grm.getId(),grm.getQuantity() , planet.getX(), planet.getY(), planet.getZ());
+					boolean result=sender.startMatch(planet.getOwnerID(), planet.getOwnerName(),info.getIp(),info.getPort(), planet.getId(),grm.getId(),grm.getQuantity() , planet.getX(), planet.getY(), planet.getZ());
 					// se vinco conquisto il pianeta
 					// se perdo perdo la mia risorsa
 					
 					//if(result)
 					System.out.println("TROVATO PIANETA NEMICO");
-					if(true)
+					if(result)
 					{
 						//ho vinto conquisto pianeta
 						this.setPlanetOwner(planet.getId(), "null", "null");//prima di conquistare il pianeta cancello
@@ -1570,7 +1570,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						info=this.getLoggedUserInfo(player.getId());
 					}
 					System.out.println("#################TROVATA BASE NEMICA+"+player.getId()+"+ #################");
-					/*					
+										
 					boolean result=sender.startMatch(player.getId(), player.getName(),info.getIp(),info.getPort(), player.getId(),grm.getId(),grm.getQuantity() , player.getPosX(), player.getPosY(), player.getPosZ());
 					//attendere esito dello scontro
 					if(result)
@@ -1584,7 +1584,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						
 						
 					}
-					*/
+					
 					
 				}
 				else if(res instanceof GameResourceMobileResponsible)
@@ -1605,7 +1605,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					{
 						
 					}
-					/* 
+					 
 					boolean result=sender.startMatch(res_grm.getOwnerId(), res_grm.getOwner(),info.getIp(),info.getPort(), res_grm.getId(),grm.getId(),grm.getQuantity() , res_grm.getX(),res_grm.getY(),res_grm.getZ());
 										
 					if(result)
@@ -1618,7 +1618,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						System.out.println("Ho perso");
 						
 						
-					}*/
+					}
 					
 				}
 			
