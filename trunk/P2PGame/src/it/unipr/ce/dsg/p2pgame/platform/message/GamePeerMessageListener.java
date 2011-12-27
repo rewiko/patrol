@@ -964,6 +964,9 @@ public class GamePeerMessageListener implements Runnable {
 			//jose' murga 01/08/2011
 			
 			
+			//Lo scontro può avvenire con un pianeta (primo ramo dell'IF)
+			//oppure con una risorsa mobile (ramo ELSE)
+			
 			String resource=startMatch.getResourceId();
 			if(resource.equals(this.peer.getMyId()))
 			{
@@ -1011,6 +1014,24 @@ public class GamePeerMessageListener implements Runnable {
 				//dopo aver inviato l'ack, inizio la risposta
 				//threadId del nemico
 				//this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),res.getId(),res.getQuantity() , threadId,res.getX(),res.getY(),res.getZ());
+				System.out.println("-----STARTMATCH--------");
+				System.out.println(startMatch);
+				System.out.println("(startMatch.getId() "+ startMatch.getId());
+				System.out.println("startMatch.getUserName() " + startMatch.getUserName());
+				System.out.println("startMatch.getSourceSocketAddr() " + startMatch.getSourceSocketAddr());
+				System.out.println("startMatch.getSourcePort() " + startMatch.getSourcePort());
+				
+				System.out.println(peer);
+				System.out.println("peer.getMyId() " + peer.getMyId());
+				System.out.println("peer.getPlayer() " + peer.getPlayer());
+				System.out.println("peer.getPlayer().getPosX() " + peer.getPlayer().getPosX());
+				System.out.println("peer.getPlayer().getPosY() " + peer.getPlayer().getPosY());
+				System.out.println("peer.getPlayer().getPosZ() " + peer.getPlayer().getPosZ());
+				
+				System.out.println("res " + res);
+				System.out.println("res.getQuantity() " + res.getQuantity());
+				
+				System.out.println("threadId " + threadId);
 				this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 			}
 			
