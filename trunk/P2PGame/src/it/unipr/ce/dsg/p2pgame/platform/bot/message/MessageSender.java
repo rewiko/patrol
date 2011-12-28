@@ -434,11 +434,13 @@ public class MessageSender{
     public ArrayList<Object> getResources() 
     {
 
-        Message message=new GamePeerResourcesRequest();
-        String response = null;
-      
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumber+5, message.generateXmlMessageString());
-
+    	 String response = null;
+    	try{
+    		Message message=new GamePeerResourcesRequest();
+           
+          
+        response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumber+5, message.generateXmlMessageString());
+    		
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -577,6 +579,12 @@ public class MessageSender{
 
         }
 
+    	}catch(Exception e)
+    	{
+    		System.out.println("MessageSender --> getResources");
+    		System.out.println(response);
+    	}
+        
         return null;
     }
 
