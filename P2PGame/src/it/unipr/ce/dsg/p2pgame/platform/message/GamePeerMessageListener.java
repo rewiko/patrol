@@ -44,6 +44,8 @@ public class GamePeerMessageListener implements Runnable {
 		this.peer = peer;
 		
 		this.threadId=peer.getMyThreadId();
+		
+		System.out.println("GamePeerMessageListener port="+this.listenerPort);
 	}
 
 
@@ -952,7 +954,7 @@ public class GamePeerMessageListener implements Runnable {
 	private void startMatchMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
 
 		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for START MATCH MESSAGE");
-		//System.out.println(LOG_TAG + "Handler for START MATCH MESSAGE");
+		System.out.println(LOG_TAG + "Handler for START MATCH MESSAGE");
 
 		//TODO: mettere controlli per verificare la posizione dell'altro avversario
 		StartMatchMessage startMatch = new StartMatchMessage(messageReceived);
@@ -1008,8 +1010,12 @@ public class GamePeerMessageListener implements Runnable {
 			{
 				GameResource objres=this.peer.getMyResourceFromId(resource);
 				
+				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
+				
 				if(objres instanceof GameResourceMobile)
 				{
+					System.out.println("GameResourceMobile");
+					
 					GameResourceMobile res=(GameResourceMobile)objres;
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
@@ -1017,6 +1023,8 @@ public class GamePeerMessageListener implements Runnable {
 				}
 				else
 				{
+					System.out.println("GameResource");
+					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),objres.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					
 				}
@@ -1024,7 +1032,7 @@ public class GamePeerMessageListener implements Runnable {
 				
 				
 
-				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
+				
 				
 				
 				//dopo aver inviato l'ack, inizio la risposta
