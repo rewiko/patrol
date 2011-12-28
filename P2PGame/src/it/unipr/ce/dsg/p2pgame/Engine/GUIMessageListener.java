@@ -514,7 +514,7 @@ public class GUIMessageListener implements Runnable{
         ArrayList<Object> Resources = new ArrayList<Object>();
 
         Resources=this.gp.getMyResources();
-        this.gp.printVision();
+        //this.gp.printVision();
 
 
         int n=Resources.size();
@@ -1848,9 +1848,10 @@ public class GUIMessageListener implements Runnable{
 		double posY=msg.getPosY();
 		double posZ=msg.getPosZ();
 		
+		System.out.println("######GUIMessageListener-->StartMatchAction############");
 		System.out.println("INIZIO SCONTRO CON "+resownerId);
-		System.out.println(" Invio il Messaggio");
-		System.out.println(msg.generateXmlMessageString());
+		//System.out.println(" Invio il Messaggio");
+		//System.out.println(msg.generateXmlMessageString());
 		
 		//chiamo a startmacth di gp
 		this.gp.startMatch(resownerId, resownerName,ipAdd,portNumber,otherresourceID,myrousrceID,resourceQuantity ,this.gp.getMyThreadId() ,posX, posY, posZ);
@@ -1883,13 +1884,13 @@ public class GUIMessageListener implements Runnable{
 			SuccessMessage message;
 			if(result==Result.WIN)
 			{
-				System.out.println("Ho vinto");
+				System.out.println("#########HO VINTO#############");
 				message=new SuccessMessage(true);
 								
 			}
 			else
 			{
-				System.out.println("Ho perso");
+				System.out.println("##############HO PERSO#############");
 				//GameResource gr=this.gp.getMyResourceFromId(myrousrceID);
 				//this.gp.removeToMyResources(gr);
 				message=new SuccessMessage(false);

@@ -1367,9 +1367,11 @@ public void publishResourceMobile()
     }
 }
 
-public boolean startMatch(String resourceOwnerID, String resourceOwnerName,String ip,int port,String otherresourceID,String myrousrceID,double resourceQuantity , double posX, double posY, double posZ)
+public boolean startMatch(String resourceOwnerID, String resourceOwnerName,String ip,int port,String otherresourceID,String myresourceID,double resourceQuantity , double posX, double posY, double posZ)
 {
-	Message message=new StartMatchRequestMessage(resourceOwnerID,resourceOwnerName,ip,port,otherresourceID,myrousrceID,resourceQuantity ,posX,  posY, posZ);
+	Message message=new StartMatchRequestMessage(resourceOwnerID,resourceOwnerName,ip,port,otherresourceID,myresourceID,resourceQuantity ,posX,  posY, posZ);
+	
+	System.out.println("MessageSender-->StartMatch myResource= "+myresourceID+" other resourceID= "+ otherresourceID);
 	
 	String response =it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumber+5, message.generateXmlMessageString());
 

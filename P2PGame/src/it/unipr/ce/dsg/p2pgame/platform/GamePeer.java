@@ -15,6 +15,7 @@ import it.simplexml.sender.MessageSender;
 import it.unipr.ce.dsg.p2pgame.network.InfoPassing;
 import it.unipr.ce.dsg.p2pgame.network.NetPeer;
 import it.unipr.ce.dsg.p2pgame.network.NetPeerInfo;
+import it.unipr.ce.dsg.p2pgame.platform.Clash.Result;
 import it.unipr.ce.dsg.p2pgame.platform.message.CheckMobileResourceMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.CheckPositionPlayerMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.ClearAttackMatchMessage;
@@ -1785,6 +1786,7 @@ public class GamePeer extends NetPeer {
 					StartMatchMessage startMatch = new StartMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
 					idresource,this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), /*this.player.getPosX()*/posx, /*this.player.getPosY()*/posy,/* this.player.getPosZ()*/posz, attack.getHash());
 			
+			System.out.println("###########GamePeer-->StartMatch##############");
 			System.out.println("INIZIO SCONTRO CON "+ownerId);
 			System.out.println(" Invio il Messaggio");		
 			System.out.println(startMatch.generateXmlMessageString());		
@@ -1801,7 +1803,7 @@ public class GamePeer extends NetPeer {
 				AckMessage ackMessage = new AckMessage(receivedStartMessageReader);
 				if (ackMessage.getAckStatus() == 0){
 					MultiLog.println(GamePeer.class.toString(), "Now Match is started");
-					System.out.println("MAtch iniziato");
+					System.out.println("#############Match iniziato################");
 				}
 
 			}
@@ -1818,12 +1820,15 @@ public class GamePeer extends NetPeer {
 
 		//se si ha giï¿½ avuto contatto con l'altro giocatore ed il precedente scontro non ï¿½ finito . ERRORE non si puï¿½ iniziare nuovamente
 		if ( this.clashes.containsKey(oppositeId) && this.clashes.get(oppositeId).getStatusLast() != Clash.Phase.HASH ){
+			System.out.println("newDefense-->false");
+			
 			return false;
 		}
 
 
 			if (this.clashes.containsKey(oppositeId)){
 
+				System.out.println("newDefense-->true");
 				this.clashes.get(oppositeId).addMyMove(myMove);
 				this.clashes.get(oppositeId).setStatusLast(Clash.Phase.DEFENSE);
 				//this.clashes.get(oppositeId).addHash(myMove.getHash());
@@ -1894,11 +1899,21 @@ public class GamePeer extends NetPeer {
 	public /*synchronized*/ boolean closeMatch(String oppositeId){
 
 		if ( this.clashes.containsKey(oppositeId) && this.clashes.get(oppositeId).getStatusLast() != Clash.Phase.DEFENSE){
+			
+			if(!this.clashes.containsKey(oppositeId))
+			{
+				System.out.println("not contains "+oppositeId);
+				
+			}
+			
+			
+			System.out.println("closeMatch-->false");
+			
 			return false;
 		}
 
 		if (this.clashes.containsKey(oppositeId)){
-
+			System.out.println("closeMatch-->true");
 			//this.clashes.get(oppositeId).addOtherPlayerMove(otherMove);
 			this.clashes.get(oppositeId).setStatusLast(Clash.Phase.END);
 			this.clashes.get(oppositeId).closeClash();
@@ -2004,17 +2019,18 @@ public class GamePeer extends NetPeer {
 		//String oppositeId = this.findSuccessor(player.getId(), threadId);
 		//NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(this.myThreadId);
 		//NetPeerInfo oppositePeer = this.getSharedInfos().getInfoFor(threadId);
-
+		System.out.println("##########GamePeer-->DefenseMatch#############");
 		Defense defense = new Defense(quantity, idresource);
-
+		System.out.println("Defense: "+ownerId);
+		
 		if (this.newDefense(ownerId, ownerName, defense)) {
 		//if (this.newDefense(player.getId(), player.getName(), defense)) {
 
 
 			DefenseMatchMessage startMatch = new DefenseMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber(),
 					this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), posx, posy, posz, defense.getType(), defense.getQuantity());
-
-			System.out.println("DEFENSE MATCH");
+			
+			System.out.println("#############DEFENSE MATCH##############");
 			System.out.println(startMatch.generateXmlMessageString());
 			String responseDefenseMessage = MessageSender.sendMessage(ownerip, ownerport, startMatch.generateXmlMessageString());
 
@@ -2048,6 +2064,7 @@ public class GamePeer extends NetPeer {
 					this.addClearAttackReceived(clearAttack.getId(), clearAttack.getUserName(), attack);
 
 					//TODO: vedere se l'hash corrisponde ed in caso contrario inviare un NACK
+					System.out.println("clearAttack: "+clearAttack.getId());
 					if (this.clashes.get(clearAttack.getId()).verifyAttack()){
 
 						MultiLog.println(GamePeer.class.toString(), "Confronto CHIUSO CORRETTAMENTE");
@@ -2055,9 +2072,24 @@ public class GamePeer extends NetPeer {
 						this.closeMatch(clearAttack.getId());
 						//devo verificare l'esito dello scontro
 						//poi verifico l'id, se e' identico a quello del peer elimino la prima GameResource, altrimenti la elimino per id
-						
+						ArrayList<Result> results=getClashes().get(clearAttack.getId()).getResults();
 							
-						
+						int sz=results.size();
+						Result result=results.get(sz-1);
+						if(result==Result.WIN)
+						{
+							System.out.println("#############Ho vinto##############");
+							
+						}
+						else
+						{
+							System.out.println("################Ho perso############");
+							//tolgo il gameresource coinvolto nello scontro
+							
+							//controllare risorsa da rimuovere
+					
+							
+						}
 						
 						//(new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes()
 						//MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, (new AckMessage("","",-1,0,"")).generateXmlMessageString());
