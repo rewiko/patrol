@@ -954,15 +954,15 @@ public class GamePeerMessageListener implements Runnable {
 	private void startMatchMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
 
 		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for START MATCH MESSAGE");
-		System.out.println(LOG_TAG + "Handler for START MATCH MESSAGE");
-
+		//System.out.println(LOG_TAG + "Handler for START MATCH MESSAGE");
+		System.out.println("#########GamePeerMessageListener-->startMatchMessageAction##########");
 		//TODO: mettere controlli per verificare la posizione dell'altro avversario
 		StartMatchMessage startMatch = new StartMatchMessage(messageReceived);
-
+		
 		if (this.peer.addAttackReceived(startMatch.getId(), startMatch.getUserName(), startMatch.getHash())){
 
 			//MultiLog.println(GamePeerMessageListener.class.toString(), "Attack RECEIVED");
-			//System.out.println("Attack RECEIVED");
+			System.out.println("Attack RECEIVED");
 			//jose' murga 01/08/2011
 			
 			
@@ -1014,7 +1014,7 @@ public class GamePeerMessageListener implements Runnable {
 				
 				if(objres instanceof GameResourceMobile)
 				{
-					System.out.println("GameResourceMobile");
+					System.out.println("################GameResourceMobile###############");
 					
 					GameResourceMobile res=(GameResourceMobile)objres;
 					
@@ -1023,7 +1023,7 @@ public class GamePeerMessageListener implements Runnable {
 				}
 				else
 				{
-					System.out.println("GameResource");
+					System.out.println("############GameResource##############à");
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),objres.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					
@@ -1076,7 +1076,7 @@ public class GamePeerMessageListener implements Runnable {
 	private void defenseMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
 		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for DEFENSE MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for DEFENSE MESSAGE");
-
+		System.out.println("#########GamePeerMessageListener-->defenseMatchAction###############");
 		DefenseMatchMessage defenseMessage = new DefenseMatchMessage(messageReceived);
 
 		Defense defense = new Defense(defenseMessage.getQuantity(), defenseMessage.getResource());
@@ -1099,14 +1099,14 @@ public class GamePeerMessageListener implements Runnable {
 			Result result=results.get(sz-1);
 			if(result==Result.WIN)
 			{
-				System.out.println("Ho vinto");
+				System.out.println("#############Ho vinto##############");
 				
 			}
 			else
 			{
-				System.out.println("Ho perso");
+				System.out.println("################Ho perso############");
 				//tolgo il gameresource coinvolto nello scontro
-				GameResource res=null;
+				/*GameResource res=null;
 				ArrayList<Object> resources=this.peer.getMyResources();
 				
 				int i=resources.size()-1;
@@ -1129,7 +1129,7 @@ public class GamePeerMessageListener implements Runnable {
 					}
 					
 				}
-				this.peer.removeToMyResources(res);
+				this.peer.removeToMyResources(res);*/
 				
 			}
 

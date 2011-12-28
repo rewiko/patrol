@@ -87,6 +87,9 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	//MessageSender request;
 	GamePeer gp;
 	
+	//flag scontri
+	
+	public boolean inClash;
 
 
 	public RTSGameBot2(String profile,String conf,int portmin,String usr,int portReq)
@@ -580,9 +583,25 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				//ArrayList<Object> res=this.gp.getMyResources();
 				//System.out.println("3");
-				res=this.sender.getResources();
+				ArrayList<Object> resaux=this.sender.getResources();
 				
-				int sr=res.size();
+				//if(resaux!=null)
+				//{
+					this.res=resaux;
+					
+				//}
+				
+				int sr=0;//res.size();
+				//if(this.res==null)
+				//{
+					sr=res.size();
+				//}
+				//else
+				//{
+					//sr=0;
+					
+				//}
+				
 				
 				//modifico periodo di ciclo
 				this.period_loop=periodbase+2000*(sr/10); //aumenta di 2.5 secondi per ogni 10 nuove risorse
@@ -675,7 +694,14 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					
 					
 				}
-				res=this.sender.getResources();
+				//res=this.sender.getResources();
+                resaux=this.sender.getResources();
+				
+				//if(resaux!=null)
+				//{
+					this.res=resaux;
+					
+				//}
 				
 				this.printMyPlanets();
 				
