@@ -435,7 +435,7 @@ public class MessageSender{
     {
 
     	 String response = null;
-    	try{
+    	//try{
     		Message message=new GamePeerResourcesRequest();
            
           
@@ -579,11 +579,11 @@ public class MessageSender{
 
         }
 
-    	}catch(Exception e)
+    /*	}catch(Exception e)
     	{
     		System.out.println("MessageSender --> getResources");
     		System.out.println(response);
-    	}
+    	}*/
         
         return null;
     }
