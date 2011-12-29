@@ -1660,6 +1660,7 @@ public class GamePeer extends NetPeer {
 				this.clashes.get(oppositeId).addMyMove(myMove);
 				this.clashes.get(oppositeId).addHash(myMove.getHash());
 				//modifica jose' murga 14/08/2011
+				System.out.println("existing clash hash");
 				this.clashes.get(oppositeId).setStatusLast(Clash.Phase.HASH);
 				return true;
 			}
@@ -1670,6 +1671,7 @@ public class GamePeer extends NetPeer {
 				newClash.setStatusLast(Clash.Phase.HASH);
 				newClash.addMyMove(myMove);
 				newClash.addHash(myMove.getHash());
+				System.out.println("new clash hash");
 				this.clashes.put(oppositeId, newClash);
 
 				return true;
@@ -1693,12 +1695,15 @@ public class GamePeer extends NetPeer {
 
 				//this.clashes.get(oppositeId).addMyMove(myMove);
 				this.clashes.get(oppositeId).addHash(hash);
+				System.out.println("addAttackReceived existing clash hash");
+				this.clashes.get(oppositeId).setStatusLast(Clash.Phase.HASH);
 				return true;
 			}
 			else { //occorre creare un nuovo campo
 
 				//this.clashes.put(oppositeId, value);
 				Clash newClash = new Clash(opposite, oppositeId);
+				System.out.println("addAttackReceived new clash hash");
 				newClash.setStatusLast(Clash.Phase.HASH);
 				//newClash.addMyMove(myMove);
 				newClash.addHash(hash);
@@ -1714,13 +1719,34 @@ public class GamePeer extends NetPeer {
 
 	public /*synchronized*/ boolean addClearAttackReceived(String oppositeId, String opposite, Attack otherAttack){
 		if (this.clashes.containsKey(oppositeId) && this.clashes.get(oppositeId).getStatusLast() != Clash.Phase.DEFENSE){
-
+			System.out.println("addClearAttack-->false");
+			
+			if(this.clashes.get(oppositeId).getStatusLast() == Clash.Phase.DEFENSE)
+			{
+				System.out.println("in defense");
+				
+			}
+			else if(this.clashes.get(oppositeId).getStatusLast() == Clash.Phase.HASH)
+			{
+				System.out.println("in hash");
+				
+			}
+			
 			return false;
 		}
 
 		if (this.clashes.containsKey(oppositeId)){
+			
+			System.out.println("addClearAttack-->true");
 			this.clashes.get(oppositeId).addOtherPlayerMove(otherAttack);
-			this.clashes.get(oppositeId).setStatusLast(Clash.Phase.END);
+			//this.clashes.get(oppositeId).setStatusLast(Clash.Phase.END);
+			if(this.clashes.get(oppositeId).getStatusLast() == Clash.Phase.DEFENSE)
+			{
+				System.out.println("in defense");
+				
+			}
+			
+			
 			return true;
 		}
 		else
@@ -1830,7 +1856,9 @@ public class GamePeer extends NetPeer {
 
 				System.out.println("newDefense-->true");
 				this.clashes.get(oppositeId).addMyMove(myMove);
-				this.clashes.get(oppositeId).setStatusLast(Clash.Phase.DEFENSE);
+				//this.clashes.get(oppositeId).setStatusLast(Clash.Phase.DEFENSE);
+				Clash cl=this.clashes.get(oppositeId);
+				cl.setStatusLast(Clash.Phase.DEFENSE);
 				//this.clashes.get(oppositeId).addHash(myMove.getHash());
 				return true;
 			}
@@ -1866,6 +1894,7 @@ public class GamePeer extends NetPeer {
 				//this.clashes.get(oppositeId).addMyMove(myMove);
 				//this.clashes.get(oppositeId).addHash(hash);
 				this.clashes.get(oppositeId).addOtherPlayerMove(otherMove);
+				System.out.println("status defense");
 				this.clashes.get(oppositeId).setStatusLast(Clash.Phase.DEFENSE);
 				return true;
 			}
@@ -1903,6 +1932,16 @@ public class GamePeer extends NetPeer {
 			if(!this.clashes.containsKey(oppositeId))
 			{
 				System.out.println("not contains "+oppositeId);
+				
+			}
+			if(this.clashes.get(oppositeId).getStatusLast() == Clash.Phase.DEFENSE)
+			{
+				System.out.println("defense");
+				
+			}
+			else if(this.clashes.get(oppositeId).getStatusLast() != Clash.Phase.HASH)
+			{
+				System.out.println("hash");
 				
 			}
 			
@@ -2097,7 +2136,7 @@ public class GamePeer extends NetPeer {
 					}
 					else {
 						MultiLog.println(GamePeer.class.toString(), "CHIUSURA MATCH ERRORE RILEVATO - Send Nack");
-						//System.out.println("CHIUSURA MATCH ERRORE RILEVATO - Send Nack");
+						System.out.println("CHIUSURA MATCH ERRORE RILEVATO - Send Nack");
 
 					//	MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, (new AckMessage("","",-1,1,"")).generateXmlMessageString());
 					}
