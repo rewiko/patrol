@@ -959,6 +959,22 @@ public class GamePeerMessageListener implements Runnable {
 		//TODO: mettere controlli per verificare la posizione dell'altro avversario
 		StartMatchMessage startMatch = new StartMatchMessage(messageReceived);
 		
+		System.out.println(".....START MATCH message log.....");
+		//StartMatchMessage(String sourceName, String sourceSocketAddr, int sourcePort,String resourceId,  String id, String username,
+			//	String position, double x, double y, double z, String hash) 
+		System.out.println("sourceName " + startMatch.getSourceName());
+		System.out.println("sourceSocketAddr " + startMatch.getSourceSocketAddr());
+		System.out.println("sourcePort " + startMatch.getSourcePort());
+		System.out.println("resourceID " + startMatch.getResourceId());
+		System.out.println("id " + startMatch.getId());
+		System.out.println("username " + startMatch.getUserName());
+		System.out.println("position " + startMatch.getPosition());
+		System.out.println("x " + startMatch.getPosX());
+		System.out.println("y " + startMatch.getPosY());
+		System.out.println("z " + startMatch.getPosZ());
+		System.out.println("hash "+ startMatch.getHash());
+		System.out.println("..................................");
+		
 		if (this.peer.addAttackReceived(startMatch.getId(), startMatch.getUserName(), startMatch.getHash())){
 
 			//MultiLog.println(GamePeerMessageListener.class.toString(), "Attack RECEIVED");
