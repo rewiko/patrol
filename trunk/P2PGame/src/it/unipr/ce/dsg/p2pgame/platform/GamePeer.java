@@ -1918,8 +1918,9 @@ public class GamePeer extends NetPeer {
 
 	public Object getAttackClear(String oppositeId) {
 
+		int pos=this.clashes.get(oppositeId).getMyMoves().size();
 		if(this.clashes.containsKey(oppositeId)){
-			return this.clashes.get(oppositeId).getMyMoves().get(this.clashes.size()-1);
+			return this.clashes.get(oppositeId).getMyMoves().get(pos-1);
 		}
 		else
 			return null;
