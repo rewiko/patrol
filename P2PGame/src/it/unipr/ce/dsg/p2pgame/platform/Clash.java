@@ -195,9 +195,16 @@ public	enum Result {
 		int pos = this.myMoves.size()-1;
 		Attack attack = (Attack) this.otherPlayerMoves.get(pos);
 		if (attack.getHash().compareTo(this.getHash().get(pos)) == 0)
+		{
+			System.out.println("TRUE: "+attack.getHash()+" "+this.getHash().get(pos));
 			return true;
-
-		else
+			
+		}
+		else{
+			
+			System.out.println("FALSE: "+attack.getHash()+" "+this.getHash().get(pos));
 			return false;
+		}
+			
 	}
 }
