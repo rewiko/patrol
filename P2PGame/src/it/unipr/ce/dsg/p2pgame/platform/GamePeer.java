@@ -82,7 +82,9 @@ public class GamePeer extends NetPeer {
 	private Thread updateNet = null;
 	private Thread gameMessageListener = null;
 	
-
+	private boolean startMatchBand;
+	
+	
 	//id non disponibile solo dopo la registrazione
 	public GamePeer(int inPort, int outPort, int idBitLength, String id, String serverAddr, int serverPort, int gameInPort, int gameOutPort, String gameServerAddr, int gameServerPort,
 			int stab, int fix, int check, int pub) {
@@ -1806,7 +1808,7 @@ public class GamePeer extends NetPeer {
  /*************************/	
 	public void startMatch(String ownerId,String ownerName,String ownerip,int ownerport, String idresource,String myresource ,double quantity, String threadId,double posx, double posy, double posz){
 		MultiLog.println(GamePeer.class.toString(), "Attacco " + player.getName());
-		
+		this.startMatchBand=false;
 		Attack attack = new Attack(quantity, myresource);
 		if (this.newAttack(ownerId,ownerName, attack)) {
 					StartMatchMessage startMatch = new StartMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
@@ -1830,6 +1832,7 @@ public class GamePeer extends NetPeer {
 				if (ackMessage.getAckStatus() == 0){
 					MultiLog.println(GamePeer.class.toString(), "Now Match is started");
 					System.out.println("#############Match iniziato################");
+					this.startMatchBand=true;
 				}
 
 			}
@@ -2163,6 +2166,16 @@ public class GamePeer extends NetPeer {
 
 	public HashMap<String, Clash> getClashes() {
 		return clashes;
+	}
+
+	public boolean getStartMatchBand() {
+		return startMatchBand;
+	}
+
+
+
+	public void setStartMatchBand(boolean startMatchBand) {
+		this.startMatchBand = startMatchBand;
 	}
 
 
