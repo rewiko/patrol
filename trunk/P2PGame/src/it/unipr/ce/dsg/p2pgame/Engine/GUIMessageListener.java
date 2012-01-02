@@ -1856,48 +1856,61 @@ public class GUIMessageListener implements Runnable{
 		//chiamo a startmacth di gp
 		this.gp.startMatch(resownerId, resownerName,ipAdd,portNumber,otherresourceID,myrousrceID,resourceQuantity ,this.gp.getMyThreadId() ,posX, posY, posZ);
 	   
-		do{
-			//attendo la fine dello scontro
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
+boolean band=this.gp.getStartMatchBand();
+		
+		if(band)
+		{
+			do{
+				//attendo la fine dello scontro
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+				}while(this.gp.getClashes().get(resownerId).getStatusLast()!=Phase.END);
+				//quando lo scontro finisco controllo il suo esito
+				System.out.println("######GUIMESSAGELISTENER######");
+				System.out.println("Lo scontro e' finito correttamente\nRisultato:");
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+				System.out.println("ID nemico: "+resownerId);
+				ArrayList<Result> results=this.gp.getClashes().get(resownerId).getResults();
+				int sz=results.size();
+				Result result=results.get(sz-1);
 				
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-			}while(this.gp.getClashes().get(resownerId).getStatusLast()!=Phase.END);
-			//quando lo scontro finisco controllo il suo esito
-			System.out.println("######GUIMESSAGELISTENER######");
-			System.out.println("Lo scontro e' finito correttamente\nRisultato:");
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
+				SuccessMessage message;
+				if(result==Result.WIN)
+				{
+					System.out.println("#########HO VINTO#############");
+					message=new SuccessMessage(true);
+									
+				}
+				else
+				{
+					System.out.println("##############HO PERSO#############");
+					//GameResource gr=this.gp.getMyResourceFromId(myrousrceID);
+					//this.gp.removeToMyResources(gr);
+					message=new SuccessMessage(false);
+					
+				}
 				
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-			System.out.println("ID nemico: "+resownerId);
-			ArrayList<Result> results=this.gp.getClashes().get(resownerId).getResults();
-			int sz=results.size();
-			Result result=results.get(sz-1);
+				os.write(message.generateXmlMessageString().getBytes());
+
 			
-			SuccessMessage message;
-			if(result==Result.WIN)
-			{
-				System.out.println("#########HO VINTO#############");
-				message=new SuccessMessage(true);
-								
-			}
-			else
-			{
-				System.out.println("##############HO PERSO#############");
-				//GameResource gr=this.gp.getMyResourceFromId(myrousrceID);
-				//this.gp.removeToMyResources(gr);
-				message=new SuccessMessage(false);
-				
-			}
+		}
+		else
+		{
+			//devo inviare un messaggio indicando che lo scontro non e' avvenuto
+			os.write((new AckMessage("", "", 0, 1, "")).generateXmlMessageString().getBytes());
 			
-			os.write(message.generateXmlMessageString().getBytes());
+		}
 
 	   
    }

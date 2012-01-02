@@ -1367,7 +1367,7 @@ public void publishResourceMobile()
     }
 }
 
-public boolean startMatch(String resourceOwnerID, String resourceOwnerName,String ip,int port,String otherresourceID,String myresourceID,double resourceQuantity , double posX, double posY, double posZ)
+public String startMatch(String resourceOwnerID, String resourceOwnerName,String ip,int port,String otherresourceID,String myresourceID,double resourceQuantity , double posX, double posY, double posZ)
 {
 	Message message=new StartMatchRequestMessage(resourceOwnerID,resourceOwnerName,ip,port,otherresourceID,myresourceID,resourceQuantity ,posX,  posY, posZ);
 	
@@ -1384,10 +1384,16 @@ public boolean startMatch(String resourceOwnerID, String resourceOwnerName,Strin
 		SuccessMessage msg=new SuccessMessage(receivedMessage);
 		boolean result=msg.getSuccess();
 		
-		return result;
+	 if(result){ return "win";}
+	 else {return "lose";}
     }
+	if(receivedMessage.getMessageType().equals("ACK"))
+	{
+		return "null";
+		
+	}
 	
-	return false;
+	return "null";
 }
 	
 
