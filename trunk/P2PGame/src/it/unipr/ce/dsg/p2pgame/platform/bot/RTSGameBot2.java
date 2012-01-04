@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -89,8 +91,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	
 	//flag scontri
 	
-	public boolean inClash;
-
+	public boolean inClash=false;
+	public String resId;
+	public String peerId; 
+	public long timeStamp;
 
 	public RTSGameBot2(String profile,String conf,int portmin,String usr,int portReq)
 	{
@@ -1387,6 +1391,19 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					
 					//String threadId=new Long(Thread.currentThread().getId()).toString();
 					System.out.println("###########SCONTRO#############");
+					
+					do{
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}while(this.inClash);
+						
+					
+					
 					System.out.println(planet.getOwnerID());
 					String result=sender.startMatch(planet.getOwnerID(), planet.getOwnerName(),info.getIp(),info.getPort(), planet.getId(),grm.getId(),grm.getQuantity() , planet.getX(), planet.getY(), planet.getZ());
 					// se vinco conquisto il pianeta
@@ -1596,20 +1613,124 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						info=this.getLoggedUserInfo(player.getId());
 					}
 					System.out.println("#################TROVATA BASE NEMICA+"+player.getId()+"+ #################");
+					
+					//inizio match
+					if(!this.inClash) // se sono attualmente in uno scontro, ignoro questo scontro
+					{
+						//faccio lo scontro, altrimento lo ignoro
+						this.inClash=true;
+						this.resId=player.getId();
+						this.peerId=player.getId();
+						
+						//invio messaggio
+						long currentTime=System.currentTimeMillis();
+						this.timeStamp=currentTime;
+						 System.out.println("#######################RTSGameBot--->richiesta di scontro#############################");
+						Message message=new BotStartMatchRequestMessage(this.ownerid,grm.getId(),player.getId(),Long.toString(currentTime));
+						
+						 String responseMessage=it.simplexml.sender.MessageSender.sendMessage(info.getIp(),(info.getPort()+7),message.generateXmlMessageString());
+						
+						 MessageReader messageReader=new MessageReader();
+
+					     Message receivedMessage = messageReader.readMessageFromString(responseMessage.trim());
+					    
+					     if(receivedMessage.getMessageType().equals("BOTSTARTMATCH"))
+						 {
+								System.out.println("##########RTSGameBot-->Risposta############ ");
+								BotStartMatchResponseMessage response=new BotStartMatchResponseMessage(receivedMessage);
+								
+								boolean isInMatch=response.getInMatch();
+								boolean decision=response.getDecision();
+								
+								
+								if(isInMatch)
+								{
+									if(decision)
+									{	//System.out.println("#############Scontro--->Decisione################");
+										//calcolo della differenza di timeStamp
+										long otherTimeStamp=Long.parseLong(response.getTimeStamp());
 										
-					String result=sender.startMatch(player.getId(), player.getName(),info.getIp(),info.getPort(), player.getId(),grm.getId(),grm.getQuantity() , player.getPosX(), player.getPosY(), player.getPosZ());
-					//attendere esito dello scontro
-					if(result.equals("win"))
-					{
-						System.out.println("Ho vinto");
+										long diff=Math.abs(currentTime-otherTimeStamp);
+										
+										//devo comparare i due id
+										int compare=this.ownerid.compareTo(player.getId());
+										
+										//se il mio id e maggiore e diff e pari inizio lo scontro se e' minore ed e' dispari inizio lo scontro
+										//altrimenti lo inizia l'altro
+										if((compare>0 && diff%2==0)||(compare<0 && diff%2!=0))
+										{   System.out.println("#############Scontro--->Decisione:INIZIO IO################");
+											String result=sender.startMatch(player.getId(), player.getName(),info.getIp(),info.getPort(), player.getId(),grm.getId(),grm.getQuantity() , player.getPosX(), player.getPosY(), player.getPosZ());
+											//attendere esito dello scontro
+											if(result.equals("win"))
+											{
+												System.out.println("Ho vinto");
+												
+											}
+											else if(result.equals("lose"))
+											{
+												System.out.println("Ho perso");
+												
+												
+											}
+											
+										 }
+										else
+										{
+											System.out.println("#############Scontro--->Decisione:INIZIA ALTRO PEER################");
+											 try {
+													Thread.sleep(500);
+												} catch (InterruptedException e) {
+													// TODO Auto-generated catch block
+													e.printStackTrace();
+												}
+												
+											
+										}
+										
+									}
+									
+								}
+								else //!inMatch
+								{	System.out.println("#############Scontro--->POSSO INIZIARE IO################");
+									if(decision)
+									{
+										String result=sender.startMatch(player.getId(), player.getName(),info.getIp(),info.getPort(), player.getId(),grm.getId(),grm.getQuantity() , player.getPosX(), player.getPosY(), player.getPosZ());
+										//attendere esito dello scontro
+										if(result.equals("win"))
+										{
+											System.out.println("Ho vinto");
+											
+										}
+										else if(result.equals("lose"))
+										{
+											System.out.println("Ho perso");
+											
+											
+										}
+										
+									}
+									
+									
+								}
+								
+								
+						 }
+					     else if(receivedMessage.getMessageType().equals("ERROR"))
+					     {
+					    	 
+					    	 System.out.println(GamePeer.class.toString()+ "Sending Message ERROR!");
+					     }
+						
+					     this.inClash=false;
 						
 					}
-					else if(result.equals("lose"))
+					else
 					{
-						System.out.println("Ho perso");
-						
+						System.out.println("##########SONO IN CLASH#################");
 						
 					}
+					
+					
 					
 					
 				}
@@ -1627,24 +1748,117 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					}
 					
 					System.out.println("###################### TROVATA RISORSA NEMICA+"+res_grm.getOwnerId()+"+  #################");
-					if(this.ownerid.compareTo(res_grm.getOwnerId())>0 )
+					//inizio match
+					if(!this.inClash) // se sono attualmente in uno scontro, ignoro questo scontro
 					{
+						//faccio lo scontro, altrimento lo ignoro
+					
+						this.inClash=true;
+						
+						//invio messaggio
+						long currentTime=System.currentTimeMillis();
+																
+						Message message=new BotStartMatchRequestMessage(this.ownerid,grm.getId(),res_grm.getId(),Long.toString(currentTime));
+						
+						 String responseMessage=it.simplexml.sender.MessageSender.sendMessage(info.getIp(),(info.getPort()+7),message.generateXmlMessageString());
+						
+						 MessageReader messageReader=new MessageReader();
+
+					     Message receivedMessage = messageReader.readMessageFromString(responseMessage.trim());
+					     
+					     if(receivedMessage.getMessageType().equals("BOTSTARTMATCH"))
+						 {
+								
+					    	 System.out.println("##########RTSGameBot-->Risposta############ ");
+								BotStartMatchResponseMessage response=new BotStartMatchResponseMessage(receivedMessage);
+								
+								boolean isInMatch=response.getInMatch();
+								boolean decision=response.getDecision();
+								
+								
+								if(isInMatch)
+								{
+									if(decision)
+									{	//System.out.println("#############Scontro--->Decisione################");
+										//calcolo della differenza di timeStamp
+										long otherTimeStamp=Long.parseLong(response.getTimeStamp());
+										
+										long diff=Math.abs(currentTime-otherTimeStamp);
+										
+										//devo comparare i due id
+										int compare=this.ownerid.compareTo(res_grm.getOwnerId());
+										
+										//se il mio id e maggiore e diff e pari inizio lo scontro se e' minore ed e' dispari inizio lo scontro
+										//altrimenti lo inizia l'altro
+										if((compare>0 && diff%2==0)||(compare<0 && diff%2!=0))
+										{   System.out.println("#############Scontro--->Decisione:INIZIO IO################");
+											String result=sender.startMatch(res_grm.getOwnerId(), res_grm.getOwner(),info.getIp(),info.getPort(), res_grm.getId(),grm.getId(),grm.getQuantity() , res_grm.getX(), res_grm.getY(), res_grm.getZ());
+											//attendere esito dello scontro
+											if(result.equals("win"))
+											{
+												System.out.println("Ho vinto");
+												
+											}
+											else if(result.equals("lose"))
+											{
+												System.out.println("Ho perso");
+												
+												
+											}
+											
+										 }
+										else
+										{
+											System.out.println("#############Scontro--->Decisione:INIZIA ALTRO PEER################");
+											 try {
+													Thread.sleep(500);
+												} catch (InterruptedException e) {
+													// TODO Auto-generated catch block
+													e.printStackTrace();
+												}
+												
+											
+										}
+										
+									}
+									
+								}
+								else //!inMatch
+								{	System.out.println("#############Scontro--->POSSO INIZIARE IO################");
+									if(decision)
+									{
+										String result=sender.startMatch(res_grm.getOwnerId(), res_grm.getOwner(),info.getIp(),info.getPort(), res_grm.getId(),grm.getId(),grm.getQuantity() , res_grm.getX(), res_grm.getY(), res_grm.getZ());
+										//attendere esito dello scontro
+										if(result.equals("win"))
+										{
+											System.out.println("Ho vinto");
+											
+										}
+										else if(result.equals("lose"))
+										{
+											System.out.println("Ho perso");
+											
+											
+										}
+										
+									}
+									
+									
+								}
+								
+						
+						 }
+					     else if(receivedMessage.getMessageType().equals("ERROR"))
+					     {
+					    	 
+					    	 System.out.println(GamePeer.class.toString()+ "Sending Message ERROR!");
+					     }
+						
+					     this.inClash=false;
 						
 					}
 					 
-					String result=sender.startMatch(res_grm.getOwnerId(), res_grm.getOwner(),info.getIp(),info.getPort(), res_grm.getId(),grm.getId(),grm.getQuantity() , res_grm.getX(),res_grm.getY(),res_grm.getZ());
 					
-					if(result.equals("win"))
-					{
-						System.out.println("Ho vinto");
-						
-					}
-					else if(result.equals("lose"))
-					{
-						System.out.println("Ho perso");
-						
-						
-					}
 					
 				}
 			
