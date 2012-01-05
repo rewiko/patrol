@@ -992,34 +992,63 @@ public class GamePeerMessageListener implements Runnable {
 				GameResource res=null;
 				ArrayList<Object> resources=this.peer.getMyResources();
 				
-				int i=resources.size()-1;
+				int i=0;
 				
-				while(i>=0)
+				boolean band=false;
+				
+				while(!band)
 				{
-					Object aux=resources.get(i);
-					if(aux instanceof GameResourceMobile)
+					Object obj=resources.get(i);
+					
+					if(obj instanceof GameResourceEvolve)
 					{
-						i--;
+						i++;
+						
 					}
-					else if(aux instanceof GameResourceEvolve)
+					else if(obj instanceof GameResourceMobile)
 					{
-						i--;
+						i++;
+						
 					}
 					else
 					{
-						res=(GameResource)aux;
-						i=-1;
+						//is GameResource
+						res=(GameResource)obj;
+						band=true;
 					}
+					if(i==resources.size())
+					{
+						band=true;
+						
+					}
+					
 					
 				}
 				
-				os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
 				
-				//dopo aver inviato l'ack, inizio la risposta
-				//threadId del nemico
-				//metto come id della risorsa l'id del peer
-				//this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
-				this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
+				if(i==resources.size())
+				{
+					System.out.println("############BASE-->NON CI SONO DIFESE##############");
+
+					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
+					
+				}
+				else //se ho trovato una risorsa
+				{
+					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 0, "")).generateXmlMessageString().getBytes());
+					
+					//dopo aver inviato l'ack, inizio la risposta
+					//threadId del nemico
+					//metto come id della risorsa l'id del peer
+					//this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
+					System.out.println("############BASE##############");
+					
+					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
+					
+				}
+				
+				
+				
 				
 			}
 			else

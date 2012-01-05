@@ -1834,6 +1834,11 @@ public class GamePeer extends NetPeer {
 					System.out.println("#############Match iniziato################");
 					this.startMatchBand=true;
 				}
+				else
+				{
+					System.out.println("Match non iniziato");
+					
+				}
 
 			}
 		}
