@@ -1402,8 +1402,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						
 					}while(this.inClash);
 						
-					
-					
+										
 					System.out.println(planet.getOwnerID());
 					String result=sender.startMatch(planet.getOwnerID(), planet.getOwnerName(),info.getIp(),info.getPort(), planet.getId(),grm.getId(),grm.getQuantity() , planet.getX(), planet.getY(), planet.getZ());
 					// se vinco conquisto il pianeta
