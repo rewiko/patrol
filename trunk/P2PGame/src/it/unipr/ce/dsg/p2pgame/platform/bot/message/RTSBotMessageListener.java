@@ -135,10 +135,19 @@ public class RTSBotMessageListener implements Runnable{
 		 //se sono già in clash
 		 if(this.mybot.inClash)
 		 {
-			 System.out.println("###############IN MATCH###########################");
+			 
+			 
+			 
+			 
+			 
+			 System.out.println("###############SONO IN MATCH###########################");
 			 long timeStamp=Long.parseLong(message.getTimeStamp());
+			 BotStartMatchResponseMessage response=new BotStartMatchResponseMessage(this.mybot.getOwnerid(),message.getOtherresId(),message.getResId(),Long.toString(this.mybot.timeStamp),true,false);
+			 
+			 os.write(response.generateXmlMessageString().getBytes());
+			 
 			
-				 if(this.mybot.peerId.equals(message.getId())) // se ho iniziato uno scontro con lui
+				 /*if(this.mybot.peerId.equals(message.getId())) // se ho iniziato uno scontro con lui
 				 {
 					 if(this.mybot.resId.equals(message.getResId()))
 					 {
@@ -201,7 +210,7 @@ public class RTSBotMessageListener implements Runnable{
 					 
 					 os.write(response.generateXmlMessageString().getBytes());
 					 
-				 }
+				 }*/
 				 
 			 
 			
@@ -211,8 +220,9 @@ public class RTSBotMessageListener implements Runnable{
 		 }
 		 else
 		 {
-			 System.out.println("###############NON SONO IN MATCH###########################");
 			 this.mybot.inClash=true;
+			 System.out.println("###############NON SONO IN MATCH###########################");
+			 
 			 //metto id della risorsa nemica e del peer nemico  e controllo 
 			 this.mybot.resId=message.getResId();
 			 this.mybot.peerId=message.getId();
