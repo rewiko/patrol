@@ -38,14 +38,14 @@ public class MovementThread2 implements Runnable{
 		this.targety=targety;
 		this.period=period;
 		//runner.start();
-		file=new File("log/"+this.resid+".txt");
-		try {
-			fos=new FileOutputStream(file,true);
-			ps=new PrintStream(fos);
-		} catch (FileNotFoundException e) {
+		//file=new File("log/"+this.resid+".txt");
+		//try {
+			//fos=new FileOutputStream(file,true);
+			//ps=new PrintStream(fos);
+		//} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			//e.printStackTrace();
+		//}
 		
 		this.sender=new MessageSender(portnumber);
 		
