@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
@@ -134,31 +135,64 @@ public class GamePeerMessageListener implements Runnable {
 
 		//handle received Message
 		if (receivedMessage.getMessageType().equals("PING"))
+			{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--PING@@@@@@@@@@@@@@@");
+			
 			this.pingMessageAction(receivedMessage, os);
-
+			
+			
+			}
 
 		if (receivedMessage.getMessageType().equals("POSITION"))
+			{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--POSITION@@@@@@@@@@@@@@@");
 			this.positionMessageAction(receivedMessage, os);
+			
+			}
 		if (receivedMessage.getMessageType().equals("CHECKPOSITION"))
+			{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--CHECK POSITION@@@@@@@@@@@@@@@");
 			this.checkPositionMessageAction(receivedMessage, os);
+			}
 
 		if (receivedMessage.getMessageType().equals("FINDRESOURCE"))
+			{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--FIND RESOURCE@@@@@@@@@@@@@@@");
 			this.findResourceMessageAction(receivedMessage, os);
+			
+			}
 		if(receivedMessage.getMessageType().equals("FINDRESOURCE2"))
+		{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--FIND RESOURCE 2@@@@@@@@@@@@@@@");
 			this.findResource2MessageAction(receivedMessage, os);
+		}
 		if (receivedMessage.getMessageType().equals("CHECKFINDRESOURCE"))
+			{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--CHECK FIND RESOURCE@@@@@@@@@@@@@@@");
 			this.checkFindResourceMessageAction(receivedMessage, os);
+			}
 
 
 		if (receivedMessage.getMessageType().equals("MOBILERESOURCE"))
+			{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--MOBILE RESOURCE@@@@@@@@@@@@@@@");
 			this.mobileResourceMessageAction(receivedMessage, os);
+			}
 		if (receivedMessage.getMessageType().equals("CHECKMOBILERESOURCE"))
+		{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--CHECK MOBILE RESOURCE@@@@@@@@@@@@@@@");
 			this.checkMobileResourceMessageAction(receivedMessage, os);
-
+		}
 		if (receivedMessage.getMessageType().equals("STARTMATCH"))
+		{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--START MATCH@@@@@@@@@@@@@@@");
 			this.startMatchMessageAction(receivedMessage, os);
+		}
 		if (receivedMessage.getMessageType().equals("DEFENSE"))
+		{
+			//System.out.println("@@@@@@@@@@@@@@GAMEPEER MESSAGE LISTENER--DEFENSE@@@@@@@@@@@@@@@");
 			this.defenseMessageAction(receivedMessage, os);
+		}
 	}
 
 
@@ -952,7 +986,7 @@ public class GamePeerMessageListener implements Runnable {
 
 	//occorre registrare l'hash dell'attacco ricevuto e rispondere ack
 	private void startMatchMessageAction(Message messageReceived, DataOutputStream os) throws IOException {
-
+		//this.peer.setInMatch(true);
 		//MultiLog.println(GamePeerMessageListener.class.toString(), LOG_TAG + "Handler for START MATCH MESSAGE");
 		//System.out.println(LOG_TAG + "Handler for START MATCH MESSAGE");
 		System.out.println("#########GamePeerMessageListener-->startMatchMessageAction##########");
@@ -1031,7 +1065,7 @@ public class GamePeerMessageListener implements Runnable {
 					System.out.println("############BASE-->NON CI SONO DIFESE##############");
 
 					os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
-					
+					//this.peer.setInMatch(false);
 				}
 				else //se ho trovato una risorsa
 				{
@@ -1042,6 +1076,13 @@ public class GamePeerMessageListener implements Runnable {
 					//metto come id della risorsa l'id del peer
 					//this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					System.out.println("############BASE##############");
+					
+					long current=System.currentTimeMillis();
+										
+					String strlog="";
+					Calendar now = Calendar.getInstance();
+					strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+res.getId()+"-def";
+					this.peer.getOutput().println(strlog);
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					
@@ -1061,7 +1102,17 @@ public class GamePeerMessageListener implements Runnable {
 				{
 					System.out.println("################GameResourceMobile###############");
 					
+					
+					
 					GameResourceMobile res=(GameResourceMobile)objres;
+					
+					long current=System.currentTimeMillis();
+					
+					String strlog="";
+					Calendar now = Calendar.getInstance();
+					strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+res.getId()+"-def";
+					this.peer.getOutput().println(strlog);
+					
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					
@@ -1069,6 +1120,13 @@ public class GamePeerMessageListener implements Runnable {
 				else
 				{
 					System.out.println("############GameResource##############à");
+					
+					long current=System.currentTimeMillis();
+					
+					String strlog="";
+					Calendar now = Calendar.getInstance();
+					strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+objres.getId()+"-def";
+					this.peer.getOutput().println(strlog);
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),objres.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					
@@ -1185,5 +1243,7 @@ public class GamePeerMessageListener implements Runnable {
 
 			os.write((new AckMessage(this.listenerId, this.listenerAddr, this.listenerPort, 1, "")).generateXmlMessageString().getBytes());
 		}
+		
+		//this.peer.setInMatch(false);
 	}
 }

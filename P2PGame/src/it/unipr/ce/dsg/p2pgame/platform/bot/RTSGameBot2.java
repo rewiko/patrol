@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,6 +97,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	public String resId;
 	public String peerId; 
 	public long timeStamp;
+	
+	//file log match
+	 FileOutputStream pfile;// = new FileOutputStream("log/.txt");
+    PrintStream Output;// = new PrintStream(file);
 
 	public RTSGameBot2(String profile,String conf,int portmin,String usr,int portReq)
 	{
@@ -249,6 +255,15 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//this.ownerid=gp.getMyId();
 		this.owner=sender.getGamePeerId();
 		this.ownerid=sender.getGamePeerId();
+		
+		//file log match
+		 try {
+			pfile= new FileOutputStream("log/planet"+ownerid +".txt");
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	     Output= new PrintStream(pfile);
 		//thread d'ascolto
 		//Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,this.gp.getMyPeer().getIpAddress(),(this.gp.getMyPeer().getPortNumber()+7)));
 		Thread botListener=new Thread(new RTSBotMessageListener(this,this.ownerid,sender.getIpAddress(),((this.portMin+1)+7)));
@@ -1313,7 +1328,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					{ //conquisto il pianeta
 						System.out.println("CONQUISTO IL PIANETA "+planet.getId());
 						this.setPlanetOwner(planet.getId(), this.getOwnerid(),this.owner); //lo conquisto
-						
+						String strlog="";
+						Calendar now = Calendar.getInstance();
+						strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+grm.getId()+"-"+planet.getId()+"-planet";
+						Output.println(strlog);
 						//invio un messaggio in broadcast a tutti peer nel gioco
 						//this.UpdateLoggedUsers();
 						HashMap<String,UserInfo> userslist=this.getLoggedUsers();
@@ -1493,7 +1511,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 									{
 										System.out.println("CONQUISTO IL PIANETA "+planet.getId());
 										this.setPlanetOwner(planet.getId(), this.getOwnerid(),this.owner); //lo conquisto
-
+										String strlog="";
+										Calendar now = Calendar.getInstance();
+										strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+grm.getId()+"-"+planet.getId()+"-planet";
+										Output.println(strlog);
 										//		ora devo comunicarlo a gli altri giocatori
 										this.UpdateLoggedUsers();
 										HashMap<String,UserInfo> userslist=this.getLoggedUsers();

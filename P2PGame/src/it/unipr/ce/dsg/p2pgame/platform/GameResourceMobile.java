@@ -76,7 +76,7 @@ public class GameResourceMobile extends GameResource {
 				try {
 					while(true) {
 						//TODO: prova forzando il periodo
-						Thread.sleep(1500);
+						Thread.sleep(2000);
 						//Thread.sleep(period);
 
 						searchObjectNearToResource();
@@ -140,6 +140,8 @@ public class GameResourceMobile extends GameResource {
 
 							//TODO: chiedi di poter avere le info su tale posizione
 							//System.out.println("GameResourceMobile-->searchToNearResource "+x+","+y+","+z);
+							
+							
 							Object resp = this.peer.requestResource(position, x, y, z, this.threadId);
 							//Object resp = this.peer.requestResource(position, x, y, z, this.threadId);
 							MultiLog.println(GameResourceMobile.class.toString(), "dopo ricerca mobile");

@@ -1,8 +1,12 @@
 package it.unipr.ce.dsg.p2pgame.platform;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -83,8 +87,18 @@ public class GamePeer extends NetPeer {
 	private Thread gameMessageListener = null;
 	
 	private boolean startMatchBand;
+	private boolean inMatch;
 	
 	
+	//file log match
+	 FileOutputStream file;// = new FileOutputStream("log/.txt");
+     PrintStream Output;// = new PrintStream(file);
+
+
+
+
+
+
 	//id non disponibile solo dopo la registrazione
 	public GamePeer(int inPort, int outPort, int idBitLength, String id, String serverAddr, int serverPort, int gameInPort, int gameOutPort, String gameServerAddr, int gameServerPort,
 			int stab, int fix, int check, int pub) {
@@ -189,6 +203,15 @@ public class GamePeer extends NetPeer {
 				MultiLog.println(GamePeer.class.toString(), "LUNCHING GAME MESSAGE LISTENER THREAD");
 				//System.out.println("LUNCHING GAME MESSAGE LISTENER THREAD");
 				this.createGameMessageListener();
+				
+			    try {
+					file = new FileOutputStream("log/"+this.getMyId()+".txt");
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    Output = new PrintStream(file);
+
 			}
 		}
 
@@ -938,6 +961,7 @@ public class GamePeer extends NetPeer {
 
 			FindResourceMessage findResourceMessage = new FindResourceMessage(this.getMyId(),this.getMyPeer().getIpAddress(),this.gameOutPort, this.username, id,x,y,z, this.player.getSpatialPosition());
 
+						
 			String responseMessage = MessageSender.sendMessage(addr, port, findResourceMessage.generateXmlMessageString());
 
 			if (responseMessage.contains("ERROR")) {
@@ -1495,6 +1519,8 @@ public class GamePeer extends NetPeer {
 				//System.out.println("sending RESOURCE MOBILE pub to " + destAddr + " : " + destPort);
 
 				String responseMessage = MessageSender.sendMessage(destAddr, destPort, mobileResourceMessage.generateXmlMessageString());
+				
+				
 
 				if (responseMessage.contains("ERROR")){
 					System.err.println("Sending Publish MOBILE RESOURCE Error");
@@ -1809,6 +1835,7 @@ public class GamePeer extends NetPeer {
 	public void startMatch(String ownerId,String ownerName,String ownerip,int ownerport, String idresource,String myresource ,double quantity, String threadId,double posx, double posy, double posz){
 		MultiLog.println(GamePeer.class.toString(), "Attacco " + player.getName());
 		this.startMatchBand=false;
+		//this.inMatch=true;
 		Attack attack = new Attack(quantity, myresource);
 		if (this.newAttack(ownerId,ownerName, attack)) {
 					StartMatchMessage startMatch = new StartMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
@@ -1819,7 +1846,13 @@ public class GamePeer extends NetPeer {
 			System.out.println(" Invio il Messaggio");		
 			System.out.println(startMatch.generateXmlMessageString());		
 			String responseStartMessage = MessageSender.sendMessage(ownerip, ownerport+2, startMatch.generateXmlMessageString());
-
+			 
+			long current=System.currentTimeMillis();
+			Calendar now = Calendar.getInstance();
+			String strlog="";
+			
+			strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+myresource+"-attack";
+			Output.println(strlog);
 			if (responseStartMessage.contains("ERROR")){
 				MultiLog.println(GamePeer.class.toString(), "Sending START MATCH ERROR !");
 				
@@ -2076,12 +2109,12 @@ public class GamePeer extends NetPeer {
 
 
 			DefenseMatchMessage startMatch = new DefenseMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber(),
-					this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), posx, posy, posz, defense.getType(), defense.getQuantity());
+					this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), posx, posy, posz,idresource /*defense.getType()*/, defense.getQuantity());
 			
 			System.out.println("#############DEFENSE MATCH##############");
 			System.out.println(startMatch.generateXmlMessageString());
 			String responseDefenseMessage = MessageSender.sendMessage(ownerip, ownerport, startMatch.generateXmlMessageString());
-
+			System.out.println("##########RICEVUTA RISPOSTA##############");
 			if (responseDefenseMessage.contains("ERROR")){
 				MultiLog.println(GamePeer.class.toString(), "Sending DEFENSE MATCH ERROR !");
 				//System.out.println("Sending DEFENSE MATCH ERROR !");
@@ -2157,6 +2190,8 @@ public class GamePeer extends NetPeer {
 			MultiLog.println(GamePeer.class.toString(), "Attacco gia' in corso");
 			//System.out.println("Attacco giï¿½ in corso");
 		}
+		
+		//this.inMatch=false;
 	}
 
 	
@@ -2183,5 +2218,26 @@ public class GamePeer extends NetPeer {
 		this.startMatchBand = startMatchBand;
 	}
 
+	public boolean getInMatch() {
+		return inMatch;
+	}
+
+
+
+	public void setInMatch(boolean inMatch) {
+		this.inMatch = inMatch;
+	}
+	
+
+
+	public PrintStream getOutput() {
+		return Output;
+	}
+
+
+
+	public void setOutput(PrintStream output) {
+		Output = output;
+	}
 
 }

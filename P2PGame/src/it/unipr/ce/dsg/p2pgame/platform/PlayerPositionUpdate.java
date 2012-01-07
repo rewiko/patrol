@@ -39,7 +39,7 @@ public class PlayerPositionUpdate implements Runnable {
 				//TODO: aggoirnarlo secondo la velocitï¿½
 				//Thread.sleep(Math.round(this.player.getVelocity()*1000));
 				//TODO: modificato il 091013 da 10000  a 1000
-				Thread.sleep(Math.round(500));
+				Thread.sleep(2500);//Math.round(2500));
 
 
 				//ricerca gli oggetti nell'intorno
