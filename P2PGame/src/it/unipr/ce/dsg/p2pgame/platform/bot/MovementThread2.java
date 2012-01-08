@@ -92,7 +92,7 @@ public class MovementThread2 implements Runnable{
 		
 		
 		
-		while((currentx!=this.targetx)||(currenty!=this.targety))
+		while((currentx!=this.targetx)||(currenty!=this.targety)&&this.mybot.getGameBand())
 		{
 			
 				Thread.sleep(this.period);
@@ -173,9 +173,19 @@ public class MovementThread2 implements Runnable{
 		
 		//fine movimento
 		//this.mybot.setResourceStatus(this.resid, false);
-		this.sender.setMobileReourceStatus(resid, false);
-		System.out.println("arrived "+resid+": x=" +targetx+" y= "+targety);
+		
+		if(!this.mybot.getGameBand())
+		{
+			
+		}
+		else
+		{
+			this.sender.setMobileReourceStatus(resid, false);
+			System.out.println("arrived "+resid+": x=" +targetx+" y= "+targety);
 
+			
+		}
+		
 		}catch(Exception e)
 		{
 			//qua va metodo di

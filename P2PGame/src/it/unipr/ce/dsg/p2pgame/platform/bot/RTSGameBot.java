@@ -1205,6 +1205,18 @@ public class RTSGameBot implements Runnable,InterfaceBot{
 		}
 		
 	}
+
+	@Override
+	public boolean getGameBand() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setGameBand(boolean band) {
+		// TODO Auto-generated method stub
+		
+	}
 		
 		
 	}
