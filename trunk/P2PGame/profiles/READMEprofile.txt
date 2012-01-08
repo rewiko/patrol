@@ -9,5 +9,5 @@ Quantità di soldi necessari per iniziare la fase di CONQUISTA
 "tipo di risorsa utilizzabile nella fase di CONQUISTA",...
 numero di risorse (per ogni tipo specificato precedentemente) per la fase di CONQUISTA
 Periodo del ciclo di esecuzione del Bot (determina quanto velocemente il giocatore prende le decisioni)
-Periodo del ciclo di spostamento (determina la veloci‡ di spostamento delle risorse, pi˘ e piccolo e pi˘ velocemente si muovono le risorse)
+Periodo del ciclo di spostamento (determina la velocità di spostamento delle risorse, più e piccolo e più velocemente si muovono le risorse)
 Probabilità di acquisto di una risorsa mobile
