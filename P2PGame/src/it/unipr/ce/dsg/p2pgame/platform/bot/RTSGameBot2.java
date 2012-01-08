@@ -252,7 +252,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran
 		//startgame
 		//this.gp.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
-		//System.out.println("1");
+		System.out.println("maxX = " + maxX + ", maxY = " + maxY);
 		sender.startGame(minX, maxX, minY, maxY, minZ, maxZ, vel, vis, gran);
 		
 		
