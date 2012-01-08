@@ -101,6 +101,9 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	//file log match
 	 FileOutputStream pfile;// = new FileOutputStream("log/.txt");
     PrintStream Output;// = new PrintStream(file);
+    
+    long time1,time2,time3;
+    int countplanets;
 
 	public RTSGameBot2(String profile,String conf,int portmin,String usr,int portReq)
 	{
@@ -127,6 +130,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 		this.sender=new MessageSender(portReq);
 		this.portReq=portReq;
+		
+		this.countplanets=0;
 	}
 
 	@Override
@@ -1326,10 +1331,11 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					{ //conquisto il pianeta
 						System.out.println("CONQUISTO IL PIANETA "+planet.getId());
 						this.setPlanetOwner(planet.getId(), this.getOwnerid(),this.owner); //lo conquisto
-						String strlog="";
-						Calendar now = Calendar.getInstance();
-						strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+grm.getId()+"-"+planet.getId()+"-planet";
-						Output.println(strlog);
+						
+						long timestamp=System.currentTimeMillis();
+						
+						this.writeLog(timestamp);
+						
 						//invio un messaggio in broadcast a tutti peer nel gioco
 						//this.UpdateLoggedUsers();
 						HashMap<String,UserInfo> userslist=this.getLoggedUsers();
@@ -1509,10 +1515,10 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 									{
 										System.out.println("CONQUISTO IL PIANETA "+planet.getId());
 										this.setPlanetOwner(planet.getId(), this.getOwnerid(),this.owner); //lo conquisto
-										String strlog="";
-										Calendar now = Calendar.getInstance();
-										strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+grm.getId()+"-"+planet.getId()+"-planet";
-										Output.println(strlog);
+										
+										long timestamp=System.currentTimeMillis();
+										this.writeLog(timestamp);
+										
 										//		ora devo comunicarlo a gli altri giocatori
 										this.UpdateLoggedUsers();
 										HashMap<String,UserInfo> userslist=this.getLoggedUsers();
@@ -1618,7 +1624,30 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		
 	}
 		
+	
+	public void writeLog(long timestamp)
+	{
+		if(this.countplanets==0)
+		{
+			this.countplanets++;
+			time1=timestamp;
+		}
+		else if(this.countplanets==1)
+		{
+			this.countplanets++;
+			time2=timestamp;
+		}
+		else if(this.countplanets==2)
+		{
+			this.countplanets=0;
+			time3=timestamp;
+			
+			String strlog=time1+";"+time2+";"+time3;
+			Output.println(strlog);
+		}
 		
+	}
+	
 	
 	public void verifyEnemies(GameResourceMobile grm)
 	{
