@@ -22,6 +22,7 @@ import it.unipr.ce.dsg.p2pgame.network.NetPeerInfo;
 import it.unipr.ce.dsg.p2pgame.platform.Clash.Result;
 import it.unipr.ce.dsg.p2pgame.platform.message.CheckMobileResourceMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.CheckPositionPlayerMessage;
+import it.unipr.ce.dsg.p2pgame.platform.message.ClashMessageListener;
 import it.unipr.ce.dsg.p2pgame.platform.message.ClearAttackMatchMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.DefenseMatchMessage;
 import it.unipr.ce.dsg.p2pgame.platform.message.FindResourceMessage;
@@ -85,6 +86,8 @@ public class GamePeer extends NetPeer {
 
 	private Thread updateNet = null;
 	private Thread gameMessageListener = null;
+	private Thread clashMessageListener=null;
+	
 	
 	private boolean startMatchBand;
 	private boolean inMatch;
@@ -452,6 +455,13 @@ public class GamePeer extends NetPeer {
 		this.gameMessageListener = new Thread(new GamePeerMessageListener(this.getMyId(), this.getMyPeer().getIpAddress(), this.gameInPort, this), "Game message listener thread");
 		this.gameMessageListener.setPriority(Thread.MAX_PRIORITY);
 		this.gameMessageListener.start();
+		
+		
+		this.clashMessageListener=new Thread(new ClashMessageListener(this.getMyId(), this.getMyPeer().getIpAddress(), this.gameInPort+10, this));
+		this.clashMessageListener.setPriority(Thread.MAX_PRIORITY);
+		this.clashMessageListener.start();
+		
+		
 
 	}
 
@@ -1845,7 +1855,7 @@ public class GamePeer extends NetPeer {
 			System.out.println("INIZIO SCONTRO CON "+ownerId);
 			System.out.println(" Invio il Messaggio");		
 			System.out.println(startMatch.generateXmlMessageString());		
-			String responseStartMessage = MessageSender.sendMessage(ownerip, ownerport+2, startMatch.generateXmlMessageString());
+			String responseStartMessage = MessageSender.sendMessage(ownerip, ownerport+12, startMatch.generateXmlMessageString());
 			 
 			long current=System.currentTimeMillis();
 			Calendar now = Calendar.getInstance();
@@ -2028,7 +2038,7 @@ public class GamePeer extends NetPeer {
 			DefenseMatchMessage startMatch = new DefenseMatchMessage(this.getMyId(),this.getMyPeer().getIpAddress(), this.getMyPeer().getPortNumber()+2,
 					this.player.getId(), this.player.getName(), this.player.getSpatialPosition(), posx, posy, posz, defense.getType(), defense.getQuantity());
 
-			String responseDefenseMessage = MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+2, startMatch.generateXmlMessageString());
+			String responseDefenseMessage = MessageSender.sendMessage(oppositePeer.getIpAddress(), oppositePeer.getPortNumber()+12, startMatch.generateXmlMessageString());
 
 			if (responseDefenseMessage.contains("ERROR")){
 				MultiLog.println(GamePeer.class.toString(), "Sending DEFENSE MATCH ERROR !");
