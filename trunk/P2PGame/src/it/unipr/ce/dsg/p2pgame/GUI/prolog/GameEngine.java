@@ -104,17 +104,15 @@ public class GameEngine extends PrologEngine{
 		
 		players.add("p1");
 		players.add("p2");
-		players.add("p3");
-		players.add("p4");
+		
 		
 		ArrayList<Integer> conq=new ArrayList<Integer>();
 		
-		conq.add(new Integer(3));
-		conq.add(new Integer(5));
-		conq.add(new Integer(2));
-		conq.add(new Integer(3));
+		conq.add(new Integer(1));
+		conq.add(new Integer(0));
 		
-		int total= 13;
+		
+		int total= 1;
 		
 		engine.createGameTheory(players, conq, total);
 		
