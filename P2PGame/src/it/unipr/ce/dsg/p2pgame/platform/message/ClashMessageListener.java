@@ -243,10 +243,7 @@ public class ClashMessageListener implements Runnable{
 					
 					long current=System.currentTimeMillis();
 										
-					String strlog="";
-					Calendar now = Calendar.getInstance();
-					strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+res.getId()+"-def";
-					this.peer.getOutput().println(strlog);
+					this.peer.writeLog(current, (-1)*res.getQuantity());
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					
@@ -272,10 +269,7 @@ public class ClashMessageListener implements Runnable{
 					
 					long current=System.currentTimeMillis();
 					
-					String strlog="";
-					Calendar now = Calendar.getInstance();
-					strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+res.getId()+"-def";
-					this.peer.getOutput().println(strlog);
+					this.peer.writeLog(current,res.getQuantity());
 					
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
@@ -287,10 +281,7 @@ public class ClashMessageListener implements Runnable{
 					
 					long current=System.currentTimeMillis();
 					
-					String strlog="";
-					Calendar now = Calendar.getInstance();
-					strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+objres.getId()+"-def";
-					this.peer.getOutput().println(strlog);
+					this.peer.writeLog(current, (-1)*objres.getQuantity());
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),objres.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					

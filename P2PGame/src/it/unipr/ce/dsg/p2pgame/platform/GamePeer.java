@@ -97,8 +97,12 @@ public class GamePeer extends NetPeer {
 	 FileOutputStream file;// = new FileOutputStream("log/.txt");
      PrintStream Output;// = new PrintStream(file);
 
-
-
+     //scrittura file
+     
+     long time1,time2,time3;
+     double q1,q2,q3;
+     int countclash;
+     
 
 
 
@@ -124,7 +128,7 @@ public class GamePeer extends NetPeer {
 		this.resResources = new HashMap<String, GameResourceMobileResponsible>();
 		
 		
-		
+		this.countclash=0;
 
 	}
 
@@ -1857,12 +1861,13 @@ public class GamePeer extends NetPeer {
 			System.out.println(startMatch.generateXmlMessageString());		
 			String responseStartMessage = MessageSender.sendMessage(ownerip, ownerport+12, startMatch.generateXmlMessageString());
 			 
-			long current=System.currentTimeMillis();
-			Calendar now = Calendar.getInstance();
-			String strlog="";
 			
-			strlog=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)+":"+now.get(Calendar.MILLISECOND)+"-"+myresource+"-attack";
-			Output.println(strlog);
+			
+			long current=System.currentTimeMillis();
+			
+			
+			this.writeLog(current, quantity);
+			
 			if (responseStartMessage.contains("ERROR")){
 				MultiLog.println(GamePeer.class.toString(), "Sending START MATCH ERROR !");
 				
@@ -1891,6 +1896,38 @@ public class GamePeer extends NetPeer {
 		}
 	}
 
+	
+	public void writeLog(long timestamp,double quantity)
+	{
+		if(this.countclash==0)
+		{
+			this.countclash++;
+			time1=timestamp;
+			q1=quantity;
+			
+		}
+		else if(this.countclash==1)
+		{
+			this.countclash++;
+			time2=timestamp;
+			q2=quantity;
+	
+			
+		}
+		else if(this.countclash==2)
+		{
+			this.countclash=0;
+			time3=timestamp;
+			q3=quantity;
+			
+			//scrivo in file
+			String strlog="";
+			
+			strlog=time1+";"+time2+";"+time3+";"+(int)q1+";"+(int)q2+";"+(int)q3;
+			Output.println(strlog);
+		}
+		
+	}
 /**************/
 	
 	public /*synchronized*/ boolean newDefense(String oppositeId, String opposite, Defense myMove) {
