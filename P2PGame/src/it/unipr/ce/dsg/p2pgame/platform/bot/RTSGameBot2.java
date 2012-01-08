@@ -238,7 +238,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
     	
     	
     	
-    	//L è pari alla lunghezza massima fratto due
+    	//L ÔøΩ pari alla lunghezza massima fratto due
 		
 		
 		//this.gp = new GamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,1000,64000,2000);
@@ -505,7 +505,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				this.UpdateLoggedUsers();
 				
-				System.out.println("probabilità di acquistare una nuova risorsa: "+randombuy + "%");
+				System.out.println("probabilitÀÜ di acquistare una nuova risorsa: "+randombuy + "%");
 				if(randombuy<probbuy)
 				{
 					
@@ -534,7 +534,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 								//this.gp.createMobileResource("Attack" + timestamp, qt);
 								//System.out.println("2");
 								this.sender.createMobileResource("Attack" + timestamp, qt);
-								//lo status per default Ë false
+								//lo status per default √® false
 								
 								
 								//status.put("m"+timestamp, new Boolean(false)); // devo salvare anche l'ID
@@ -645,16 +645,16 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						boolean st=sender.getResourceMobileStatus(id);//grm.getStatus();
 						//String id=grm.getDescription();
 						
-						if(!st) // se non è in movimento
+						if(!st) // se non ÔøΩ in movimento
 						{
 														
 							// qua devo mettere il tread di spostamento e indicare che la risorsa e' in movimento
-							//prima verifico se la risors Ë attualmente in movimento
+							//prima verifico se la risors √® attualmente in movimento
 							int aux=(int)(Math.random()*100);
-							System.out.println("probabilità di spostare risorsa "+id+" : "+aux+" %");
+							System.out.println("probabilitÀÜ di spostare risorsa "+id+" : "+aux+" %");
 						    if(aux<probmove)
 							{
-								//se la risorsa non Ë attualmente in movimento
+								//se la risorsa non √® attualmente in movimento
 								//se decido di spostare una risorsa, devo scegliere in modo aleatorio il punto d'arrivo
 								// il punto d'arrivo dipende del raggio massimo di spostamento scelto dalla fase del gioco
 								
@@ -761,7 +761,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					
 					UserInfo info=loggedusers.get(iduser);
 					//devo tener conto che  tuprolog ha problemi con le stringhe, non posso iniziare da un numero, quindi:
-					players.add("PLAYER"+info.getId()); //poi recupero la stringa originale
+					players.add("player"+info.getId()); //poi recupero la stringa originale
 					
 				}
 				
@@ -813,7 +813,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					 //meccanismo per uscire del gioco e della rete
 				 }
 				 
-				 //ora devo verificare se ho ancora delle risorse, se non ho pi˘ nessuna risorsa vuol dire che sono stato annientato e quindi devo usicre del gioco
+				 //ora devo verificare se ho ancora delle risorse, se non ho pi√π nessuna risorsa vuol dire che sono stato annientato e quindi devo usicre del gioco
 				 //faccio una teori per verificarlo in casi piu' complessi????
 				 int nresources=this.sender.getResourcesSize();//this.gp.getMyResources().size();
 				 
@@ -1236,7 +1236,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			{
 				GameResourceMobile grm=(GameResourceMobile)res.get(i);
 				//System.out.println("RM"+grm.getId()+" X="+grm.getX()+" Y="+grm.getY());
-				//controllo visibilità del grm
+				//controllo visibilitÀÜ del grm
 				ArrayList<Object> vis=grm.getResourceVision();
 				
 				for(int j=0;j<vis.size();j++)
@@ -1308,7 +1308,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		double x=grm.getX();
 		double y=grm.getY();
 		ArrayList<VirtualResource> planets=this.getPlanets();
-		//System.out.println("£££planets "+planets.size());
+		//System.out.println("¬£¬£¬£planets "+planets.size());
 		
 		
 		for(int k=0;k<planets.size();k++)
@@ -1324,7 +1324,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				//ps.println("PIANETA");
 				//ps.println("Coordinate: x= "+planet.getX()+ " y= "+planet.getY());
 				
-				if(planet.getOwnerID().equals("null")) // se il pianeta non Ë stato conquistato da qualcuno
+				if(planet.getOwnerID().equals("null")) // se il pianeta non √® stato conquistato da qualcuno
 				{
 													
 					if(this.createResource(planet.getId())) //se ho abbastanza soldi per creare una diffesa
@@ -1611,7 +1611,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 
 					
 				}
-				// se il pianeta Ë mio non faccio niente
+				// se il pianeta √® mio non faccio niente
 			
 			
 			
@@ -1676,7 +1676,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		pattack.add(new Integer(this.getProbattack()));
 		
 		//System.out.println("RM "+grm.getId()+" X="+grm.getX()+" Y="+grm.getY());
-		//controllo visibilit‡ del grm
+		//controllo visibilit√† del grm
 		ArrayList<Object> vision=grm.getResourceVision();
 		
 		double v=grm.getVision()+10;
