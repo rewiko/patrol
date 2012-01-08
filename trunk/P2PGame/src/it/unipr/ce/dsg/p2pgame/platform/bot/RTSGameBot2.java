@@ -104,7 +104,12 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
     
     long time1,time2,time3;
     int countplanets;
+    
+    
+    //flag de 
+    private boolean gameband;
 
+	
 	public RTSGameBot2(String profile,String conf,int portmin,String usr,int portReq)
 	{
 		
@@ -424,7 +429,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		int c=0;
 		int periodbase=this.period_loop;
 		
-		boolean gameband=true;
+		this.gameband=true;
 		while(gameband)
 		{
 			try {
@@ -812,12 +817,12 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					 {
 						 System.out.println(" HO VINTO");
 						 
-						 gameband=false;
+						 this.gameband=false;
 					 }
 					 else
 					 {
 						 System.out.println("HA VINTO IL GIOCATORE "+idwinner);
-						 gameband=false;
+						 this.gameband=false;
 					 }
 					 
 					 //meccanismo per uscire del gioco e della rete
@@ -831,7 +836,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				 {
 					 System.out.println("SONO STATO ANNIENTATO, HO PERSO");
 					 //meccanismo di uscita del gioco
-					 gameband=false;
+					 this.gameband=false;
 				 }
 				
 				//da  fare
@@ -2028,6 +2033,21 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 	       	}
 		
 	}
+	
+	
+
+	@Override
+	public boolean getGameBand() {
+		// TODO Auto-generated method stub
+		return gameband;
+	}
+
+	@Override
+	public void setGameBand(boolean gameband) {
+		// TODO Auto-generated method stub
+		this.gameband = gameband;
+	}
+
 	
 }
 	

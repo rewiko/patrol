@@ -42,4 +42,7 @@ public interface InterfaceBot {
 	
 	void moveResourceMobile(String resid, int movX,int  movY, int movZ);
 	
+	boolean getGameBand();
+	void setGameBand(boolean band);
+	
 }
