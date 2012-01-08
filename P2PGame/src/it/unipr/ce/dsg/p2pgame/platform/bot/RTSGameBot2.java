@@ -423,7 +423,9 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//poi entro nel ciclo infinito
 		int c=0;
 		int periodbase=this.period_loop;
-		while(true)
+		
+		boolean gameband=true;
+		while(gameband)
 		{
 			try {
 				Thread.sleep(this.period_loop);
@@ -748,7 +750,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				//dopo aver aggiornato l'elenco dei giocatori ottengo il loro numero
 				
-				
+				System.out.println("##########################STATO DEL GIOCO#############################");
 				//ottengo un arrayList di tutti i giocatori loggati
 				ArrayList<String> players=new ArrayList<String>();
 				
@@ -761,6 +763,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 					
 					UserInfo info=loggedusers.get(iduser);
 					//devo tener conto che  tuprolog ha problemi con le stringhe, non posso iniziare da un numero, quindi:
+					System.out.println("Player "+info.getId());
 					players.add("player"+info.getId()); //poi recupero la stringa originale
 					
 				}
@@ -771,20 +774,25 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				for(int i=0;i<players.size();i++)
 				{
 					int count=0;
+					String playerid=players.get(i).substring(6);
 					for(int j=0;j<planets.size();j++)
 					{
 						VirtualResource planet=planets.get(j);
-						if(players.get(i).equals(planet.getOwnerID()))
+						
+						
+						if(playerid.equals(planet.getOwnerID()))
 						{
 							count++;
 						}
 					}
+					System.out.println("PLAYER "+playerid+" NUM PLANETS= "+count);
 					numberplanets.add(new Integer(count));
 					
 				}
 
 				 GameEngine gameengine=new GameEngine("rules/gameTheory.pl");
 				 int nplanets=this.planets.size();
+				 System.out.println("TOTAL PLANETS = "+nplanets);
 				 
 				 gameengine.createGameTheory(players, numberplanets, nplanets);
 				//verifico se il goal del gioco e' stato ragiunto!!!
@@ -792,22 +800,24 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				 
 				 if(gameengine.gameover())//se il gioco e' finito perche' qualcuno ha raggiunto l'obiettivo
 				 {
+					 System.out.println("#####################GIOCO FINITO#############################");
 					 String winner=gameengine.getGameWinner(); //ricavo l'id del vincitore
 					 
 					 //devo togliere la parola PLAYER
 					 String idwinner=winner.substring(6);
 					 
-					 System.out.println("Gioco finito");
+					 //System.out.println("Gioco finito");
 					 //if(gp.getMyId().equals(idwinner)) //se sono io il vincitore ....
 				     if(this.sender.getGamePeerId().equals(idwinner)) 
 					 {
 						 System.out.println(" HO VINTO");
 						 
+						 gameband=false;
 					 }
 					 else
 					 {
-						 System.out.println("ha vinto giocatore "+idwinner);
-						 
+						 System.out.println("HA VINTO IL GIOCATORE "+idwinner);
+						 gameband=false;
 					 }
 					 
 					 //meccanismo per uscire del gioco e della rete
@@ -821,6 +831,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				 {
 					 System.out.println("SONO STATO ANNIENTATO, HO PERSO");
 					 //meccanismo di uscita del gioco
+					 gameband=false;
 				 }
 				
 				//da  fare
