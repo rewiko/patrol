@@ -233,7 +233,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
     	
     	
     	
-    	//L Ë pari alla lunghezza massima fratto due
+    	//L è pari alla lunghezza massima fratto due
 		
 		
 		//this.gp = new GamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,1000,64000,2000);
@@ -423,7 +423,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			try {
 				Thread.sleep(this.period_loop);
 				c++;
-				System.out.println("@@@@@@@@@@@@@@@@@@@ ciclo "+c+"@@@@@@@@@@@@@@@@Ú");
+				System.out.println("@@@@@@@@@@@@@@@@@@@ ciclo "+c+"@@@@@@@@@@@@@@@@");
 				
 				
 				
@@ -473,7 +473,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				rad*=L;
 				System.out.println("rad: "+rad);
 				
-				 probattack=gee.getProbAttack();
+				probattack=gee.getProbAttack();
 				
 				System.out.println("prob attack: "+probattack);
 				
@@ -500,7 +500,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				this.UpdateLoggedUsers();
 				
-				System.out.println("probabilit‡ di acquistare una nuova risorsa: "+randombuy + "%");
+				System.out.println("probabilità di acquistare una nuova risorsa: "+randombuy + "%");
 				if(randombuy<probbuy)
 				{
 					
@@ -640,13 +640,13 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						boolean st=sender.getResourceMobileStatus(id);//grm.getStatus();
 						//String id=grm.getDescription();
 						
-						if(!st) // se non Ë in movimento
+						if(!st) // se non è in movimento
 						{
 														
 							// qua devo mettere il tread di spostamento e indicare che la risorsa e' in movimento
 							//prima verifico se la risors Ë attualmente in movimento
 							int aux=(int)(Math.random()*100);
-							System.out.println("probabilita' di spostare risorsa "+id+" : "+aux+" %");
+							System.out.println("probabilità di spostare risorsa "+id+" : "+aux+" %");
 						    if(aux<probmove)
 							{
 								//se la risorsa non Ë attualmente in movimento
@@ -703,8 +703,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						}
 						else
 						{
-							
-							System.out.println("Resource "+id+" in movimento");
+							//System.out.println("Resource "+id+" in movimento");
 						}
 						
 					}
@@ -1188,8 +1187,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			
 			if(planet.getOwnerID().equals(this.ownerid))
 			{
-				System.out.println(planet.getId());
-				
+				System.out.println(planet.getId());		
 			}
 			
 		}
@@ -1232,8 +1230,8 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 			if(res.get(i) instanceof GameResourceMobile)
 			{
 				GameResourceMobile grm=(GameResourceMobile)res.get(i);
-				System.out.println("RM"+grm.getId()+" X="+grm.getX()+" Y="+grm.getY());
-				//controllo visibilit‡ del grm
+				//System.out.println("RM"+grm.getId()+" X="+grm.getX()+" Y="+grm.getY());
+				//controllo visibilità del grm
 				ArrayList<Object> vis=grm.getResourceVision();
 				
 				for(int j=0;j<vis.size();j++)
@@ -1253,7 +1251,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						GameResourceMobileResponsible grmr=(GameResourceMobileResponsible)vis.get(j);
 						
 						
-						System.out.println(j+". RISORSA MOBILE "+grmr.getId()+" di "+grmr.getOwnerId()+" X="+grmr.getX()+" Y="+grmr.getY());
+						//System.out.println(j+". RISORSA MOBILE "+grmr.getId()+" di "+grmr.getOwnerId()+" X="+grmr.getX()+" Y="+grmr.getY());
 							
 					}
 					else
@@ -1648,7 +1646,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		pattack.add(new Integer(this.getProbattack()));
 		pattack.add(new Integer(this.getProbattack()));
 		
-		System.out.println("RM"+grm.getId()+" X="+grm.getX()+" Y="+grm.getY());
+		//System.out.println("RM "+grm.getId()+" X="+grm.getX()+" Y="+grm.getY());
 		//controllo visibilit‡ del grm
 		ArrayList<Object> vision=grm.getResourceVision();
 		
@@ -1864,7 +1862,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 						info=this.getLoggedUserInfo(res_grm.getOwnerId());
 					}
 					
-					System.out.println("###################### TROVATA RISORSA NEMICA+"+res_grm.getOwnerId()+"+  #################");
+					System.out.println("###################### TROVATA RISORSA NEMICA +"+res_grm.getOwnerId()+" +  #################");
 					//inizio match
 					if(!this.inClash) // se sono attualmente in uno scontro, ignoro questo scontro
 					{
