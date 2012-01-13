@@ -27,28 +27,25 @@ import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 public class ClashMessageListener implements Runnable{
 	
 	private final String LOG_TAG = "Game Peer MESSAGE LISTENER: ";
-
 	private String listenerId = null;
 	private String listenerAddr = null;
 	private int listenerPort;
-
 	private GamePeer peer;
-
 	private String threadId = new Long(Thread.currentThread().getId()).toString();
+	private long gameStartTimestamp = 0;
 
 	public ClashMessageListener(String listenerId, String listenerAddr,
-			int listenerPort, GamePeer peer)
+			int listenerPort, GamePeer peer, long gameStartTimestamp)
 	{
 		super();
 		this.listenerId = listenerId;
 		this.listenerAddr = listenerAddr;
 		this.listenerPort = listenerPort;
 		this.peer = peer;
-		
 		this.threadId=peer.getMyThreadId();
+		this.gameStartTimestamp = gameStartTimestamp;
 		
 		System.out.println("GamePeerMessageListener port="+this.listenerPort);
-		
 	}
 
 	@Override
@@ -243,7 +240,7 @@ public class ClashMessageListener implements Runnable{
 					
 					long current=System.currentTimeMillis();
 										
-					this.peer.writeLog(current, (-1)*res.getQuantity());
+					this.peer.writeLog(current-gameStartTimestamp, (-1)*res.getQuantity());
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					
@@ -269,7 +266,7 @@ public class ClashMessageListener implements Runnable{
 					
 					long current=System.currentTimeMillis();
 					
-					this.peer.writeLog(current,res.getQuantity());
+					this.peer.writeLog(current-gameStartTimestamp,res.getQuantity());
 					
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),res.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
@@ -281,7 +278,7 @@ public class ClashMessageListener implements Runnable{
 					
 					long current=System.currentTimeMillis();
 					
-					this.peer.writeLog(current, (-1)*objres.getQuantity());
+					this.peer.writeLog(current-gameStartTimestamp, (-1)*objres.getQuantity());
 					
 					this.peer.defenseMatch(startMatch.getId(), startMatch.getUserName(),startMatch.getSourceSocketAddr(),startMatch.getSourcePort(),peer.getMyId(),objres.getQuantity() , threadId,peer.getPlayer().getPosX(),peer.getPlayer().getPosY(),peer.getPlayer().getPosZ());
 					

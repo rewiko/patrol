@@ -512,7 +512,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 				
 				this.UpdateLoggedUsers();
 				
-				System.out.println("probabilitˆ di acquistare una nuova risorsa: "+randombuy + "%");
+				System.out.println("probabilit� di acquistare una nuova risorsa: "+randombuy + "%");
 				if(randombuy<probbuy)
 				{
 					
@@ -658,7 +658,7 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 							// qua devo mettere il tread di spostamento e indicare che la risorsa e' in movimento
 							//prima verifico se la risors è attualmente in movimento
 							int aux=(int)(Math.random()*100);
-							System.out.println("probabilitˆ di spostare risorsa "+id+" : "+aux+" %");
+							System.out.println("probabilit� di spostare risorsa "+id+" : "+aux+" %");
 						    if(aux<probmove)
 							{
 								//se la risorsa non è attualmente in movimento
