@@ -103,7 +103,7 @@ public class GamePeer extends NetPeer {
      double q1,q2,q3;
      int countclash;
      
-
+     private long gameStartTimestamp = 0;
 
 
 	//id non disponibile solo dopo la registrazione
@@ -449,7 +449,6 @@ public class GamePeer extends NetPeer {
 	}
 
 	private void createGameMessageListener() {
-
 		if (this.gameMessageListener != null)
 			return;
 
@@ -460,13 +459,11 @@ public class GamePeer extends NetPeer {
 		this.gameMessageListener.setPriority(Thread.MAX_PRIORITY);
 		this.gameMessageListener.start();
 		
+		this.gameStartTimestamp = System.currentTimeMillis();
 		
-		this.clashMessageListener=new Thread(new ClashMessageListener(this.getMyId(), this.getMyPeer().getIpAddress(), this.gameInPort+10, this));
+		this.clashMessageListener=new Thread(new ClashMessageListener(this.getMyId(), this.getMyPeer().getIpAddress(), this.gameInPort+10, this, gameStartTimestamp));
 		this.clashMessageListener.setPriority(Thread.MAX_PRIORITY);
 		this.clashMessageListener.start();
-		
-		
-
 	}
 
 	public void startGame(double minX, double maxX, double minY, double maxY, double minZ, double maxZ, double vel, double vis, double gran){
@@ -1866,7 +1863,7 @@ public class GamePeer extends NetPeer {
 			long current=System.currentTimeMillis();
 			
 			
-			this.writeLog(current, quantity);
+			this.writeLog(current-gameStartTimestamp, quantity);
 			
 			if (responseStartMessage.contains("ERROR")){
 				MultiLog.println(GamePeer.class.toString(), "Sending START MATCH ERROR !");
@@ -1924,11 +1921,12 @@ public class GamePeer extends NetPeer {
 			String strlog="";
 			
 			strlog=time1+";"+time2+";"+time3+";"+(int)q1+";"+(int)q2+";"+(int)q3;
+			System.out.println("log: " + strlog);
 			Output.println(strlog);
 		}
 		
 	}
-/**************/
+	
 	
 	public /*synchronized*/ boolean newDefense(String oppositeId, String opposite, Defense myMove) {
 
