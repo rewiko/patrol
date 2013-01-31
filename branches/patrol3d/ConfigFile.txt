@@ -1,0 +1,2 @@
+it.unipr.ce.dsg.p2pgame.GUI3D.RTSGameGUI
+it.unipr.ce.dsg.p2pgame.platform.bot.RTSGameMainPeer

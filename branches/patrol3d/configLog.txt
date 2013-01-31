@@ -1,0 +1,10 @@
+#it.unipr.ce.dsg.p2pgame.RTSgame.RTSGameBootstrapServer
+#it.unipr.ce.dsg.p2pgame.RTSgame.RTSGameGUI
+#it.unipr.ce.dsg.p2pgame.RTSgame.BattlefieldPanel
+#it.unipr.ce.dsg.p2pgame.RTSgame.BattlefieldMouseListener
+#it.unipr.ce.dsg.p2pgame.platform.message.GamePeerMessageListener
+#it.unipr.ce.dsg.p2pgame.platform.GamePeer
+#it.unipr.ce.dsg.p2pgame.network.message.NetMessageListener
+#it.unipr.ce.dsg.p2pgame.network.NetPeer
+#it.unipr.ce.dsg.p2pgame.platform.PlayerPositionUpdate
+#it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile
