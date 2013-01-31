@@ -1179,8 +1179,21 @@ public void CreateGamePeer(int inPort, int outPort, int idBitLength, String id, 
 //response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",9999, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
+    
+    if (response.contains("ERROR:")){
+    	System.err.println("Received an ERROR message");
+    	System.exit(3);
+    }
+    	
+    
+    
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
-
+    System.out.println("Response " + response);
+    if (receivedMessage == null){
+    	System.err.println("No Response message from server");
+    	System.exit(2);
+    }
+    
     if(receivedMessage.getMessageType().equals("SUCCESSMESSAGE"))
     {
      //............
