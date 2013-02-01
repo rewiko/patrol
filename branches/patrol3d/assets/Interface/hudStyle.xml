@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : hudStyle.xml
+    Created on : 5 settembre 2012, 14.08
+    Author     : giorgio
+    Description:
+        Purpose of the document follows.
+-->
+
+<nifty-styles>
+    <style id="verticalLayer">
+        <attributes backgroundColor="#0000" childLayout="horizontal"/>
+    </style>
+    <style id="horizontalLayer">
+        <attributes backgroundColor="#0000" childLayout="horizontal"/>
+    </style>
+    <style id="angleLayer">
+        <attributes backgroundColor="#0000" childLayout="horizontal"/>
+    </style>
+    <style id="anglePanel">
+        <!--<attributes width="10%" height="10%" valign="bottom" childLayout="center" backgroundImage="Interface/Images/guiAngleTexture.png" imageMode="resize:24,2,24,24,24,2,24,2,24,2,24,24"/>-->
+        <attributes width="105px" height="80px" valign="bottom" childLayout="center" backgroundImage="Interface/Images/guiAngleTexture.png" imageMode="resize:24,2,24,24,24,2,24,2,24,2,24,24"/>
+    </style>
+    <style id="verticalPanel">
+        <!--<attributes backgroundColor="#f000" height="100%" width="10%" valign="top" childLayout="vertical" padding="20px,0px,20px,0px" backgroundImage="Interface/Images/labelTexture.png" imageMode="resize:24,2,24,24,24,2,24,2,24,2,24,24"/>-->
+        <attributes backgroundColor="#f000" height="100%" width="105px" valign="top" childLayout="vertical" padding="20px,0px,20px,0px" backgroundImage="Interface/Images/labelTexture.png" imageMode="resize:24,2,24,24,24,2,24,2,24,2,24,24"/>
+    </style>
+    <style id="horizontalPanel">
+        <!--<attributes backgroundColor="#f000" height="10%" width="100%" valign="bottom" childLayout="horizontal" backgroundImage="Interface/Images/labelTexture.png" imageMode="resize:24,2,24,24,24,2,24,2,24,2,24,24"/>-->
+        <attributes backgroundColor="#f000" height="80px" width="100%" valign="bottom" childLayout="horizontal" backgroundImage="Interface/Images/labelTexture.png" imageMode="resize:24,2,24,24,24,2,24,2,24,2,24,24"/>
+    </style>
+    <style id="vDivPanel">
+        <attributes width="100%" height="15%" childLayout="vertical"/><!--valign="top" -->
+    </style>
+    <style id="aDivPanel">
+        <attributes width="100%" height="100%" childLayout="center"/><!--valign="top" -->
+    </style>
+    <style id="hDivPanel">
+        <attributes width="30%" height="100%" childLayout="vertical"/><!--valign="top" -->
+    </style>
+    <style id="guiText">
+        <attributes font="Interface/Fonts/CenturyGothic16.fnt" align="center" color="#000f" wrap="true" width="100%"/>
+    </style>
+    <style id="dummyHPanel">
+        <attributes width="105px" height="100%"/>
+    </style>
+</nifty-styles>

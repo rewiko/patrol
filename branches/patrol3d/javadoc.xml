@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" author="true" classpath="inc/joone-engine.jar;inc/log4j.jar;inc/SimpleXMLProtocol_1.2.jar;inc/weka.jar" destdir="doc" doctitle="PATROL - P2Pgame JavaDoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="it.unipr.ce.dsg.patrol.platform,it.unipr.ce.dsg.patrol.network,it.unipr.ce.dsg.patrol.RTSgame,it.unipr.ce.dsg.patrol.platform.learning,it.unipr.ce.dsg.patrol.util,it.unipr.ce.dsg.patrol.platform.learning.message,it.unipr.ce.dsg.patrol.network.test,it.unipr.ce.dsg.patrol.network.test.multi,it.unipr.ce.dsg.patrol.network.message,it.unipr.ce.dsg.patrol.platform.test,it.unipr.ce.dsg.patrol.platform.message" source="1.6" sourcepath="src" splitindex="true" use="true" version="true">
+            <link href="http://java.sun.com/javase/6/docs/api/"/>
+        </javadoc>
+    </target>
+</project>
