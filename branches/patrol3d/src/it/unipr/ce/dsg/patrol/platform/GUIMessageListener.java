@@ -1,5 +1,5 @@
 
-package it.unipr.ce.dsg.patrol.Engine;
+package it.unipr.ce.dsg.patrol.platform;
 
 import it.simplexml.message.AckMessage;
 import it.simplexml.message.Message;
@@ -17,17 +17,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import it.unipr.ce.dsg.patrol.GUI.message.*;
-import it.unipr.ce.dsg.patrol.platform.Attack;
-import it.unipr.ce.dsg.patrol.platform.Clash;
-import it.unipr.ce.dsg.patrol.platform.GamePeer;
-import it.unipr.ce.dsg.patrol.platform.GamePlayer;
-import it.unipr.ce.dsg.patrol.platform.GamePlayerResponsible;
-import it.unipr.ce.dsg.patrol.platform.GameResource;
-import it.unipr.ce.dsg.patrol.platform.GameResourceEvolve;
-import it.unipr.ce.dsg.patrol.platform.GameResourceMobile;
-import it.unipr.ce.dsg.patrol.platform.GameResourceMobileResponsible;
-import it.unipr.ce.dsg.patrol.platform.Clash.Phase;
 import it.unipr.ce.dsg.patrol.platform.Clash.Result;
+import it.unipr.ce.dsg.patrol.platform.Clash.Phase;
 import it.unipr.ce.dsg.patrol.platform.bot.UserInfo;
 import it.unipr.ce.dsg.patrol.platform.bot.message.MessageSender;
 import it.unipr.ce.dsg.patrol.platform.bot.message.PlanetConqueredMessage;

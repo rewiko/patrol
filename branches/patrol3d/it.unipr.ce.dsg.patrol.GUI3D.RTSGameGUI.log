@@ -1,0 +1,18 @@
+17:42:52_: Try to connect and register...
+17:42:52_: Peer is created
+17:42:52_: Peer is registrated into the network
+17:42:52_: 0.0 100.0 0.0 100.0 0.0 0.0 delta:50.0
+17:42:52_: Speed: 10.0 Visibility: 10.0 Granularity: 5.0
+17:42:53_: Player ID: 3a4d67eb2c7c1aeb8cfd15182af01f6f7ec0be3d
+17:42:53_: Initialize grid of the ground, tile dimension is 5.0, field dimensions are 100.0x100.0
+17:42:53_: Created 400 tile
+17:42:53_: Home planet position: 10.0 95.0 delta:50.0
+17:42:54_: pianeta: -40.0 0.0 45.0 io -40.0 20.0 25.0
+17:42:54_: InitKeys
+17:42:59_: Buy ship button clicked
+17:42:59_: Creating a ship spatial
+17:42:59_: Comprata astronave: x:10.0 z:95.0
+17:42:59_: Moving ship out of planet
+17:42:59_: End move on creation method
+17:42:59_: Ship is created and moved
+17:42:59_: The ship was bought
