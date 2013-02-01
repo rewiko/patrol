@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package it.unipr.ce.dsg.patrol.Engine;
+package it.unipr.ce.dsg.patrol.platform;
 
 
 import it.simplexml.message.Message;
@@ -13,7 +13,6 @@ import it.unipr.ce.dsg.patrol.GUI.message.RegisterRequestMessage;
 import it.unipr.ce.dsg.patrol.GUI.message.RegisterResponseMessage;
 import it.unipr.ce.dsg.patrol.GUI.message.StartMessage;
 import it.unipr.ce.dsg.patrol.GUI.message.SuccessMessage;
-import it.unipr.ce.dsg.patrol.platform.GamePeer;
 
 
 import java.io.DataInputStream;
