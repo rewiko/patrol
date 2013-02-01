@@ -1,0 +1,10 @@
+#it.unipr.ce.dsg.patrol.RTSgame.RTSGameBootstrapServer
+#it.unipr.ce.dsg.patrol.RTSgame.RTSGameGUI
+#it.unipr.ce.dsg.patrol.RTSgame.BattlefieldPanel
+#it.unipr.ce.dsg.patrol.RTSgame.BattlefieldMouseListener
+#it.unipr.ce.dsg.patrol.platform.message.GamePeerMessageListener
+#it.unipr.ce.dsg.patrol.platform.GamePeer
+#it.unipr.ce.dsg.patrol.network.message.NetMessageListener
+#it.unipr.ce.dsg.patrol.network.NetPeer
+#it.unipr.ce.dsg.patrol.platform.PlayerPositionUpdate
+#it.unipr.ce.dsg.patrol.platform.GameResourceMobile
