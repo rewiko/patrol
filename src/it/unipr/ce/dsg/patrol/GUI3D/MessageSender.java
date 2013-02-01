@@ -971,7 +971,12 @@ response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumb
                             double vvis=Double.parseDouble(Array_vision[11]);
                             long vtime=Long.parseLong(Array_vision[12]);
                             String poshash=Array_vision[13];
-                            String oldpos=Array_vision[14];
+                            
+                            String oldpos = null;
+                            if (Array_vision.length == 15)
+                            	oldpos=Array_vision[14];
+                            else
+                            	System.out.println("Resource Old position unknow");
 
                             GameResourceMobileResponsible grmresp=new GameResourceMobileResponsible(vid,vdesc,vowner,vownerid,vq,vx,vy,vz,vvel,vvis,vtime,poshash,oldpos);
                             /*MultiLog.println(RTSGameGUI.class.toString(),"ID risorsa: "+grmresp.getId()+" descrizione"+grmresp.getDescription()+" posizione x:"+grmresp.getX()+" y:"+grmresp.getY()+" z:"+grmresp.getZ());

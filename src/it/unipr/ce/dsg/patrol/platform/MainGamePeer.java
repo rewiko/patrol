@@ -18,6 +18,7 @@ import it.unipr.ce.dsg.patrol.GUI.message.SuccessMessage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -49,9 +50,15 @@ public class MainGamePeer extends Thread{
         
 
         try {
-		if (server == null)
-                	server = new ServerSocket(this.portnumber);//(9999);
-
+		if (server == null){
+            try{    	
+            	server = new ServerSocket(this.portnumber);//(9999);
+            } catch (BindException e){
+            	System.err.println("The specified address port ("+ this.portnumber + ") is already in use. Try a different one");
+            	e.printStackTrace();
+            	System.exit(5);
+            }
+		}
             } catch (IOException e) {
 		e.printStackTrace();
             }
