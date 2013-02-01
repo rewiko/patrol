@@ -947,14 +947,20 @@ response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumb
                             double vvis=Double.parseDouble(Array_vision[8]);
                             long vtime=Long.parseLong(Array_vision[9]);
                             String poshash=Array_vision[10];
-                            String oldpos=Array_vision[11];//FIXME
+                            //String oldpos=Array_vision[11];//FIXME:
 
+                            String oldpos = null;
+                            if (Array_vision.length == 12)
+                            	oldpos=Array_vision[11];
+                            else
+                            	System.out.println("Player Old position unknow");
+                            
                             GamePlayerResponsible gpresp=new GamePlayerResponsible(vid,vname,vx,vy,vz,vvel,vvis,vtime,poshash,oldpos);
                            /* MultiLog.println(RTSGameGUI.class.toString(),"ID risorsa: "+gpresp.getId()+" posizione x:"+gpresp.getPosX()+" y:"+gpresp.getPosY()+" z:"+gpresp.getPosZ());
                             MultiLog.println(RTSGameGUI.class.toString(), "Size: "+vision.size());*/
                             ensureSize(vision,pos+1);//FIXME
                             //MultiLog.println(RTSGameGUI.class.toString(), "Size: "+vision.size());
-                            vision.add(pos,gpresp);
+                            vision.add(pos,gpresp); //FIXME:
                         }
                         else if(type.equals("GameResourceMobileResponsible"))
                         {
@@ -974,16 +980,16 @@ response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",this.portnumb
                             
                             String oldpos = null;
                             if (Array_vision.length == 15)
-                            	oldpos=Array_vision[14];
+                            	oldpos=Array_vision[14]; //FIXME:
                             else
                             	System.out.println("Resource Old position unknow");
 
                             GameResourceMobileResponsible grmresp=new GameResourceMobileResponsible(vid,vdesc,vowner,vownerid,vq,vx,vy,vz,vvel,vvis,vtime,poshash,oldpos);
                             /*MultiLog.println(RTSGameGUI.class.toString(),"ID risorsa: "+grmresp.getId()+" descrizione"+grmresp.getDescription()+" posizione x:"+grmresp.getX()+" y:"+grmresp.getY()+" z:"+grmresp.getZ());
                             MultiLog.println(RTSGameGUI.class.toString(), "Size: "+vision.size());*/
-                            ensureSize(vision,pos+1);
+                            ensureSize(vision,pos+1);//FIXME:
                             //MultiLog.println(RTSGameGUI.class.toString(), "Size: "+vision.size());
-                            vision.add(pos,grmresp);
+                            vision.add(pos,grmresp); //FIXME:
                         }
             }
 
