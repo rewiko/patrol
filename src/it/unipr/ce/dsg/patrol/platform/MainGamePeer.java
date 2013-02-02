@@ -26,7 +26,10 @@ import java.util.logging.Logger;
 
 /**
  *
+ * Class that create a GamePeer manager that interacts with the GUI component 
+ *
  * @author jose murga
+ * @author Stefano Sebastio
  */
 public class MainGamePeer extends Thread{
 
@@ -35,7 +38,12 @@ public class MainGamePeer extends Thread{
     private GUIMessageListener message_listener;
     private int portnumber;
     
-    
+    /**
+     * The port number is the port where the GamePeer responds to GUI requests.
+     * It is an internal port not an external communication one
+     * 
+     * @param port
+     */
     public MainGamePeer(int port)
     {
     	this.gp=null;
@@ -50,52 +58,52 @@ public class MainGamePeer extends Thread{
         
 
         try {
-		if (server == null){
-            try{    	
-            	server = new ServerSocket(this.portnumber);//(9999);
-            } catch (BindException e){
-            	System.err.println("The specified address port ("+ this.portnumber + ") is already in use. Try a different one");
-            	e.printStackTrace();
-            	System.exit(5);
-            }
-		}
-            } catch (IOException e) {
-		e.printStackTrace();
-            }
+        	if (server == null){
+	            try{    	
+		            server = new ServerSocket(this.portnumber);//(9999);
+		        } catch (BindException e){
+		            	System.err.println("The specified address port ("+ this.portnumber + ") is already in use. Try a different one");
+		            	e.printStackTrace();
+		            	System.exit(5);
+		        }
+        	}
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
 
         while(true){
             try {
-                clientSocket = server.accept();
+                clientSocket = server.accept(); //it is a blocking method. Thus it waits until a GUI is created 
                 DataInputStream is = new DataInputStream(clientSocket.getInputStream());
                 DataOutputStream os = new DataOutputStream(clientSocket.getOutputStream());
                 String message = null;
-                while(true){
+              //  while(true){
 
-                    int current = 0;
-                    byte[] buf = new byte[100000];
+                int current = 0;
+                byte[] buf = new byte[100000];
 
-                    while (current < 1) {
+                while (current < 1) {
 
-			int reader = is.read(buf);
-
-			if (reader != -1){
-			message = new String(buf);
+					int reader = is.read(buf);
+		
+					if (reader != -1){
+						message = new String(buf);
+					
+						current++;
+					}
+		        }
+		
+		        checkIncomingMessage(message, os);
+		
+		        is.close();
+		        os.close();
+		        clientSocket.close();
+		        break;
+			    //  }
 			
-			current++;
-			}
-                    }
-
-                    checkIncomingMessage(message, os);
-
-                    is.close();
-		    os.close();
-		    clientSocket.close();
-		    break;
-                }
-
-            } catch (IOException ex) {
-                Logger.getLogger(MainGamePeer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+	            } catch (IOException ex) {
+	                Logger.getLogger(MainGamePeer.class.getName()).log(Level.SEVERE, null, ex);
+	            }
 
         }
     }
