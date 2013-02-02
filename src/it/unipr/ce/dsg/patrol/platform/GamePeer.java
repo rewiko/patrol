@@ -6,7 +6,6 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -40,6 +39,12 @@ import it.unipr.ce.dsg.patrol.platform.message.UsersListRequestMessage;
 import it.unipr.ce.dsg.patrol.util.MultiLog;
 import it.unipr.ce.dsg.patrol.util.SHA1;
 
+
+/**
+ * 
+ * @author Stefano Sebastio
+ *
+ */
 public class GamePeer extends NetPeer {
 
 	//identificate con l'id dell'avversario
@@ -133,8 +138,14 @@ public class GamePeer extends NetPeer {
 	}
 
 
-
-	public void registerOnServer(String un, String pwd) {
+/**
+ * 02/02/2013 now provide a feedback about the success or insuccess of the action
+ * 
+ * @param un
+ * @param pwd
+ * @return
+ */
+	public boolean registerOnServer(String un, String pwd) {
 
 		this.username = un;
 		this.password = pwd;
@@ -164,7 +175,7 @@ public class GamePeer extends NetPeer {
 			MultiLog.println(GamePeer.class.toString(), "Retry later...");
 			//System.out.println("Retry later...");
 
-			return;
+			return false;
 
 		}
 		else {
@@ -183,7 +194,7 @@ public class GamePeer extends NetPeer {
 				MultiLog.println(GamePeer.class.toString(), "Username already in use. Try with another");
 				//System.out.println("Username already in use. Try with another");
 
-				return;
+				return false;
 			}
 			else {
 				MultiLog.println(GamePeer.class.toString(), "Registration completed succesfully");
@@ -221,7 +232,7 @@ public class GamePeer extends NetPeer {
 
 			}
 		}
-
+		return true;
 
 	}
 	
