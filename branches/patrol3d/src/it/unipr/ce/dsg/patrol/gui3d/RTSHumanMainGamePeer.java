@@ -5,7 +5,9 @@ import it.unipr.ce.dsg.patrol.platform.MainGamePeer;
 /**
  *
  * @author giorgio
- * Class that launch MainGamePeer for human player
+ * Class that launch MainGamePeer for human player.
+ * 
+ * It manages only the game node without user interface
  */
 public class RTSHumanMainGamePeer 
 {
