@@ -26,7 +26,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * Class that create a GamePeer manager that interacts with the GUI component 
+ * Class that create a GamePeer manager that interacts with the GUI component.
+ * It is the backend of a Game Node
  *
  * @author jose murga
  * @author Stefano Sebastio
@@ -50,7 +51,9 @@ public class MainGamePeer extends Thread{
     	this.portnumber=port;
     }
     
-    @Override
+	/**
+	 * Manages all the requests coming from the GUI module
+	 */
     public void run()
     {
         System.out.println("waiting...");
@@ -79,17 +82,20 @@ public class MainGamePeer extends Thread{
                 String message = null;
               //  while(true){
 
-                int current = 0;
+               // int current = 0;
+                boolean read = false;
                 byte[] buf = new byte[100000];
 
-                while (current < 1) {
+                //while (current < 1) {
+                while (!read) {
 
 					int reader = is.read(buf);
 		
 					if (reader != -1){
 						message = new String(buf);
 					
-						current++;
+						//current++;
+						read = true;
 					}
 		        }
 		
@@ -108,19 +114,20 @@ public class MainGamePeer extends Thread{
         }
     }
 
-    /*
-     * checkIncomingMessage:
+    /**
+     * checkIncomingMessage(): Dispatch the GUI message request to the appropriate handler
+     * 
      * transforms the received message, string format to the appropriate data structure and
      * verifies the received message type, then invokes the appropriate method to develop response
-     * Parameters:
-     * messageString : String
-     * os : DataOutputStream
-     */
+     * 
+     * @param messageString : String, os : DataOutputStream 
+     * 
+     **/
 
     public void checkIncomingMessage(String messageString, DataOutputStream os) throws IOException {
 
         MessageReader messageReader = new MessageReader();
-	Message receivedMessage = messageReader.readMessageFromString(messageString.trim());
+        Message receivedMessage = messageReader.readMessageFromString(messageString.trim());
         
         
         if(receivedMessage.getMessageType().equals("CREATEGAMEPEERREQUEST"))
@@ -145,17 +152,19 @@ public class MainGamePeer extends Thread{
     }
 
     /*
-     * CreateGamePeerAction
+     * CreateGamePeerAction:
      * creates a new instance of the game peer class with the message's info
      * creates a new instance of the MessageListener class thread an  starts it
-     * Parameters:
-     * messageString : String
-     * os : DataOutputStream
-     */
+     * 
+     * @param messageString : String
+     * @param os : DataOutputStream
+     **/
     private void CreateGamePeerAction(Message receivedMessage, DataOutputStream os) throws IOException
     {
+    	System.out.println("CreateGamePeer ");
+    	System.exit(2);
         CreateGamePeerRequestMessage request=new CreateGamePeerRequestMessage(receivedMessage);
-
+        
         int inPort=request.getInPort();
         int outPort=request.getOutPort();
         int idBitLength=request.getIdBitLength();
@@ -193,26 +202,32 @@ public class MainGamePeer extends Thread{
 
     }
 
-    /*
+    /**
      *  RegisterRequestAction
-     *  logs the new user on the server
-     * Parameters:
-     * receivedMessage: Message
-     * os: DataOutputStream
-     */
+     *  register the user on the bootstrap server
+     * 
+     * @param receivedMessage: Message
+     * @param os: DataOutputStream
+     **/
     private void RegisterRequestAction(Message receivedMessage, DataOutputStream os) throws IOException
     {
+    	System.out.println("RegisterReq");
+         System.exit(3);
          
             RegisterRequestMessage register=new RegisterRequestMessage(receivedMessage);
 
             String user=register.getUserName();
             String password=register.getPassword();
 
-            this.gp.registerOnServer(user, password);
 
-            System.out.println("user registrato nel server");
+            System.out.println("registering user on server");
+            boolean resp = this.gp.registerOnServer(user, password);
 
-            RegisterResponseMessage response=new RegisterResponseMessage("yes");
+            RegisterResponseMessage response = null;
+           if (resp)
+        	   response=new RegisterResponseMessage("yes");
+           else
+        	   response=new RegisterResponseMessage("no");
 
             os.write(response.generateXmlMessageString().getBytes());
 
@@ -227,7 +242,8 @@ public class MainGamePeer extends Thread{
      */
     private void StartMessageAction(Message receivedMessage, DataOutputStream os) throws IOException
     {
-       
+    	System.out.println("Start Message received - for debug purpose only (Called by MessageSender)");
+    	System.exit(1);
                StartMessage start =new StartMessage(receivedMessage);
                double minx=start.getMinX();
                double maxx=start.getMaxX();
@@ -250,12 +266,14 @@ public class MainGamePeer extends Thread{
 
     }
 
-    /*
+    /**
      *  GamePeerExistAction
-     *  returns true if exist an instance of game peer class. Returns false, Otherwise
-     * receivedMessage: Message
-     * os: DataOutputStream
-     */
+     *  returns true if exist an instance of game peer class. Returns false, otherwise.
+     *  
+     *  
+     * @param receivedMessage: Message coming from the GUI
+     * @param os: DataOutputStream 
+     **/
 
     public void GamePeerExistAction(Message receivedMessage, DataOutputStream os) throws IOException
     {
@@ -277,13 +295,18 @@ public class MainGamePeer extends Thread{
 
     }
 
-    /*
-     * creates and launches a new instance of Main Game peer thread class
-     */
+    /**
+     * Creates and launches a new instance of Main Game peer thread class. The node backend
+     **/
     public static void main(String [] arg)
     {
-        MainGamePeer main=new MainGamePeer(9999/*1235*/);
-        main.start();
+    	
+    	int port = 9998;
+    	if (arg.length >= 1)
+    		port = Integer.parseInt(arg[0].trim());
+    	
+		MainGamePeer mainpeer=new MainGamePeer(port);
+		mainpeer.start();
 
 
     }
