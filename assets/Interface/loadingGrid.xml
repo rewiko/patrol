@@ -6,7 +6,7 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- grid loading screen -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
-    <screen id="loadingGrid" controller="it.unipr.ce.dsg.patrol.GUI3D.MyScreenController">
+    <screen id="loadingGrid" controller="it.unipr.ce.dsg.patrol.gui3d.MyScreenController">
         <layer id="background" style="backgroundLayer">
         </layer>
         <layer id="foreground" style="foregroundLayer">

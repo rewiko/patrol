@@ -8,7 +8,7 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- hud screen -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
-    <screen id="hud" controller="it.unipr.ce.dsg.patrol.GUI3D.MyScreenController">
+    <screen id="hud" controller="it.unipr.ce.dsg.patrol.gui3d.MyScreenController">
         <layer id="vLayer" style="verticalLayer">
             <panel id="vPanel" style="verticalPanel">
                 <panel id="homeTextPanel" style="vDivPanel">
