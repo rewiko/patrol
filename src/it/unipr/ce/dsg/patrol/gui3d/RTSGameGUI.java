@@ -86,6 +86,12 @@ import java.util.Set;
 public class RTSGameGUI extends SimpleApplication 
 {
 
+	/**
+	 * Default value for the communication with the MainGamePeer 
+	 * (used for the 'internal' communication among GUI and the GamePeer)
+	 */
+	int gamePeerPort = 9998;
+	
     /**
      * Main method for game's GUI
      * @param argv 
@@ -138,7 +144,12 @@ public class RTSGameGUI extends SimpleApplication
             this.displayStatView=true;
         else if(argv[3].equals("false"))
             this.displayStatView=false;
-        //initialize screenController class
+        
+        if(argv.length > 4){
+        	gamePeerPort = Integer.parseInt(argv[4]);
+        }
+        
+        	//initialize screenController class
         this.screenController=new MyScreenController(this);
         this.screenController.setUser("user");
         this.screenController.setPwd("pwd");
@@ -213,6 +224,7 @@ public class RTSGameGUI extends SimpleApplication
     
     /**
      * Provides connection between this class and server/game peer
+     * Provides connection among GUI and game peer (Stefano) 
      */
     public void connect()
     {
@@ -243,7 +255,8 @@ public class RTSGameGUI extends SimpleApplication
         this.fix=1000;
         this.check=64000;
         this.pub=2000;
-        this.request=new MessageSender(9998);
+        this.request=new MessageSender(gamePeerPort);
+        //this.request=new MessageSender(9998);
         //start of communication between bootstrap server and GUI
         MultiLog.println(RTSGameGUI.class.toString(), "Try to connect and register...");
         this.request.CreateGamePeer(inPort, outPort, idLength, id, serverAddr, serverPort, gameInPort, gameOutPort, gameServerAddr, gameServerPort, stab, fix, check, pub);
