@@ -6,7 +6,7 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- keys loading screen -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
-    <screen id="loadingKeys" controller="it.unipr.ce.dsg.patrol.GUI3D.MyScreenController">
+    <screen id="loadingKeys" controller="it.unipr.ce.dsg.patrol.gui3d.MyScreenController">
         <layer id="background" style="backgroundLayer">
         </layer>
         <layer id="foreground" style="foregroundLayer">

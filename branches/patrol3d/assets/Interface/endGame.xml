@@ -8,7 +8,7 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- hud screen -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
-    <screen id="endGameWin" controller="it.unipr.ce.dsg.patrol.GUI3D.MyScreenController">
+    <screen id="endGameWin" controller="it.unipr.ce.dsg.patrol.gui3d.MyScreenController">
         <layer id="layer" childLayout="center">
             <panel id="panel" width="50%" height="50%" childLayout="center">
                 <control name="pulsateBlueButton" id="endGameButton" text="You Win! Click to Exit" width="50%" height="50%" style="pulsateSquareBlueButton"/>
