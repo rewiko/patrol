@@ -17,7 +17,7 @@ public class RTSHumanMainGamePeer
     	if (arg.length >= 1)
     		port = Integer.parseInt(arg[0].trim());
     	
-		MainGamePeer mainpeer=new MainGamePeer(port);
-		mainpeer.start();
+	MainGamePeer mainpeer=new MainGamePeer(port);
+	mainpeer.start();
 	}
 }

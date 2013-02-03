@@ -82,17 +82,9 @@ import java.util.Set;
 /**
  * PATROL's game
  * @author Michael Benassi Giorgio Micconi
- * test
  */
 public class RTSGameGUI extends SimpleApplication 
-{
-
-	/**
-	 * Default value for the communication with the MainGamePeer 
-	 * (used for the 'internal' communication among GUI and the GamePeer)
-	 */
-	int gamePeerPort = 9998;
-	
+{	
     /**
      * Main method for game's GUI
      * @param argv 
@@ -146,17 +138,18 @@ public class RTSGameGUI extends SimpleApplication
         else if(argv[3].equals("false"))
             this.displayStatView=false;
         
-        if(argv.length > 4){
+        /*if(argv.length > 4){
         	gamePeerPort = Integer.parseInt(argv[4]);
-        }
+        }*/
         
-        	//initialize screenController class
+        //initialize screenController class
         this.screenController=new MyScreenController(this);
         this.screenController.setUser("user");
         this.screenController.setPwd("pwd");
         this.screenController.setServerAddress("127.0.0.1");
         this.screenController.setServerPort(1235);
         this.screenController.setOutPort(40000/*7000*//*6891*/);
+        this.screenController.setMessagePort(9998);
         this.screenController.setActualCentralPosition("0 0");
         this.screenController.setActualCursorPosition("0 0");
         this.screenController.setSelection("Niente");
@@ -236,6 +229,7 @@ public class RTSGameGUI extends SimpleApplication
             this.serverPort=Integer.parseInt(this.screenController.getServerPort());//1235;
             this.user=this.screenController.getUser();
             this.pwd=this.screenController.getPwd();
+            this.gamePeerPort=Integer.parseInt(this.screenController.getMessagePort());
             }
         else
             {
@@ -244,6 +238,7 @@ public class RTSGameGUI extends SimpleApplication
             this.serverPort=1235;
             this.user="giorgio";
             this.pwd="ggg";
+            this.gamePeerPort=9998;
             }
         this.inPort=this.outPort;
         this.id="";
@@ -256,7 +251,7 @@ public class RTSGameGUI extends SimpleApplication
         this.fix=1000;
         this.check=64000;
         this.pub=2000;
-        this.request=new MessageSender(gamePeerPort);
+        this.request=new MessageSender(this.gamePeerPort);
         //this.request=new MessageSender(9998);
         //start of communication between bootstrap server and GUI
         MultiLog.println(RTSGameGUI.class.toString(), "Try to connect and register...");
@@ -1963,4 +1958,9 @@ public class RTSGameGUI extends SimpleApplication
     private boolean ready;
     private double delta;
     public HashMap<String, UserInfo> loggedusers;    //TODO public only for stamp the status
+    /**
+     * Default value for the communication with the MainGamePeer 
+     * (used for the 'internal' communication among GUI and the GamePeer)
+     */
+    private int gamePeerPort;
 }
