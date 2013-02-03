@@ -82,6 +82,7 @@ import java.util.Set;
 /**
  * PATROL's game
  * @author Michael Benassi Giorgio Micconi
+ * test
  */
 public class RTSGameGUI extends SimpleApplication 
 {
