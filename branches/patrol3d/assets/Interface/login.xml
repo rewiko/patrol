@@ -12,7 +12,7 @@
         <layer id="background" style="backgroundLayer">
         </layer>
         <layer id="foreground" style="foregroundLayer">
-            <panel id="panel_top" style="titlePanel" height="20%">
+            <panel id="panel_top" style="titlePanel" height="20%"><!--20%-->
                 <text text="Login Settings Tab" style="titleText" />
             </panel>    
             <panel id="fieldsPanel" style="fieldsPanel">
@@ -56,8 +56,16 @@
                         <control id="serverPort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getServerPort()}"></control>
                     </panel>
                 </panel>
+                <panel id="panel_messagePort" style="singleFieldPanel">
+                    <panel id="messagePortLabel" style="fieldLabel">
+                        <control name="label" text="Message Port Number:"  style="simpleLabel"/>
+                    </panel>
+                    <panel id="userField" style="fieldStyle">
+                        <control id="messagePort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getMessagePort()}"></control>
+                    </panel>
+                </panel>
             </panel>
-            <panel id="centeringPanel" style="centeringPanel" height="50%">
+            <panel id="centeringPanel" style="centeringPanel" height="60%">
                 <panel id="buttonContainingPanel" style="buttonPanel">
                     <panel id="leftDiv" style="buttonDiv">
                         <control name="pulsateBlueButton" id="mybutton" text="Start" style="slidingPulsateBlueButton"/>

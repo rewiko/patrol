@@ -162,7 +162,7 @@ public class MainGamePeer extends Thread{
     private void CreateGamePeerAction(Message receivedMessage, DataOutputStream os) throws IOException
     {
     	System.out.println("CreateGamePeer ");
-    	System.exit(2);
+    	//System.exit(2);
         CreateGamePeerRequestMessage request=new CreateGamePeerRequestMessage(receivedMessage);
         
         int inPort=request.getInPort();

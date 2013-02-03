@@ -154,6 +154,11 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         return String.valueOf(this.outPort);
     }
     
+    public String getMessagePort()
+    {
+        return String.valueOf(this.messagePort);
+    }
+    
     public void setUser(String user)
     {
         this.user=user;
@@ -177,6 +182,11 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     public void setOutPort(int outPort)
     {
         this.outPort=outPort;
+    }
+    
+    public void setMessagePort(int messagePort)
+    {
+        this.messagePort=messagePort;
     }
     
     public String getActualCentralPosition()
@@ -417,6 +427,7 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     private String serverAddr;
     private int serverPort;
     private int outPort;
+    private int messagePort;
     private String actualCentralPosition;
     private String actualCursorPosition;
     private String selection;

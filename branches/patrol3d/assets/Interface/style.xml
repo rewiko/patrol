@@ -70,7 +70,7 @@
         <attributes childLayout="horizontal" height="60px" width="100%" align="center" padding="20px" backgroundColor="#f000"/>
     </style>
     <style id="fieldLabel">
-        <attributes childLayout="center" height="50px" width="200px" backgroundImage="Interface/Images/labelTexture.png" imageMode="resize:24,2,24,24,24,2,24,2,24,2,24,24"/>
+        <attributes childLayout="center" height="50px" width="230px" backgroundImage="Interface/Images/labelTexture.png" imageMode="resize:24,2,24,24,24,2,24,2,24,2,24,24"/>
     </style>
     <style id="simpleLabel">
         <attributes font="Interface/Fonts/CenturyGothicB20.fnt" color="#000f" backgroundColor="#fff0" align="center" valign="center"/>
