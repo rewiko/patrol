@@ -188,6 +188,8 @@ public class RTSGameGUI extends SimpleApplication
             this.nifty.addXml("Interface/loadingHome.xml");
             this.nifty.addXml("Interface/loadingKeys.xml");
             this.nifty.addXml("Interface/HUD.xml");
+            this.nifty.addXml("Interface/purchaseDefenseWindow.xml");
+            this.nifty.addXml("Interface/purchaseShipWindow.xml");
             this.nifty.addXml("Interface/endGame.xml");
             this.stateManager.attach(this.screenController);
             guiViewPort.addProcessor(niftyDisplay);
@@ -199,6 +201,8 @@ public class RTSGameGUI extends SimpleApplication
             this.nifty=niftyDisplay.getNifty();
             this.nifty.fromXml("Interface/HUD_start.xml","start",this.screenController);
             this.nifty.addXml("Interface/HUD.xml");
+            this.nifty.addXml("Interface/purchaseDefenseWindow.xml");
+            this.nifty.addXml("Interface/purchaseShipWindow.xml");
             this.nifty.addXml("Interface/endGame.xml");
             this.stateManager.attach(this.screenController);
             guiViewPort.addProcessor(niftyDisplay);
@@ -251,8 +255,8 @@ public class RTSGameGUI extends SimpleApplication
         this.fix=1000;
         this.check=64000;
         this.pub=2000;
+        System.out.println(this.user+" "+this.pwd+" "+this.serverAddr+" "+this.serverPort+" "+this.outPort+" "+this.gamePeerPort);
         this.request=new MessageSender(this.gamePeerPort);
-        //this.request=new MessageSender(9998);
         //start of communication between bootstrap server and GUI
         MultiLog.println(RTSGameGUI.class.toString(), "Try to connect and register...");
         this.request.CreateGamePeer(inPort, outPort, idLength, id, serverAddr, serverPort, gameInPort, gameOutPort, gameServerAddr, gameServerPort, stab, fix, check, pub);
@@ -489,15 +493,16 @@ public class RTSGameGUI extends SimpleApplication
     }
     
     /**Function that buy and create a mobile resource*/
-    public boolean buyAndCreateMobileResource()
+    public boolean buyAndCreateMobileResource(Float value)
     {
+        if(value<this.resMinCost)
+            return false;
         MultiLog.println(RTSGameGUI.class.toString(),"Creating a ship spatial");
-        Double money=this.request.getMyResourceFromId("moneyEvolveble").getQuantity();
-        if(this.resMinCost>money)
+        if(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-value<0)
             return false;
         String timestamp = Long.toString(System.currentTimeMillis());
-        this.request.createMobileResource("Attack"+timestamp, 1.0);
-        this.request.UpdateResourceEvolve(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-this.resMinCost); 
+        this.request.createMobileResource("Attack"+timestamp, value);
+        this.request.UpdateResourceEvolve(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-value); 
         //System.out.println("COMPRATA ASTRONAVE");
         ArrayList<Object> myResources=this.request.getResources();
         //TODO check if last resource is a mobile resource
@@ -528,6 +533,18 @@ public class RTSGameGUI extends SimpleApplication
         MultiLog.println(RTSGameGUI.class.toString(),"Ship is created and moved");
         /*for(int i=0;i<rootNode.getChildren().size();i++)
             MultiLog.println(RTSGameGUI.class.toString(),"Child: "+rootNode.getChild(i));*/
+        return true;
+    }
+    
+    boolean buyAndCreateDefence(Float value)
+    {
+        if(value<this.resMinCost)
+            return false;
+        if(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-value<0)
+            return false;
+        String timestamp = Long.toString(System.currentTimeMillis());
+        this.request.addResource("strdef" + timestamp, "Defense" + timestamp, value);
+        this.request.UpdateResourceEvolve(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-value); 
         return true;
     }
     
@@ -1222,9 +1239,7 @@ public class RTSGameGUI extends SimpleApplication
     
     public void verifyPlanets(GameResourceMobile grm)
     {
-        //*PIANETI: RICERCA DI PIANETI**//
-	//verifica pianeti
-	//ottengo lista di pianeti
+        String resID=grm.getId();
 	double x=grm.getX();
 	double y=grm.getY();
 	//ArrayList<VirtualResource> planets=this.planets;
@@ -1383,9 +1398,11 @@ public class RTSGameGUI extends SimpleApplication
                             {//destroy ship after losing
                                 for(Iterator<Spatial> iter=rootNode.getChildren().iterator();iter.hasNext();)
                                 {
-                                    Spatial ship=iter.next();
-                                    if(ship.getUserData("id").equals(grm.getId()))
-                                        rootNode.detachChild(ship);
+                                    Spatial spatial=iter.next();
+                                    if(spatial.getUserData("type")!=null)
+                                        if(spatial.getUserData("type").equals("mobile"))
+                                            if(spatial.getUserData("id").equals(resID))
+                                                rootNode.detachChild(spatial);
                                 }
                             }					
                             }					
@@ -1488,9 +1505,11 @@ public class RTSGameGUI extends SimpleApplication
                                 //destroy ship after losing
                                 for(Iterator<Spatial> iter=rootNode.getChildren().iterator();iter.hasNext();)
                                 {
-                                    Spatial ship=iter.next();
-                                    if(ship.getUserData("id").equals(resID))
-                                        rootNode.detachChild(ship);
+                                    Spatial spatial=iter.next();
+                                    if(spatial.getUserData("type")!=null)
+                                        if(spatial.getUserData("type").equals("mobile"))
+                                            if(spatial.getUserData("id").equals(resID))
+                                                rootNode.detachChild(spatial);
                                 }
                             }
 			}
@@ -1857,16 +1876,8 @@ public class RTSGameGUI extends SimpleApplication
     
     public String getActualMoney()
     {
-        return "Money: "+Double.toString(this.request.getMyResourceFromId("moneyEvolveble").getQuantity());
-    }
-
-    public void buyHomeDefence()
-    {
-        if(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-this.resMinCost<0)
-            return;
-        String timestamp = Long.toString(System.currentTimeMillis());
-        this.request.addResource("strdef" + timestamp, "Defense" + timestamp, 1.0);
-        this.request.UpdateResourceEvolve(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-this.resMinCost); 
+        return Double.toString(this.request.getMyResourceFromId("moneyEvolveble").getQuantity());
+        //return "Money: "+Double.toString(this.request.getMyResourceFromId("moneyEvolveble").getQuantity());
     }
       
     //developer's modificator

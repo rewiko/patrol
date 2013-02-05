@@ -9,13 +9,16 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.controls.SliderChangedEvent;
 import de.lessvoid.nifty.controls.TextField;
+import de.lessvoid.nifty.controls.label.LabelControl;
+import de.lessvoid.nifty.controls.slider.SliderControl;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import it.unipr.ce.dsg.patrol.util.MultiLog;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,7 +33,6 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     {
         this.gui=gui;
         this.i=-1;
-        this.time=0;
         this.screensMap=new HashMap<Integer,String>();
         this.screensMap.put(0, "loadingNetwork");
         this.screensMap.put(1, "loadingKnowledges");
@@ -75,19 +77,27 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         TextField control=screen.findNiftyControl("user",TextField.class);
         if(control.getText().isEmpty())
             return;
+        this.user=control.getText();
         control=screen.findNiftyControl("pwd",TextField.class);
         if(control.getText().isEmpty())
             return;
+        this.pwd=control.getText();
         control=screen.findNiftyControl("serverIP",TextField.class);
         if(control.getText().isEmpty())
             return;
+        this.serverAddr=control.getText();
         control=screen.findNiftyControl("serverPort",TextField.class);
         if(control.getText().isEmpty())
             return;
+        this.serverPort=Integer.parseInt(control.getText());
         control=screen.findNiftyControl("myFirstPort",TextField.class);
         if(control.getText().isEmpty())
             return;
-        //this.nifty.gotoScreen("loading");
+        this.outPort=Integer.parseInt(control.getText());
+        control=screen.findNiftyControl("messagePort",TextField.class);
+        if(control.getText().isEmpty())
+            return;
+        this.messagePort=Integer.parseInt(control.getText());
         this.i=0;
         this.oldDate=new Date();
     }
@@ -116,13 +126,6 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     {
         this.gui.stop();
     }
-    
-    /*public void setEndMessage(String message)
-    {
-        textElement=nifty.getScreen("endGame").findElementByName("endGameButton");
-        textRenderer=textElement.getRenderer(TextRenderer.class);
-        textRenderer.setText(message.concat(" Click To Esc"));
-    }*/
     
     public void back()
     {
@@ -245,7 +248,7 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
             {
             textElement=nifty.getScreen("hud").findElementByName("moneytext");
             textRenderer=textElement.getRenderer(TextRenderer.class);
-            textRenderer.setText(this.gui.getActualMoney());
+            textRenderer.setText("Money "+this.gui.getActualMoney());
             }
     }
     
@@ -304,9 +307,64 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
             }
     }
     
-    public void buyHomeDefenceClicked()
+    @NiftyEventSubscriber(id="slider")
+    public void onSliderChange(final String id, final SliderChangedEvent event)
     {
-        this.gui.buyHomeDefence();
+        float value=event.getValue();
+        LabelControl label=this.nifty.getCurrentScreen().findNiftyControl("value",LabelControl.class);
+        label.setText(Float.toString(value));
+    }
+    
+    public void openDefenseWindowClicked()
+    {
+        if(this.gui.getActualMoney().equals("0.0"))
+            return;
+        this.nifty.gotoScreen("purchaseDefenseWindow");
+        SliderControl slider=nifty.getScreen("purchaseDefenseWindow").findNiftyControl("slider",SliderControl.class);
+        slider.setMax(Float.parseFloat(this.gui.getActualMoney()));
+    }
+    
+    public void openShipWindowClicked()
+    {
+        if(this.gui.getActualMoney().equals("0.0"))
+            return;
+        this.nifty.gotoScreen("purchaseShipWindow");
+        SliderControl slider=nifty.getScreen("purchaseShipWindow").findNiftyControl("slider",SliderControl.class);
+        slider.setMax(Float.parseFloat(this.gui.getActualMoney()));
+    }
+    
+    public void buyDefenceClicked()
+    {
+        LabelControl label=nifty.getScreen("purchaseDefenseWindow").findNiftyControl("value",LabelControl.class);
+        float value=Float.parseFloat(label.getText());
+        MultiLog.println(RTSGameGUI.class.toString(),"Buy defence button clicked");
+        if(this.gui.buyAndCreateDefence(value))
+        {
+            MultiLog.println(RTSGameGUI.class.toString(),"The defence was bought");
+            this.backToGUI();
+        }
+        else
+            MultiLog.println(RTSGameGUI.class.toString(),"Couldn't buy the defence");
+    }
+    
+    public void buyShipClicked()
+    {
+        System.exit(-2);
+        LabelControl label=nifty.getScreen("purchaseShipWindow").findNiftyControl("value",LabelControl.class);
+        float value=Float.parseFloat(label.getText());
+        MultiLog.println(RTSGameGUI.class.toString(),"Buy ship button clicked");
+        if(this.gui.buyAndCreateMobileResource(value))
+        {
+            MultiLog.println(RTSGameGUI.class.toString(),"The ship was bought");
+            this.backToGUI();
+        }
+        else
+            MultiLog.println(RTSGameGUI.class.toString(),"Couldn't buy the ship");
+    }
+    
+    public void backToGUI()
+    {
+        this.nifty.gotoScreen("hud");
     }
     
     public void toggleHUD()
@@ -332,15 +390,6 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     public void homeVisionClicked()
     {
         this.gui.setVisionToHome();
-    }
-    
-    public void buyShipClicked()
-    {
-        MultiLog.println(RTSGameGUI.class.toString(),"Buy ship button clicked");
-        if(this.gui.buyAndCreateMobileResource())
-            MultiLog.println(RTSGameGUI.class.toString(),"The ship was bought");
-        else
-            MultiLog.println(RTSGameGUI.class.toString(),"Couldn't buy the ship");
     }
     
     @Override
@@ -412,7 +461,6 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     private Screen screen;
     private SimpleApplication app;
     private int i;
-    private float time;
     private Date oldDate;
     private HashMap<Integer,String> screensMap;
     private Element textElement;
@@ -429,6 +477,5 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     private int outPort;
     private int messagePort;
     private String actualCentralPosition;
-    private String actualCursorPosition;
     private String selection;
 }

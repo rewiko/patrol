@@ -12,8 +12,8 @@ import it.unipr.ce.dsg.patrol.gui.message.content.Point;
  */
 public class CoordinatesMapping 
 {
-    public static String Patrol="patrol";
-    public static String jMonkey="jmonkey";
+    public String Patrol="patrol";
+    public String jMonkey="jmonkey";
     
     public CoordinatesMapping()
     {

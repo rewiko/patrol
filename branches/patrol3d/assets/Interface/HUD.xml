@@ -20,12 +20,12 @@
                 <panel id="buyShipPanel" style="vDivPanel" childLayout="center">
                     <!--<control id="buyShipButton" name="button" label="Buy ship" width="70%" height="60%"/>-->
                     <control name="pulsateBlueButton" id="buyShipButton" text="Buy ship" width="90%" height="60%" style="pulsateSquareBlueButton"/>
-                    <interact onClick="buyShipClicked()"/>
+                    <interact onClick="openShipWindowClicked()"/>
                 </panel>
                 <panel id="buyDefencePanel" style="vDivPanel" childLayout="center">
                     <!--<control id="buyDefenceButton" name="button" label="Buy defence" width="70%" height="60%"/>-->
                     <control name="pulsateBlueButton" id="buyDefenceButton" text="Buy defence" width="90%" height="60%" style="pulsateSquareBlueButton"/>
-                    <interact onClick="buyHomeDefenceClicked()"/>
+                    <interact onClick="openDefenseWindowClicked()"/>
                 </panel>
                 <panel id="goHomePanel" style="vDivPanel" childLayout="center">
                     <!--<control id="goHomeButton" name="button" label="Go To Home" width="70%" height="60%"/>-->
