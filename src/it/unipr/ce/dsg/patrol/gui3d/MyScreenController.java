@@ -42,6 +42,7 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         this.screensMap.put(5, "loadingHome");
         this.screensMap.put(6, "loadingKeys");
         this.screensMap.put(7, "hud");
+        this.shipModel="-";
     }
     
     public void bind(Nifty nifty, Screen screen) 
@@ -98,6 +99,8 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         if(control.getText().isEmpty())
             return;
         this.messagePort=Integer.parseInt(control.getText());
+        if(this.shipModel.equals("-"))
+            return;
         this.i=0;
         this.oldDate=new Date();
     }
@@ -162,6 +165,11 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         return String.valueOf(this.messagePort);
     }
     
+    public String getShipModel()
+    {
+        return this.shipModel;
+    }
+    
     public void setUser(String user)
     {
         this.user=user;
@@ -190,6 +198,11 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     public void setMessagePort(int messagePort)
     {
         this.messagePort=messagePort;
+    }
+    
+    public void setResMinCost(double cost)
+    {
+        this.resMinCost=cost;
     }
     
     public String getActualCentralPosition()
@@ -321,6 +334,7 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
             return;
         this.nifty.gotoScreen("purchaseDefenseWindow");
         SliderControl slider=nifty.getScreen("purchaseDefenseWindow").findNiftyControl("slider",SliderControl.class);
+        slider.setMin((float)this.resMinCost);
         slider.setMax(Float.parseFloat(this.gui.getActualMoney()));
     }
     
@@ -330,6 +344,7 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
             return;
         this.nifty.gotoScreen("purchaseShipWindow");
         SliderControl slider=nifty.getScreen("purchaseShipWindow").findNiftyControl("slider",SliderControl.class);
+        slider.setMin((float)this.resMinCost);
         slider.setMax(Float.parseFloat(this.gui.getActualMoney()));
     }
     
@@ -364,6 +379,12 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     public void backToGUI()
     {
         this.nifty.gotoScreen("hud");
+    }
+    
+    public void selectShip(String selection)
+    {
+        //this.shipModel="Models/"+selection+"/"+selection+".j3o";
+        this.shipModel=selection;
     }
     
     public void toggleHUD()
@@ -475,6 +496,8 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     private int serverPort;
     private int outPort;
     private int messagePort;
+    private String shipModel;
+    private double resMinCost;
     private String actualCentralPosition;
     private String selection;
 }
