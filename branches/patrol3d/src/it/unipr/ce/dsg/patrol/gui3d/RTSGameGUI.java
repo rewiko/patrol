@@ -508,8 +508,6 @@ public class RTSGameGUI extends SimpleApplication
         spaceship.setUserData("type", "mobile");
         spaceship.setLocalScale(shipScale);
         spaceship.addControl(shipControl);
-        /*if(shipModel.contains("cylinder"))//because the model is wrongly oriented
-            spaceship.setLocalRotation(new Quaternion(0.0f,0.0f,1.0f,90*FastMath.DEG_TO_RAD));*/
         spaceship.setLocalTranslation((int)(pos.getX()),(int)(pos.getY()),(int)(pos.getZ()));
         rootNode.attachChild(spaceship);
         //spaceship.setLocalTranslation((int)(this.homePlanetCoord.getX()+5.0f),(int)(this.homePlanetCoord.getY()),(int)(this.homePlanetCoord.getZ()+5.0f));
