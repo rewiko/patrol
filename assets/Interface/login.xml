@@ -84,7 +84,7 @@
                             <effect>
                                 <onHover name="pulsate" scaleFactor="0.008" startColor="#adf0" endColor="#00ff" post="true"/>
                             </effect>
-                            <interact onClick="selectShip(cylinderSpacaship17)"/>
+                            <interact onClick="selectShip(cylinderSpaceship18)"/>
                             </image>
                         </panel>
                     </panel>
