@@ -4,7 +4,7 @@
     <useStyles filename="Interface/style.xml" />
     <useStyles filename="Interface/customButtonStyle.xml"/>
     <useControls filename="nifty-default-controls.xml" />
-    <useControls filename="Interface/customControls.xml"/>
+    <!--<useControls filename="Interface/customControls.xml"/>-->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- start screen -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->

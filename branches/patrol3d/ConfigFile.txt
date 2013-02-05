@@ -1,2 +1,3 @@
-it.unipr.ce.dsg.patrol.GUI3D.RTSGameGUI
+it.unipr.ce.dsg.patrol.gui3d.RTSGameGUI
+it.unipr.ce.dsg.patrol.gui3d.MyScreenController
 it.unipr.ce.dsg.patrol.platform.bot.RTSGameMainPeer

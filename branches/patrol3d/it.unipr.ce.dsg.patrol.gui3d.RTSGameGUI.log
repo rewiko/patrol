@@ -1,0 +1,11 @@
+15:10:28_: Try to connect and register...
+15:10:28_: Peer is created
+15:10:28_: Peer is registrated into the network
+15:10:28_: 0.0 100.0 0.0 100.0 0.0 0.0 delta:50.0
+15:10:28_: Speed: 10.0 Visibility: 10.0 Granularity: 5.0
+15:10:28_: Player ID: 3a4d67eb2c7c1aeb8cfd15182af01f6f7ec0be3d
+15:10:29_: Initialize grid of the ground, tile dimension is 5.0, field dimensions are 100.0x100.0
+15:10:30_: Created 400 tile
+15:10:30_: Home planet position: 60.0 70.0 delta:50.0
+15:10:30_: pianeta: 10.0 0.0 20.0 io 10.0 20.0 0.0
+15:10:30_: InitKeys

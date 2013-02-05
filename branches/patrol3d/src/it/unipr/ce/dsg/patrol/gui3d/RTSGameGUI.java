@@ -271,28 +271,13 @@ public class RTSGameGUI extends SimpleApplication
         this.owner=this.playerId;
         this.ownerid=this.playerId;
         MultiLog.println(RTSGameGUI.class.toString(),"Player ID: "+this.playerId);
-        //this.initializeKnowledges();
-        //this.initTerrain();
-        //this.initGroundGrid();
-        //this.addLightToScene();
         this.initMoneyResource();
-        //this.getHomePlanetAndDefense();
-        //this.buyAndCreateMobileResource();
-        //initKeys(); // load my custom keybinding
-        //this.connected=true;
     }
     
     public void updatePositionGUI()
     {
-        Vector3f v=this.cam.getLocation();//rootNode.getWorldTranslation();
-        /*Vector2f v2=this.inputManager.getCursorPosition();
-        this.textElement=this.nifty.getScreen("hud").findElementByName("actualCenterPosition");
-        this.textRenderer=textElement.getRenderer(TextRenderer.class);
-        this.textRenderer.setText(v.x+" "+v.z);*/
+        Vector3f v=this.cam.getLocation();
         this.screenController.setActualCentralPosition(v.x+" "+v.z);
-        /*this.textElement=this.nifty.getScreen("hud").findElementByName("actualCursorPosition");
-        this.textRenderer=textElement.getRenderer(TextRenderer.class);
-        this.textRenderer.setText(v2.x+" "+v2.y);*/
     }
     
     @SuppressWarnings("CallToThreadDumpStack")
@@ -305,7 +290,6 @@ public class RTSGameGUI extends SimpleApplication
             FileInputStream fisconf=new FileInputStream(fconf);
             InputStreamReader isrconf=new InputStreamReader(fisconf);
 	    BufferedReader brconf=new BufferedReader(isrconf);
-	    //minXField, maxXField, minYField, maxYField, minZField, maxZField, vel, vis, gran
 	    String straux=brconf.readLine();
             this.minXField=Double.parseDouble(straux);
             straux=brconf.readLine();
