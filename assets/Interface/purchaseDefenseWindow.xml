@@ -6,7 +6,7 @@
     <useStyles filename="Interface/hudStyle.xml"/>
     <useStyles filename="Interface/customButtonStyle.xml"/>
     <useControls filename="nifty-default-controls.xml" />
-    <useControls filename="Interface/customControls.xml"/>
+    <!--<useControls filename="Interface/customControls.xml"/>-->
 
     <screen id="purchaseDefenseWindow" controller="it.unipr.ce.dsg.patrol.gui3d.MyScreenController">
         <layer id="windows" childLayout="center">
@@ -17,10 +17,12 @@
                     <panel width="10px"/>
                     <control id="slider" name="horizontalSlider" width="150px" min="1.0" max="100.0" initial="1.0" stepSize="1.0" buttonStepSize="1.0"/>
                     <panel width="10px"/>
-                    <control name="pulsateBlueButton" id="buyDefenseButton" text="Buy Defense" width="30%" height="60%" style="pulsateSquareBlueButton"/>
-                    <interact onClick="buyDefenceClicked()"/>
-                    <control name="pulsateBlueButton" id="cancelButton" text="Cancel" width="30%" height="60%" style="pulsateSquareBlueButton"/>
-                    <interact onClick="backToGUI()"/>
+                    <control name="pulsateBlueButton" id="buyDefenseButton" text="Buy Defense" width="30%" height="60%" style="pulsateSquareBlueButton">
+                        <interact onClick="buyDefenceClicked()"/>
+                    </control>
+                    <control name="pulsateBlueButton" id="cancelButton" text="Cancel" width="30%" height="60%" style="pulsateSquareBlueButton">
+                        <interact onClick="backToGUI()"/>
+                    </control>
                 </panel>
             </control>
         </layer>

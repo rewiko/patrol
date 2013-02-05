@@ -337,29 +337,28 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     {
         LabelControl label=nifty.getScreen("purchaseDefenseWindow").findNiftyControl("value",LabelControl.class);
         float value=Float.parseFloat(label.getText());
-        MultiLog.println(RTSGameGUI.class.toString(),"Buy defence button clicked");
+        MultiLog.println(MyScreenController.class.toString(),"Buy defence button clicked");
         if(this.gui.buyAndCreateDefence(value))
         {
-            MultiLog.println(RTSGameGUI.class.toString(),"The defence was bought");
+            MultiLog.println(MyScreenController.class.toString(),"The defence was bought");
             this.backToGUI();
         }
         else
-            MultiLog.println(RTSGameGUI.class.toString(),"Couldn't buy the defence");
+            MultiLog.println(MyScreenController.class.toString(),"Couldn't buy the defence");
     }
     
     public void buyShipClicked()
     {
-        System.exit(-2);
         LabelControl label=nifty.getScreen("purchaseShipWindow").findNiftyControl("value",LabelControl.class);
         float value=Float.parseFloat(label.getText());
-        MultiLog.println(RTSGameGUI.class.toString(),"Buy ship button clicked");
+        MultiLog.println(MyScreenController.class.toString(),"Buy ship button clicked");
         if(this.gui.buyAndCreateMobileResource(value))
         {
-            MultiLog.println(RTSGameGUI.class.toString(),"The ship was bought");
+            MultiLog.println(MyScreenController.class.toString(),"The ship was bought");
             this.backToGUI();
         }
         else
-            MultiLog.println(RTSGameGUI.class.toString(),"Couldn't buy the ship");
+            MultiLog.println(MyScreenController.class.toString(),"Couldn't buy the ship");
     }
     
     public void backToGUI()

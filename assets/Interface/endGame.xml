@@ -4,7 +4,7 @@
     <useStyles filename="Interface/hudStyle.xml"/>
     <useStyles filename="Interface/customButtonStyle.xml"/>
     <useControls filename="nifty-default-controls.xml" />
-    <useControls filename="Interface/customControls.xml"/>
+    <!--<useControls filename="Interface/customControls.xml"/>-->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- hud screen -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
@@ -16,7 +16,7 @@
             </panel>
         </layer>
     </screen>
-    <screen id="endGameLose" controller="it.unipr.ce.dsg.patrol.GUI3D.MyScreenController">
+    <screen id="endGameLose" controller="it.unipr.ce.dsg.patrol.gui3d.MyScreenController">
         <layer id="layer" childLayout="center">
             <panel id="panel" width="50%" height="50%" childLayout="center">
                 <control name="pulsateBlueButton" id="endGameButton" text="You Lose! Click to Exit" width="50%" height="50%" style="pulsateSquareBlueButton"/>
