@@ -12,10 +12,10 @@
         <layer id="background" style="backgroundLayer">
         </layer>
         <layer id="foreground" style="foregroundLayer">
-            <panel id="panel_top" style="titlePanel" height="20%"><!--20%-->
+            <panel id="panel_top" style="titlePanel" height="10%"><!--20%-->
                 <text text="Login Settings Tab" style="titleText" />
             </panel>    
-            <panel id="fieldsPanel" style="fieldsPanel">
+            <panel id="fieldsPanel" style="fieldsPanel" height="60%">
                 <panel id="panel_user" style="singleFieldPanel">
                     <panel id="userLabel" style="fieldLabel">
                         <control name="label" text="Username:" style="simpleLabel"/>
@@ -64,8 +64,32 @@
                         <control id="messagePort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getMessagePort()}"></control>
                     </panel>
                 </panel>
-            </panel>
-            <panel id="centeringPanel" style="centeringPanel" height="60%">
+                </panel>
+                <panel id="panel_ship" style="centeringPanel" height="15%">
+                    <effect>
+                        <onStartScreen name="move" mode="in" direction="top" length="800" startDelay="0" inherit="true"/>
+                        <onEndScreen name="move" mode="out" direction="top" length="300" startDelay="0" inherit="true"/>
+                    </effect>
+                    <panel style="buttonPanel">
+                        <panel id="ship1" style="buttonDiv">
+                            <image filename="Interface/Images/playerShip2.png" width="180px" height="70px" visibleToMouse="true">
+                            <effect>
+                                <onHover name="pulsate" scaleFactor="0.008" startColor="#adf0" endColor="#00ff" post="true"/>
+                            </effect>
+                            <interact onClick="selectShip(spaceship-51-prova_per_jmonkey)"/>
+                            </image>
+                        </panel>
+                        <panel id="ship2" style="buttonDiv">
+                            <image filename="Interface/Images/enemyShip2.png" width="180px" height="70px" visibleToMouse="true">
+                            <effect>
+                                <onHover name="pulsate" scaleFactor="0.008" startColor="#adf0" endColor="#00ff" post="true"/>
+                            </effect>
+                            <interact onClick="selectShip(cylinderSpacaship17)"/>
+                            </image>
+                        </panel>
+                    </panel>
+                </panel>
+            <panel id="centeringPanel" style="centeringPanel" height="15%">
                 <panel id="buttonContainingPanel" style="buttonPanel">
                     <panel id="leftDiv" style="buttonDiv">
                         <control name="pulsateBlueButton" id="mybutton" text="Start" style="slidingPulsateBlueButton"/>

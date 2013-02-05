@@ -1,11 +1,21 @@
-15:10:28_: Try to connect and register...
-15:10:28_: Peer is created
-15:10:28_: Peer is registrated into the network
-15:10:28_: 0.0 100.0 0.0 100.0 0.0 0.0 delta:50.0
-15:10:28_: Speed: 10.0 Visibility: 10.0 Granularity: 5.0
-15:10:28_: Player ID: 3a4d67eb2c7c1aeb8cfd15182af01f6f7ec0be3d
-15:10:29_: Initialize grid of the ground, tile dimension is 5.0, field dimensions are 100.0x100.0
-15:10:30_: Created 400 tile
-15:10:30_: Home planet position: 60.0 70.0 delta:50.0
-15:10:30_: pianeta: 10.0 0.0 20.0 io 10.0 20.0 0.0
-15:10:30_: InitKeys
+16:41:31_: Try to connect and register...
+16:41:32_: Peer is created
+16:41:32_: Peer is registrated into the network
+16:41:32_: 0.0 100.0 0.0 100.0 0.0 0.0 delta:50.0
+16:41:32_: Speed: 10.0 Visibility: 10.0 Granularity: 5.0
+16:41:32_: Player ID: 4cb07fb2bfe5026a2b682d75253f59de7f2b4c13
+16:41:40_: Initialize grid of the ground, tile dimension is 5.0, field dimensions are 100.0x100.0
+16:41:41_: Created 400 tile
+16:41:46_: Home planet position: 70.0 65.0 delta:50.0
+16:41:47_: pianeta: 20.0 0.0 15.0 io 20.0 20.0 -5.0
+16:41:49_: InitKeys
+16:42:2_: Creating a ship spatial
+16:42:2_: Comprata astronave: x:70.0 z:65.0
+16:42:3_: Moving ship out of planet
+16:42:4_: End move on creation method
+16:42:4_: Ship is created and moved
+16:42:12_: Creating a ship spatial
+16:42:12_: Comprata astronave: x:70.0 z:65.0
+16:42:12_: Moving ship out of planet
+16:42:12_: End move on creation method
+16:42:12_: Ship is created and moved

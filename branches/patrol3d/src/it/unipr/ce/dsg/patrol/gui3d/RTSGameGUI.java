@@ -25,6 +25,7 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.material.RenderState.FaceCullMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Plane;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
@@ -234,6 +235,7 @@ public class RTSGameGUI extends SimpleApplication
             this.user=this.screenController.getUser();
             this.pwd=this.screenController.getPwd();
             this.gamePeerPort=Integer.parseInt(this.screenController.getMessagePort());
+            this.shipModel="Models/"+this.screenController.getShipModel()+"/"+this.screenController.getShipModel()+".j3o";
             }
         else
             {
@@ -243,6 +245,7 @@ public class RTSGameGUI extends SimpleApplication
             this.user="giorgio";
             this.pwd="ggg";
             this.gamePeerPort=9998;
+            this.shipModel="Models/spaceship-51-prova_per_jmonkey/spaceship-5.1-prova_per_jmonkey.j3o";
             }
         this.inPort=this.outPort;
         this.id="";
@@ -272,6 +275,7 @@ public class RTSGameGUI extends SimpleApplication
         this.ownerid=this.playerId;
         MultiLog.println(RTSGameGUI.class.toString(),"Player ID: "+this.playerId);
         this.initMoneyResource();
+        this.screenController.setResMinCost((float)this.resMinCost);
     }
     
     public void updatePositionGUI()
@@ -495,8 +499,8 @@ public class RTSGameGUI extends SimpleApplication
         //this.request.addResource("def" + timestamp, "Defense" + timestamp, 1.0/*Double.parseDouble(defenseQt.getText())*/); 
         //Spatial spaceship = assetManager.loadModel("Models/spaceship8-2/spaceship8-2.j3o");
         Coordinate pos=this.transformer.patrolTojMonkey(this.request.getGamePlayerPosition(),this.delta);
-        MyShipControl shipControl=new MyShipControl(1.0f);
-        Spatial spaceship =assetManager.loadModel("Models/spaceship-51-prova_per_jmonkey/spaceship-5.1-prova_per_jmonkey.j3o");
+        MyShipControl shipControl=new MyShipControl(1.0f);            
+        Spatial spaceship =assetManager.loadModel(this.shipModel/*"Models/spaceship-51-prova_per_jmonkey/spaceship-5.1-prova_per_jmonkey.j3o"*/);
         spaceship.setName("spaceship_"+timestamp);
         spaceship.setUserData("id", grm.getId());
         spaceship.setUserData("owner", this.playerId);
@@ -504,6 +508,8 @@ public class RTSGameGUI extends SimpleApplication
         spaceship.setUserData("type", "mobile");
         spaceship.setLocalScale(shipScale);
         spaceship.addControl(shipControl);
+        /*if(shipModel.contains("cylinder"))//because the model is wrongly oriented
+            spaceship.setLocalRotation(new Quaternion(0.0f,0.0f,1.0f,90*FastMath.DEG_TO_RAD));*/
         spaceship.setLocalTranslation((int)(pos.getX()),(int)(pos.getY()),(int)(pos.getZ()));
         rootNode.attachChild(spaceship);
         //spaceship.setLocalTranslation((int)(this.homePlanetCoord.getX()+5.0f),(int)(this.homePlanetCoord.getY()),(int)(this.homePlanetCoord.getZ()+5.0f));
@@ -1915,6 +1921,7 @@ public class RTSGameGUI extends SimpleApplication
     private Node gridNode;
     private boolean shiftPressed=false;
     public HashMap<String,Spatial> enemyShipMap;    //TODO public only for stamp the status
+    private String shipModel;
     
     //niftyGUI's properties
     private MyScreenController screenController;
