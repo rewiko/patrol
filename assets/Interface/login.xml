@@ -76,7 +76,7 @@
                             <effect>
                                 <onHover name="pulsate" scaleFactor="0.008" startColor="#adf0" endColor="#00ff" post="true"/>
                             </effect>
-                            <interact onClick="selectShip(spaceship-51-prova_per_jmonkey)"/>
+                            <interact onClick="selectShip(spaceship-red)"/>
                             </image>
                         </panel>
                         <panel id="ship2" style="buttonDiv">

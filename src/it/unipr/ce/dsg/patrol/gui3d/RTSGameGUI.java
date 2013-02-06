@@ -95,18 +95,16 @@ public class RTSGameGUI extends SimpleApplication
     {
         new MultiLog("ConfigFile.txt",true,true);  //initialization of MultiLog object
         //read the first argument to decide if the initial settings must be shown
-        //boolean showSettings=false;
-        if (argv.length < 4) {
-        	System.err.println("RTSGameGUI launched without required (4) parameters");
-        	System.exit(1);
+        if (argv.length < 4)
+        {
+            System.err.println("RTSGameGUI launched without required (4) parameters");
+            System.exit(1);
         }
-        
         if(argv[0].equals("true"))
             showSettingsContr=true;
         else if(argv[0].equals("false"))
             showSettingsContr=false;
         RTSGameGUI app = new RTSGameGUI(argv);
-        //instantiate AppSettings doesn't show jmonkey's settings window at startup
         AppSettings settings = new AppSettings(true);
         settings.setRenderer(AppSettings.LWJGL_OPENGL2);
         settings.setWidth(width);
@@ -245,7 +243,8 @@ public class RTSGameGUI extends SimpleApplication
             this.user="giorgio";
             this.pwd="ggg";
             this.gamePeerPort=9998;
-            this.shipModel="Models/spaceship-51-prova_per_jmonkey/spaceship-5.1-prova_per_jmonkey.j3o";
+            //this.shipModel="Models/spaceship-51-prova_per_jmonkey/spaceship-5.1-prova_per_jmonkey.j3o";
+            this.shipModel="Models/spaceship-red/spaceship-red.j3o";
             }
         this.inPort=this.outPort;
         this.id="";
@@ -482,25 +481,23 @@ public class RTSGameGUI extends SimpleApplication
     
     /**Function that buy and create a mobile resource*/
     public boolean buyAndCreateMobileResource(Float value)
-    {
+    {MultiLog.println(RTSGameGUI.class.toString(),"value="+value+" min="+this.resMinCost);
         if(value<this.resMinCost)
             return false;
-        MultiLog.println(RTSGameGUI.class.toString(),"Creating a ship spatial");
+        MultiLog.println(RTSGameGUI.class.toString(),"actual money="+this.request.getMyResourceFromId("moneyEvolveble").getQuantity());
         if(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-value<0)
             return false;
+        MultiLog.println(RTSGameGUI.class.toString(),"Creating a ship spatial");
         String timestamp = Long.toString(System.currentTimeMillis());
         this.request.createMobileResource("Attack"+timestamp, value);
         this.request.UpdateResourceEvolve(this.request.getMyResourceFromId("moneyEvolveble").getQuantity()-value); 
-        //System.out.println("COMPRATA ASTRONAVE");
         ArrayList<Object> myResources=this.request.getResources();
-        //TODO check if last resource is a mobile resource
         GameResourceMobile grm=(GameResourceMobile) myResources.get(myResources.size()-1);
         MultiLog.println(RTSGameGUI.class.toString(),"Comprata astronave: x:"+grm.getX()+" z:"+grm.getY());
-        //this.request.addResource("def" + timestamp, "Defense" + timestamp, 1.0/*Double.parseDouble(defenseQt.getText())*/); 
-        //Spatial spaceship = assetManager.loadModel("Models/spaceship8-2/spaceship8-2.j3o");
         Coordinate pos=this.transformer.patrolTojMonkey(this.request.getGamePlayerPosition(),this.delta);
-        MyShipControl shipControl=new MyShipControl(1.0f);            
-        Spatial spaceship =assetManager.loadModel(this.shipModel/*"Models/spaceship-51-prova_per_jmonkey/spaceship-5.1-prova_per_jmonkey.j3o"*/);
+        MyShipControl shipControl=new MyShipControl(1.0f);   
+        MultiLog.println(RTSGameGUI.class.toString(),"model to load="+this.shipModel);
+        Spatial spaceship =assetManager.loadModel(this.shipModel);
         spaceship.setName("spaceship_"+timestamp);
         spaceship.setUserData("id", grm.getId());
         spaceship.setUserData("owner", this.playerId);
@@ -510,7 +507,6 @@ public class RTSGameGUI extends SimpleApplication
         spaceship.addControl(shipControl);
         spaceship.setLocalTranslation((int)(pos.getX()),(int)(pos.getY()),(int)(pos.getZ()));
         rootNode.attachChild(spaceship);
-        //spaceship.setLocalTranslation((int)(this.homePlanetCoord.getX()+5.0f),(int)(this.homePlanetCoord.getY()),(int)(this.homePlanetCoord.getZ()+5.0f));
         MultiLog.println(RTSGameGUI.class.toString(),"Moving ship out of planet");
         if(pos.getIZ()>(-this.delta))
             //spaceship.setLocalTranslation((int)(pos.getX()),(int)(pos.getY()),(int)(pos.getZ()+this.gran));
