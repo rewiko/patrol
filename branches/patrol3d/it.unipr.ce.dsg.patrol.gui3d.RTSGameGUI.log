@@ -1,16 +1,19 @@
-17:17:7_: Try to connect and register...
-17:17:7_: Peer is created
-17:17:7_: Peer is registrated into the network
-17:17:7_: 0.0 100.0 0.0 100.0 0.0 0.0 delta:50.0
-17:17:7_: Speed: 10.0 Visibility: 10.0 Granularity: 5.0
-17:17:7_: Player ID: 12dea96fec20593566ab75692c9949596833adc9
-17:17:16_: Initialize grid of the ground, tile dimension is 5.0, field dimensions are 100.0x100.0
-17:17:16_: Created 400 tile
-17:17:22_: Home planet position: 95.0 95.0 delta:50.0
-17:17:22_: pianeta: 45.0 0.0 45.0 io 45.0 20.0 25.0
-17:17:25_: InitKeys
-17:17:38_: Creating a ship spatial
-17:17:38_: Comprata astronave: x:95.0 z:95.0
-17:17:38_: Moving ship out of planet
-17:17:38_: End move on creation method
-17:17:38_: Ship is created and moved
+23:42:30_: Try to connect and register...
+23:42:30_: Peer is created
+23:42:30_: Peer is registrated into the network
+23:42:30_: 0.0 100.0 0.0 100.0 0.0 0.0 delta:50.0
+23:42:30_: Speed: 10.0 Visibility: 10.0 Granularity: 5.0
+23:42:30_: Player ID: 12dea96fec20593566ab75692c9949596833adc9
+23:42:39_: Initialize grid of the ground, tile dimension is 5.0, field dimensions are 100.0x100.0
+23:42:39_: Created 400 tile
+23:42:45_: Home planet position: 90.0 5.0 delta:50.0
+23:42:45_: pianeta: 40.0 0.0 -45.0 io 40.0 20.0 -65.0
+23:42:48_: InitKeys
+23:42:56_: value=9.0 min=5.0
+23:42:56_: actual money=25.0
+23:42:56_: Creating a ship spatial
+23:42:56_: Comprata astronave: x:90.0 z:5.0
+23:42:56_: model to load=Models/spaceship-red/spaceship-red.j3o
+23:42:56_: Moving ship out of planet
+23:42:56_: End move on creation method
+23:42:56_: Ship is created and moved
