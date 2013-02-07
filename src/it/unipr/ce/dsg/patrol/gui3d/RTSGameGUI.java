@@ -514,7 +514,7 @@ public class RTSGameGUI extends SimpleApplication
         else
             //spaceship.setLocalTranslation((int)(pos.getX()),(int)(pos.getY()),(int)(pos.getZ()-this.gran));
             this.moveOnCreation(spaceship,new Vector3f((int)(pos.getX()),(int)(pos.getY()),(int)(pos.getZ()+this.gran)));
-        MultiLog.println(RTSGameGUI.class.toString(),"Ship is created and moved");
+        MultiLog.println(RTSGameGUI.class.toString(),"Ship was created and moved");
         /*for(int i=0;i<rootNode.getChildren().size();i++)
             MultiLog.println(RTSGameGUI.class.toString(),"Child: "+rootNode.getChild(i));*/
         return true;
