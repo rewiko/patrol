@@ -481,7 +481,8 @@ public class RTSGameGUI extends SimpleApplication
     
     /**Function that buy and create a mobile resource*/
     public boolean buyAndCreateMobileResource(Float value)
-    {MultiLog.println(RTSGameGUI.class.toString(),"value="+value+" min="+this.resMinCost);
+    {
+        MultiLog.println(RTSGameGUI.class.toString(),"value="+value+" min="+this.resMinCost);
         if(value<this.resMinCost)
             return false;
         MultiLog.println(RTSGameGUI.class.toString(),"actual money="+this.request.getMyResourceFromId("moneyEvolveble").getQuantity());
