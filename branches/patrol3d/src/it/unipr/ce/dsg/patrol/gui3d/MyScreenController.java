@@ -226,11 +226,6 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         return this.actualCentralPosition;
     }
     
-    public void setActualCursorPosition(String position)
-    {
-        this.actualCentralPosition=position;
-    }
-    
     public String getSelection()
     {
         return this.selection;
