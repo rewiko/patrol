@@ -15,7 +15,7 @@ import java.util.Properties;
 
 /**
  *
- * @author giorgio
+ * @author Michael Benassi Giorgio Micconi
  */
 public class CustomButtonController implements Controller
 {
