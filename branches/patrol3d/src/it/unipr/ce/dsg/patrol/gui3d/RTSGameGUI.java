@@ -802,8 +802,8 @@ public class RTSGameGUI extends SimpleApplication
     /**
      * Listener for keys and mouse buttons. Discrete inputs.
      */  
-  private ActionListener actionListener = new ActionListener()
-  {
+    private ActionListener actionListener = new ActionListener()
+    {
       /**
        * Callback launched when a discrete event is occured.
        * @param name identifier assigned to this event in initKeys()
@@ -909,14 +909,14 @@ public class RTSGameGUI extends SimpleApplication
         }
   };
   
-  /**
+    /**
      * Moves starship of the player
      * @param object the ship that has to be moved
      * @param contactPointPreCalc point of contact on the plane
      * @param multiPath indicates if the movement is part of multipoint path or simple path
      */
-  private void move(Spatial object,Vector3f contactPointPreCalc,boolean multiPath)
-  {
+    private void move(Spatial object,Vector3f contactPointPreCalc,boolean multiPath)
+    {
     if(object!=null)
         if(object.getUserData("type")!=null)
         {
@@ -938,13 +938,13 @@ public class RTSGameGUI extends SimpleApplication
         }
   }
   
-  /**
+    /**
      * Moves starship of the player, only for ship creation events
      * @param object the ship that has to be moved
      * @param contactPointPreCalc point of contact on the plane
      */
-  private void moveOnCreation(Spatial object,Vector3f contactPointPreCalc)
-  {
+    private void moveOnCreation(Spatial object,Vector3f contactPointPreCalc)
+    {
       if(object.getUserData("type")!=null && object.getUserData("type").equals("mobile"))
         {
         Vector3f contactPoint=this.findTile(contactPointPreCalc);
@@ -963,13 +963,13 @@ public class RTSGameGUI extends SimpleApplication
       MultiLog.println(RTSGameGUI.class.toString(),"End move on creation method");
   }
   
-  /**
+    /**
      * Finds the tile to which the contact point belongs
      * @param contactPoint point of contact on the plane
      * @return the coordinate of the right tile
      */
-  private Vector3f findTile(Vector3f contactPoint)
-  {
+    private Vector3f findTile(Vector3f contactPoint)
+    {
       int tileX;
       int tileZ;
       if(contactPoint.getX()>=0)
@@ -991,11 +991,11 @@ public class RTSGameGUI extends SimpleApplication
         return new Vector3f((float)(this.gran*tileX),0.0f,(float)(this.gran*tileZ));
   }
  
-  /**
+    /**
      * Listener for keys and mouse buttons. Continuous inputs.
      */
-  private AnalogListener analogListener = new AnalogListener() 
-  {
+    private AnalogListener analogListener = new AnalogListener() 
+    {
     public void onAnalog(String name, float value, float tpf)
         {
         if(!isRunning)
@@ -1062,13 +1062,13 @@ public class RTSGameGUI extends SimpleApplication
             }
   };
   
-  /**
+    /**
    * Cycle of application update
    * @param tpf speed of refresh
    */
-  @Override
-  public void simpleUpdate(float tpf) 
-  {
+    @Override
+    public void simpleUpdate(float tpf) 
+    {
     if(!this.isRunning)
         return;
     if(this.ready)
@@ -1080,11 +1080,11 @@ public class RTSGameGUI extends SimpleApplication
     }
   }
   
-  /**
+    /**
    * Check if the game has ended and who win
    */
-  private void checkEndGame()
-  {
+    private void checkEndGame()
+    {
     boolean endGame=true;
     ArrayList<Integer> numberPlanets=new ArrayList<Integer>();			
     this.UpdateLoggedUsers();
@@ -1130,12 +1130,12 @@ public class RTSGameGUI extends SimpleApplication
     }
   }
     
-  /**
+    /**
    * Performs update of the positions of all the player ships
    * @param tpf time per frame
    */
-  private void updatePosition(float tpf)
-  {
+    private void updatePosition(float tpf)
+    {
     HashMap positions=new HashMap();
     for(int i=0;i<this.rootNode.getChildren().size();i++)
     {
@@ -1158,13 +1158,13 @@ public class RTSGameGUI extends SimpleApplication
     }
   }
   
-  /**
+    /**
    * Detaching (and destruction by the garbage collector) of all enemy ships
    * Not used. It can be deleted.
    * TODO this way isn't efficient, better use the enemyShipMap to know what ship is visible e waht notTODO This is not efficient, it is better to use the enemyShipMap to know which ship is visible and which is not
    */
-  private void detachEnemyShip()
-  {
+    private void detachEnemyShip()
+    {
     for(Iterator<Spatial> iter=rootNode.getChildren().iterator();iter.hasNext();)
     {
         Spatial spatial=iter.next();
@@ -1176,11 +1176,11 @@ public class RTSGameGUI extends SimpleApplication
     }
   }
   
-  /**
+    /**
    * Update visibility around the player's resources
    */
-  private void updateFieldVisibility()
-  {
+    private void updateFieldVisibility()
+    {
     Iterator iter=this.enemyShipMap.values().iterator();
     for(;iter.hasNext();)
     {
@@ -1242,15 +1242,15 @@ public class RTSGameGUI extends SimpleApplication
                 rootNode.detachChildAt(i);
     }
     
-  /**
+    /**
    * Check if the coordinates coord are equivalent to (i,j)
    * @param i x coordinate
    * @param j y coordinate
    * @param coord coordinates to match with (i,j)
    * @return true if the coordinates are equivalent, false otherwise
    */
-  private boolean matchCoordinates(int i,int j,Coordinate coord)
-  {
+    private boolean matchCoordinates(int i,int j,Coordinate coord)
+    {
     Point point=this.transformer.jMonkeyToPatrol(coord, this.delta);
     Point tile=new Point(point.getX()/this.gran,point.getY()/this.gran);
     if((int)Math.round(j*this.numTileX + i)==(tile.getY()*this.numTileX+tile.getX()))
@@ -1258,12 +1258,12 @@ public class RTSGameGUI extends SimpleApplication
     return false;
   }
   
-  /**
+    /**
    * Check if there are planet to conquer near the ship grm
    * @param grm the ship in exam
    */
-  public void verifyPlanets(GameResourceMobile grm)
-  {
+    public void verifyPlanets(GameResourceMobile grm)
+    {
     String resID=grm.getId();
     double x=grm.getX();
     double y=grm.getY();
@@ -1435,12 +1435,12 @@ public class RTSGameGUI extends SimpleApplication
     }
   }
 
-  /**
+    /**
    * Check if there are enemy ship to destroy near the ship grm
    * @param grm the ship in exam
    */
-  public void verifyEnemies(GameResourceMobile grm)
-  {
+    public void verifyEnemies(GameResourceMobile grm)
+    {
       String resID=grm.getId();
       //get visiblity value of the resource
       ArrayList<Object> vision=grm.getResourceVision();	
@@ -1610,13 +1610,13 @@ public class RTSGameGUI extends SimpleApplication
       }
   }
   
-  /**
+    /**
    * Acquisition of defensive resource
    * @param idRes id of the player
    * @return true if it possible to buy the resource, false otherwise (not enough money)
    */
-  public boolean createResource(String idRes)
-  {
+    public boolean createResource(String idRes)
+    {
       double qt=this.request.getMyResourceFromId("moneyEvolveble").getQuantity();
       int multiplicity=(int) (qt/this.resMinCost);
       if(multiplicity>0)
@@ -1631,54 +1631,54 @@ public class RTSGameGUI extends SimpleApplication
         return false;
   }
   
-  /**
+    /**
    * Gets list of logged players
    * @return HashMap that contains player's Id and player's Information
    */
-  public HashMap<String,UserInfo> getLoggedUsers()
-  {
+    public HashMap<String,UserInfo> getLoggedUsers()
+    {
     return this.loggedusers;
   }
   
-  /**
+    /**
    * Sets new owner of the planet
    * @param idPlanet id of the planet
    * @param idOwner id of the new owner
    * @param nameOwner name of the new owner
    */
-  public void setPlanetOwner(String idPlanet,String idOwner,String nameOwner)
-  {
+    public void setPlanetOwner(String idPlanet,String idOwner,String nameOwner)
+    {
     this.getPlanetbyID(idPlanet).setOwnerID(idOwner);
     this.getPlanetbyID(idPlanet).setOwnerName(nameOwner);	
     rootNode.getChild("uPlanet_"+idPlanet).setUserData("ownerId",idOwner);
   }
   
-  /**
+    /**
    * Gets the information about the player id
    * @param id player in exam
    * @return information about the player
    */
-  public UserInfo getLoggedUserInfo(String id)
-  {
+    public UserInfo getLoggedUserInfo(String id)
+    {
         return this.loggedusers.get(id);
   }
   
-  /**
+    /**
    * Gets the id of the player
    * @return the id of the player
    */  
-  public String getOwnerid()
-  {
+    public String getOwnerid()
+    {
         return ownerid;
   }
   
-  /**
+    /**
    * Gets the VirtualResource that represent the planet
    * @param idPlanet id of the planet
    * @return VirtualResource associated
    */
-  public VirtualResource getPlanetbyID(String idPlanet)
-  {
+    public VirtualResource getPlanetbyID(String idPlanet)
+    {
       for(int i=0;i<this.planets.size();i++)
       {
           VirtualResource planet=this.planets.get(i);
@@ -1688,14 +1688,14 @@ public class RTSGameGUI extends SimpleApplication
       return null;
   }
   
-  /**
+    /**
    * Creates planet that isn't a home planet for one of the players, if it doesn't exist
    * @param x coordinate x
    * @param y coordinate y
    * @param planet VirtualResource associated to the planet
    */ 
-  private void createOtherPlanets(int x,int y,VirtualResource planet)
-  {
+    private void createOtherPlanets(int x,int y,VirtualResource planet)
+    {
       Coordinate coord=this.transformer.patrolTojMonkey(new Point(x*this.gran,y*this.gran),this.delta);
       String resOwnerId=planet.getOwnerID();
         if(rootNode.getChild("myPlanet_"+planet.getId())!=null || rootNode.getChild("uPlanet_"+planet.getId())!=null || rootNode.getChild("ePlanet_"+planet.getId())!=null)
@@ -1756,14 +1756,14 @@ public class RTSGameGUI extends SimpleApplication
         }
   }
   
-  /**
+    /**
     * Creates the enemy player's home planet, if it doesn't exist
     * @param x coordinate x
     * @param y coordinate y
     * @param planet VirtualResource associated to the planet
     */
-  private void createEnemyHomePlanet(int x,int y,GamePlayerResponsible planet)
-  {
+    private void createEnemyHomePlanet(int x,int y,GamePlayerResponsible planet)
+    {
     Coordinate coord=this.transformer.patrolTojMonkey(new Point(x*this.gran,y*this.gran),this.delta);
     if(rootNode.getChild("ehPlanet_"+planet.getName())!=null)
             return;
@@ -1780,7 +1780,7 @@ public class RTSGameGUI extends SimpleApplication
         ehPlanet.setUserData("defenseName", "");
     }
     
-  /**
+    /**
      * Creates the enemy starship
      * @param x coordinate x
      * @param y coordinate y
