@@ -4,30 +4,33 @@ import it.unipr.ce.dsg.patrol.platform.GamePlayerResponsible;
 import it.unipr.ce.dsg.patrol.platform.GameResourceMobileResponsible;
 import it.unipr.ce.dsg.patrol.platform.bot.VirtualResource;
 
-public class KnowledgeSpace {
+/**
+ * This class rapresent one piece, a tile, of information about the space
+ * @author Michael Benassi Giorgio Micconi
+ */
+public class KnowledgeSpace
+{
+    enum SpaceType
+    {
+        UNKNOW,
+	SPACE,
+	PLANET, //TODO check this, maybe it can be deleted beacuse the other 3 at end are now used
+	STARSHIP,
+        UNCONQUEREDPLANET,
+        MYCONQUEREDPLANET,
+        ENEMYCONQUEREDPLANET
+    };
 
-	enum SpaceType{
+    public KnowledgeSpace()
+    {
+        this.type = SpaceType.UNKNOW;
+	this.element = null;
+    }
 
-		UNKNOW,
-		SPACE,
-		PLANET,
-		STARSHIP,
-                UNCONQUEREDPLANET, //it's a try
-                MYCONQUEREDPLANET, //it's a try
-                ENEMYCONQUEREDPLANET //it's a try
-	};
-
-	private SpaceType type;
-	private Object element;
-
-	public KnowledgeSpace(){
-		this.type = SpaceType.UNKNOW;
-		this.element = null;
-	}
-
-	public SpaceType getType() {
-		return type;
-	}
+    public SpaceType getType()
+    {
+        return type;
+    }
 
 	public Object getElement() {
 		return element;
@@ -70,4 +73,7 @@ public class KnowledgeSpace {
             this.type=SpaceType.ENEMYCONQUEREDPLANET;
             this.element=planet;
         }
+        
+    private SpaceType type;
+    private Object element;
 }

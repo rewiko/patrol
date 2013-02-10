@@ -18,18 +18,14 @@ import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 
 /**
- *
- * @author giorgio
+ * Control class for ship spatial. That class provides methods to handle the movement of any ship.
+ * @author Michael Benassi Giorgio Micconi
  */
 public class MyShipControl extends AbstractControl
-{
-    private float movementSpeed;
-    private boolean move,ready;
-    private Coordinate arrival;
-    //private MotionTrack motionControl;
-    private MotionEvent motionControl;
-    private MotionPath path;
-    
+{   
+    /**
+     * Constructor without the speed argument. Will be used the default speed, 1.0f.
+     */
     public MyShipControl()
     {
         this.movementSpeed=1.0f;
@@ -37,27 +33,44 @@ public class MyShipControl extends AbstractControl
         this.ready=false;
     }
     
+    /**
+     * Constructor with specified speed.
+     * @param movementSpeed the speed of the ship
+     */
     public MyShipControl(float movementSpeed)
     {
         this.movementSpeed=movementSpeed;
         this.move=false;
         this.ready=false;
     }
-     
+    
+    /**
+     * Sets the spatial which will be controlled by the istance of the class
+     * @param spatial the spacial controlled
+     */
     @Override
     public void setSpatial(Spatial spatial) 
     {
         super.setSpatial(spatial);
     }
     
+    /**
+     * Check if the ship is moving
+     * @return true if the ship is moving, false otherwise
+     */
     public boolean isMoving()
     {
         return this.move;
     }
     
+    /**
+     * Sets the next arrival point to reach
+     * @param arrival
+     * @return true if the path to the destination is set, false if wasn't set the model to move or if the arrival is equal to the departure
+     */
     public boolean setMovement(Coordinate arrival)
     {
-        if(/*move ||*/ (spatial == null))    //if move==true then we can't do another movement, same for spatial==null
+        if((spatial == null))
             return false;
         this.arrival=arrival;
         this.path=new MotionPath();
@@ -73,7 +86,7 @@ public class MyShipControl extends AbstractControl
                     }
                 else
                     {
-                    
+                    //TODO deleted if there isn't anything to handle
                     }
                 }
             });
@@ -91,7 +104,6 @@ public class MyShipControl extends AbstractControl
         System.out.println("Actual coordinate(path): "+this.path.getWayPoint(0).getX()+" "+this.path.getWayPoint(0).getY()+" "+this.path.getWayPoint(0).getZ());
         System.out.println("Arrival coordinate(path): "+this.path.getWayPoint(1).getX()+" "+this.path.getWayPoint(1).getY()+" "+this.path.getWayPoint(1).getZ());
         motionControl = new MotionEvent(this.spatial,path);
-        //motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(1.0f);
@@ -102,23 +114,6 @@ public class MyShipControl extends AbstractControl
         System.out.println("Path configuration ready");
         return true;
     }
-    
-    /*public boolean move()
-    {
-        if(this.path.getNbWayPoints()>0 && (spatial != null))
-                {
-                this.move=true;
-                motionControl = new MotionTrack(this.spatial,path);
-                motionControl.setDirectionType(MotionTrack.Direction.PathAndRotation);
-                //motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
-                motionControl.setInitialDuration(10f);
-                motionControl.setSpeed(this.movementSpeed);
-                System.out.println("Play");
-                motionControl.play();
-                return true;
-                }
-        return false;
-    }*/        
             
     /** Implement your spatial's behaviour here.
     * From here you can modify the scene graph and the spatial
@@ -127,9 +122,8 @@ public class MyShipControl extends AbstractControl
     @Override
     protected void controlUpdate(float tpf)
     {
-        //System.out.println("Cycle");
         if(spatial != null)
-            if(this.ready/* && !this.move*/)
+            if(this.ready)
                 {
                     this.move=true;
                     this.motionControl.play();
@@ -138,10 +132,16 @@ public class MyShipControl extends AbstractControl
     }
 
     @Override
-    protected void controlRender(RenderManager rm, ViewPort vp) {
+    protected void controlRender(RenderManager rm, ViewPort vp)
+    {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Clonig of the control for another spatial
+     * @param spatial the spatial that has the control to be cloned
+     * @return the cloned control
+     */
     public Control cloneForSpatial(Spatial spatial) 
     {
         final MyShipControl control = new MyShipControl();
@@ -150,4 +150,10 @@ public class MyShipControl extends AbstractControl
         control.setSpatial(spatial);
         return control;
     }
+    
+    private float movementSpeed;
+    private boolean move,ready;
+    private Coordinate arrival;
+    private MotionEvent motionControl;
+    private MotionPath path;
 }
