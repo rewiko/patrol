@@ -11,20 +11,21 @@ import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 
 /**
- *
- * @author giorgio
+ * Control class for planet spatial. That class provides methods to apply continuos rotation to the planet.
+ * @author Michael Benassi Giorgio Micconi
  */
 public class MyPlanetControl extends AbstractControl
-{
-    private float rotSpeed=1/10f;
-    
+{   
+    /**
+     * Constructor without the rotation speed argument. Will be used the default speed.
+     */
     public MyPlanetControl()
     {
         this.rotSpeed=1/10f;
     }
     
     /**
-     * 
+     * Constructor with specified rotation speed.
      * @param rotSpeed is the value that multiply tpf parameter in controlUpdate
      */
     public MyPlanetControl(float rotSpeed)
@@ -32,6 +33,10 @@ public class MyPlanetControl extends AbstractControl
         this.rotSpeed=rotSpeed;
     }
     
+    /**
+     * Sets the spatial which will be controlled by the istance of the class
+     * @param spatial the spacial controlled
+     */
     @Override
     public void setSpatial(Spatial spatial) 
     {
@@ -46,9 +51,7 @@ public class MyPlanetControl extends AbstractControl
     protected void controlUpdate(float tpf)
     {
         if(spatial != null)
-            {
             spatial.rotate(0.0f,tpf*this.rotSpeed,0.0f);
-            }
     }
 
     @Override
@@ -56,6 +59,11 @@ public class MyPlanetControl extends AbstractControl
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Clonig of the control for another spatial
+     * @param spatial the spatial that has the control to be cloned
+     * @return the cloned control
+     */
     public Control cloneForSpatial(Spatial spatial) 
     {
         final MyPlanetControl control = new MyPlanetControl();
@@ -64,4 +72,6 @@ public class MyPlanetControl extends AbstractControl
         control.setSpatial(spatial);
         return control;
     }
+    
+    private float rotSpeed;
 }
