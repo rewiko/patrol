@@ -11,21 +11,21 @@ import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 
 /**
- *
- * @author giorgio
+ * Control class for defence spatial. That class provides methods to apply continuos rotation to the defence.
+ * @author Michael Benassi Giorgio Micconi
  */
 public class MyDefenseControl extends AbstractControl
-{
-    
-    private float rotSpeed=1/15f;
-    
+{   
+    /**
+     * Constructor without the rotation speed argument. Will be used the default speed.
+     */
     public MyDefenseControl()
     {
         this.rotSpeed=1/15f;
     }
     
     /**
-     * 
+     * Constructor with specified rotation speed.
      * @param rotSpeed is the value that multiply tpf parameter in controlUpdate
      */
     public MyDefenseControl(float rotSpeed)
@@ -33,6 +33,10 @@ public class MyDefenseControl extends AbstractControl
         this.rotSpeed=rotSpeed;
     }
 
+    /**
+     * Sets the spatial which will be controlled by the istance of the class
+     * @param spatial the spacial controlled
+     */
     @Override
     public void setSpatial(Spatial spatial) 
     {
@@ -57,6 +61,11 @@ public class MyDefenseControl extends AbstractControl
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Clonig of the control for another spatial
+     * @param spatial the spatial that has the control to be cloned
+     * @return the cloned control
+     */
     public Control cloneForSpatial(Spatial spatial) 
     {
         final MyDefenseControl control = new MyDefenseControl();
@@ -65,4 +74,6 @@ public class MyDefenseControl extends AbstractControl
         control.setSpatial(spatial);
         return control;
     }
+    
+    private float rotSpeed;
 }
