@@ -8,52 +8,30 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.jme3.scene.Spatial;
-
 import it.unipr.ce.dsg.patrol.gui.message.content.Point;
 import it.unipr.ce.dsg.patrol.platform.GameResourceMobile;
-import it.unipr.ce.dsg.patrol.util.MultiLog;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- *
- * @author giorgio
+ * Handler of the movement of the ship. Implements Savable because everything used as UserData for Spatial must implments that class.
+ * @author Michael Benassi Giorgio Micconi
  */
 public class HandlingMovement implements Savable
-{
-    private String resId;
-    private RTSGameGUI gui;
-    private int period;
-    private Spatial spatial;
-    private Coordinate current;
-    private Coordinate previous;
-    private Coordinate arrival;
-    private int previousX;
-    private int previousZ;
-    private CoordinatesMapping mapping;
-    private boolean arrived;
-    private MessageSender sender;
-    private GameResourceMobile grm;
-    private boolean firstTime;
-    private double delta;
-    private int gran;
-    private LinkedBlockingQueue<Point2PointData> travelsQueue;
-    
+{   
     /**
      * Constructor without specific path
-     * @param gui
-     * @param id
-     * @param period_movement
-     * @param selected
-     * @param sender
-     * @param delta
-     * @param gran 
+     * @param gui reference to the GUI istance
+     * @param id id of the ship. TODO the id is also in spatial object, this can be deleted
+     * @param period_movement period of the movement. TODO it's unused, it can be deleted
+     * @param selected the spatial of the ship
+     * @param sender reference of the object that communicates with the net
+     * @param delta displacement from PATROL reference system to jMonkeyEngine reference system
+     * @param gran granularity value
      */
     public HandlingMovement(RTSGameGUI gui, String id, int period_movement, Spatial selected, MessageSender sender,double delta,double gran)
     {
-        //MultiLog.println(RTSGameGUI.class.toString(),"HandlingMovement constructor");
         this.resId=id;
 	this.gui=gui;
 	this.period=period_movement;
@@ -65,31 +43,28 @@ public class HandlingMovement implements Savable
         this.previousZ=0;
         this.arrived=false;
         this.sender=sender;
-        //MultiLog.println(RTSGameGUI.class.toString(),"Request for resource "+this.resId);
         this.grm=this.sender.getMobileResource(this.resId);
         this.firstTime=true;
         this.mapping=new CoordinatesMapping();
         this.delta=delta;
         this.gran=(int) gran;
         this.travelsQueue=new LinkedBlockingQueue<Point2PointData>();
-        //MultiLog.println(RTSGameGUI.class.toString(),"End HandlingMovement constructor");
     }
     
     /**
      * Constructor with a path
-     * @param gui
-     * @param id
-     * @param start
-     * @param arrival
-     * @param period_movement
-     * @param selected
-     * @param sender
-     * @param delta
-     * @param gran 
+     * @param gui reference to the GUI istance
+     * @param id id of the ship. TODO the id is also in spatial object, this can be deleted
+     * @param start departure Coordinates
+     * @param arrival arrival Coordinates
+     * @param period_movement period of the movement. TODO it's unused, it can be deleted
+     * @param selected the spatial of the ship
+     * @param sender reference of the object that communicates with the net
+     * @param delta displacement from PATROL reference system to jMonkeyEngine reference system
+     * @param gran granularity value
      */
     public HandlingMovement(RTSGameGUI gui, String id, Coordinate start, Coordinate arrival, int period_movement, Spatial selected, MessageSender sender,double delta,double gran)
     {
-        //MultiLog.println(RTSGameGUI.class.toString(),"HandlingMovement constructor");
         this.resId=id;
 	this.gui=gui;
 	this.period=period_movement;
@@ -101,7 +76,6 @@ public class HandlingMovement implements Savable
         this.previousZ=0;
         this.arrived=false;
         this.sender=sender;
-        //MultiLog.println(RTSGameGUI.class.toString(),"Request for resource "+this.resId);
         this.grm=this.sender.getMobileResource(this.resId);
         this.firstTime=true;
         this.mapping=new CoordinatesMapping();
@@ -109,47 +83,41 @@ public class HandlingMovement implements Savable
         this.gran=(int) gran;
         this.travelsQueue=new LinkedBlockingQueue<Point2PointData>();
         this.travelsQueue.offer(new Point2PointData(start,arrival));
-        //MultiLog.println(RTSGameGUI.class.toString(),"End HandlingMovement constructor");
     }
     
+    /**
+     * Add new movement for the spatial
+     * @param start new departure Coordinate
+     * @param arrival new arrival Coordinate
+     * @return true if the spatial has been setted, false otherwise
+     */
     public boolean addMovement(Coordinate start, Coordinate arrival)
     {
-        //MultiLog.println(RTSGameGUI.class.toString(),"Add movement");
         if(this.spatial==null)
-            {
-            //MultiLog.println(RTSGameGUI.class.toString(),"Spatial wasn't set");    
             return false;
-            }
         if(this.travelsQueue.isEmpty())
-            {
-            //MultiLog.println(RTSGameGUI.class.toString(),"Queue empty, add first Point2PointData element");
             this.travelsQueue.offer(new Point2PointData(start,arrival));
-            //MultiLog.println(RTSGameGUI.class.toString(),"\t Added new Point2PointData element");
-            }
         else
             {
-            //MultiLog.println(RTSGameGUI.class.toString(),"Queue not empty, "+this.travelsQueue.size()+" elements");
             Iterator<Point2PointData> iter=this.travelsQueue.iterator();
             Point2PointData last=null;
             while(iter.hasNext())
                 last=iter.next();
             this.travelsQueue.offer(new Point2PointData(last.getArrival(),arrival));
-            //MultiLog.println(RTSGameGUI.class.toString(),"\t Added new Point2PointData element");
             }
         return true;
     }
     
+    /**
+     * Calculates the next point that has to be reached by the spatial on its path to the arrival
+     * @return the next point
+     */
     public Coordinate calculateNextWayPoint()
     {
-        //MultiLog.println(RTSGameGUI.class.toString(),"HandlingMovement calculateNextWayPoint");
         if(this.travelsQueue.isEmpty() && this.arrived==true)
-            {
-            //MultiLog.println(RTSGameGUI.class.toString(),"\tNo path to follow was set");
             return null;
-            }
         if(this.firstTime)
             {
-            //MultiLog.println(RTSGameGUI.class.toString(),"\tFirst time waypoint");
             this.sender.setMobileReourceStatus(this.resId, true);
             this.firstTime=false;
             this.arrived=false;
@@ -157,23 +125,17 @@ public class HandlingMovement implements Savable
         if(this.arrived)
             return null;
         if(this.spatial.getControl(MyShipControl.class).isMoving())
-            {
-            //MultiLog.println(RTSGameGUI.class.toString(),"\tShip is still moving, can't calculate next way point");
             return null;
-            }
         if(this.current==null && this.arrival==null)
             {
             Point2PointData path=this.travelsQueue.poll();
             this.current=path.getStart();
             this.arrival=path.getArrival();
             }
-        //MultiLog.println(RTSGameGUI.class.toString(), "Current: "+this.current.getIX()+" "+this.current.getIY()+" "+this.current.getIZ());
-        //MultiLog.println(RTSGameGUI.class.toString(), "Arrival: "+this.arrival.getIX()+" "+this.arrival.getIY()+" "+this.arrival.getIZ());
         if(this.current.equalTo(this.arrival,"integer"))
             {
             System.out.println("Travel complete");
             grm=this.sender.getMobileResource(this.resId);
-            //MultiLog.println(RTSGameGUI.class.toString(),"\tTravel complete x:"+grm.getX()+" z:"+grm.getY());
             this.sender.setMobileReourceStatus(this.resId, false);
             this.current=null;
             this.arrival=null;
@@ -187,19 +149,19 @@ public class HandlingMovement implements Savable
 	int movz=0;
         if(directionX!=0 && !(previousX!=0 && directionZ!=0))
             {
-            if(directionX==1)//verso ovest
+            if(directionX==1)//towards west
                 {
                 movx=this.gran;
                 this.previousX=1;
                 this.previousZ=0;
                 }
-            else if(directionX==2) //verso est
+            else if(directionX==2) //towards east
                 {
                 movx=-this.gran;
                 this.previousX=2;
                 this.previousZ=0;
                 }
-            else if(directionX==0)//non mi muovo in orizontale
+            else if(directionX==0)//no horizontal movement
                 {
                 movx=0;
                 this.previousX=0;
@@ -208,19 +170,19 @@ public class HandlingMovement implements Savable
             }
         else    //Z movement
             {
-            if(directionZ==1)//verso nord
+            if(directionZ==1)//towards north
                 {
                 movz=this.gran;
                 this.previousZ=1;
                 this.previousX=0;
                 }
-            else if(directionZ==2)//verso sud
+            else if(directionZ==2)//towards south
                 {
                 movz=-this.gran;
                 this.previousZ=2;
                 this.previousX=0;
                 }
-            else if(directionZ==0)//non mi muovo in verticale
+            else if(directionZ==0)//no vertical movement
                 {
                 movz=0;
                 this.previousZ=0;
@@ -230,26 +192,25 @@ public class HandlingMovement implements Savable
         double patrolOldX=grm.getX();
         double patrolOldY=grm.getY();
         this.sender.moveMobileResource(this.resId, movx, movz);
-        //MultiLog.println(RTSGameGUI.class.toString(), "Move: "+movx+" "+movz);
         grm=this.sender.getMobileResource(this.resId);
         double patrolNewX=grm.getX();
         double patrolNewY=grm.getY();
         if(patrolOldX!=patrolNewX || patrolOldY!=patrolNewY)
             {
-            //MultiLog.println(RTSGameGUI.class.toString(),"Previus: "+current.getFX()+" "+current.getFY()+" "+current.getFZ());
-            //MultiLog.println(RTSGameGUI.class.toString(),"Patrol new: "+patrolNewX+" "+patrolNewY);
             this.previous=this.current;
             Point newPoint=new Point(patrolNewX,patrolNewY);
             this.current=this.mapping.patrolTojMonkey(newPoint,this.delta);
-           //MultiLog.println(RTSGameGUI.class.toString(),"Current: "+current.getFX()+" "+current.getFY()+" "+current.getFZ());
             System.out.println("Next step has been calculated");
-            //MultiLog.println(RTSGameGUI.class.toString(),"Next step has been calculated");
             return this.current;
             }
         else
             return null;
     }
     
+    /**
+     * Calcualtes the horizontal displacement of the next way point
+     * @return the direction, 1=West, 0=No displacement, 2=East
+     */
     private int longitudeMovement() 
     {
         if((int)this.current.getIX()<(int)this.arrival.getIX())
@@ -267,6 +228,10 @@ public class HandlingMovement implements Savable
         return 0;
     }
 
+    /**
+     * Calcualtes the vertical displacement of the next way point
+     * @return the direction, 1=North, 0=No displacement, 2=South
+     */
     private int latitudeMovement() 
     {
         if((int)this.current.getIZ()<(int)this.arrival.getIZ())
@@ -284,11 +249,39 @@ public class HandlingMovement implements Savable
         return 0;
     }
 
+    /**
+     * It isn't used, it is necessary only to save game but must be present in each class that is used as an UserData of a Spatial
+     * @param ex
+     * @throws IOException 
+     */
     public void write(JmeExporter ex) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * It isn't used, it is necessary only to load game but must be present in each class that is used as an UserData of a Spatial
+     * @param ex
+     * @throws IOException 
+     */
     public void read(JmeImporter im) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    private String resId;
+    private RTSGameGUI gui;
+    private int period;
+    private Spatial spatial;
+    private Coordinate current;
+    private Coordinate previous;
+    private Coordinate arrival;
+    private int previousX;
+    private int previousZ;
+    private CoordinatesMapping mapping;
+    private boolean arrived;
+    private MessageSender sender;
+    private GameResourceMobile grm;
+    private boolean firstTime;
+    private double delta;
+    private int gran;
+    private LinkedBlockingQueue<Point2PointData> travelsQueue;
 }
