@@ -21,12 +21,14 @@
             <panel id="centeringPanel" style="centeringPanel">
                 <panel id="buttonContainingPanel" style="buttonPanel">
                     <panel id="leftDiv" style="buttonDiv">
-                        <control name="pulsateBlueButton" id="mybutton" text="Login" style="slidingPulsateBlueButton"/>
-                        <interact onClick="toLogin()"/>
+                        <control name="pulsateBlueButton" id="mybutton" text="Login" style="slidingPulsateBlueButton">
+                            <interact onClick="toLogin()"/>
+                        </control>
                     </panel>
                     <panel id="rightDiv" style="buttonDiv">
-                        <control name="pulsateBlueButton" id="mybutton" text="Exit" style="slidingPulsateBlueButton"/>
-                        <interact onClick="quit()"/>
+                        <control name="pulsateBlueButton" id="mybutton" text="Exit" style="slidingPulsateBlueButton">
+                            <interact onClick="quit()"/>
+                        </control>
                     </panel> 
                 </panel>
             </panel>

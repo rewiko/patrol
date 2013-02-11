@@ -11,16 +11,18 @@
     <screen id="endGameWin" controller="it.unipr.ce.dsg.patrol.gui3d.MyScreenController">
         <layer id="layer" childLayout="center">
             <panel id="panel" width="50%" height="50%" childLayout="center">
-                <control name="pulsateBlueButton" id="endGameButton" text="You Win! Click to Exit" width="50%" height="50%" style="pulsateSquareBlueButton"/>
-                <interact onClick="endGame()"/>
+                <control name="pulsateBlueButton" id="endGameButton" text="You Win! Click to Exit" width="50%" height="50%" style="pulsateSquareBlueButton">
+                    <interact onClick="endGame()"/>
+                </control>
             </panel>
         </layer>
     </screen>
     <screen id="endGameLose" controller="it.unipr.ce.dsg.patrol.gui3d.MyScreenController">
         <layer id="layer" childLayout="center">
             <panel id="panel" width="50%" height="50%" childLayout="center">
-                <control name="pulsateBlueButton" id="endGameButton" text="You Lose! Click to Exit" width="50%" height="50%" style="pulsateSquareBlueButton"/>
-                <interact onClick="endGame()"/>
+                <control name="pulsateBlueButton" id="endGameButton" text="You Lose! Click to Exit" width="50%" height="50%" style="pulsateSquareBlueButton">
+                    <interact onClick="endGame()"/>
+                </control>
             </panel>
         </layer>
     </screen>

@@ -24,11 +24,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *
+ * Class that controls NiftyGUI screens.
  * @author Benassi Michael Micconi Giorgio
  */
 public class MyScreenController extends AbstractAppState implements ScreenController
 {
+    /**
+     * Constructor that initialize value
+     * @param gui reference to the istance of RTSGameGUI class
+     */
     public MyScreenController(RTSGameGUI gui)
     {
         this.gui=gui;
@@ -45,33 +49,53 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         this.shipModel="-";
     }
     
+    /**
+     * Not used by programmers, it is used by NiftyGUI
+     * @param nifty
+     * @param screen 
+     */
     public void bind(Nifty nifty, Screen screen) 
     {
         this.nifty=nifty;
         this.screen=screen;
     }
 
+    /**
+     * Callback launched when a screen is loaded
+     */
     public void onStartScreen() 
     {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Callback launched when a screen is closing
+     */
     public void onEndScreen() 
     {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
     
+    /**
+     * Callback launched when the user click the button Exit in welcome.xml screen. It closes the application
+     */
     public void quit()
     {
         this.app.stop();
     }
     
+    /**
+     * Callback launched when the user click the button Login in welcome.xml screen. It changes the screen and shown login.xml screen
+     */
     public void toLogin()
     {
         this.nifty.gotoScreen("loginScreen");
-        this.nifty.getScreen("loginScreen").findNiftyControl("pwd",TextField.class).enablePasswordChar('*');
     }
     
+    /**
+     * Callback launched when the user click on the button Start in login.xml screen. It checks if all the field aren't empty and if the starship model was selected
+     * TODO maybe add a control that check if current screen is Login
+     */
     public void startGame()
     {
         //Screen screen=this.nifty.getScreen("loginScreen");
@@ -105,18 +129,27 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         this.oldDate=new Date();
     }
     
+    /**
+     * Starts game in case of develpment mode, without initial GUI
+     */
     public void startGameWithoutGUI()
     {
         this.i=-2;
         this.oldDate=new Date();
-        //this.nifty.gotoScreen("hud");
     }
     
+    /**
+     * Callback launched by HUD_start.xml. Changes the actual screen to HUD.xml screen
+     */
     public void goToHudStart()
     {
         this.nifty.gotoScreen("hud");
     }
     
+    /**
+     * Changes the actual screen to the endGame.xml screen of victory or defeat
+     * @param victory indicates if the player has won or lose
+     */
     public void goToEndGame(boolean victory)
     {
         if(victory)
@@ -125,11 +158,17 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
             this.nifty.gotoScreen("endGameLose");
     }
     
+    /**
+     * TODO probably it can be deleted, there is quit()
+     */
     public void endGame()
     {
         this.gui.stop();
     }
     
+    /**
+     * Callback launched in login.xml screen. It changes the screen to welcome.xml
+     */
     public void back()
     {
         this.nifty.gotoScreen("start");
@@ -315,36 +354,55 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
             }
     }
     
+    /**
+     * Callback launched when a slider is modified by the user. Here it's used Event bus subscription to catch the event.
+     * It works for both buyScreens because the Event bus subscription pass the id of the slider
+     * @param id
+     * @param event 
+     */
     @NiftyEventSubscriber(id="slider")
     public void onSliderChange(final String id, final SliderChangedEvent event)
     {
         float value=event.getValue();
+        //TODO LabelControl is deprecated and it works but will need to find another way
         LabelControl label=this.nifty.getCurrentScreen().findNiftyControl("value",LabelControl.class);
         label.setText(Float.toString(value));
     }
     
+    /**
+     * Callback launched when the user click on the "Buy Defence" button
+     */
     public void openDefenseWindowClicked()
     {
         if(this.gui.getActualMoney().equals("0.0"))
             return;
         this.nifty.gotoScreen("purchaseDefenseWindow");
+        //TODO SliderControl is deprecated and it works but will need to find another way
         SliderControl slider=nifty.getScreen("purchaseDefenseWindow").findNiftyControl("slider",SliderControl.class);
         slider.setMin((float)this.resMinCost);
         slider.setMax(Float.parseFloat(this.gui.getActualMoney()));
     }
     
+    /**
+     * Callback launched when the user click on the "Buy Ship" button
+     */
     public void openShipWindowClicked()
     {
         if(this.gui.getActualMoney().equals("0.0"))
             return;
         this.nifty.gotoScreen("purchaseShipWindow");
+        //TODO SliderControl is deprecated and it works but will need to find another way
         SliderControl slider=nifty.getScreen("purchaseShipWindow").findNiftyControl("slider",SliderControl.class);
         slider.setMin((float)this.resMinCost);
         slider.setMax(Float.parseFloat(this.gui.getActualMoney()));
     }
     
+    /**
+     * Callback launched when the user click on the "Buy" button in "Buy Defence" window
+     */
     public void buyDefenceClicked()
     {
+        //TODO LabelControl is deprecated and it works but will need to find another way
         LabelControl label=nifty.getScreen("purchaseDefenseWindow").findNiftyControl("value",LabelControl.class);
         float value=Float.parseFloat(label.getText());
         MultiLog.println(MyScreenController.class.toString(),"Buy defence button clicked");
@@ -357,8 +415,12 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
             MultiLog.println(MyScreenController.class.toString(),"Couldn't buy the defence");
     }
     
+    /**
+     * Callback launched when the user click on the "Buy" button in "Buy Ship" window
+     */
     public void buyShipClicked()
     {
+        //TODO LabelControl is deprecated and it works but will need to find another way
         LabelControl label=nifty.getScreen("purchaseShipWindow").findNiftyControl("value",LabelControl.class);
         float value=Float.parseFloat(label.getText());
         MultiLog.println(MyScreenController.class.toString(),"Buy ship button clicked");
@@ -371,6 +433,9 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
             MultiLog.println(MyScreenController.class.toString(),"Couldn't buy the ship");
     }
     
+    /**
+     * Callback launched when the user click on the "Cancel" button in "Buy Defence" or "Buy Ship" windows
+     */
     public void backToGUI()
     {
         this.nifty.gotoScreen("hud");
@@ -378,10 +443,12 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
     
     public void selectShip(String selection)
     {
-        //this.shipModel="Models/"+selection+"/"+selection+".j3o";
         this.shipModel=selection;
     }
     
+    /**
+     * Callback launched when the user click on the "Hide/Show" button in the left-down corner of the GUI.
+     */
     public void toggleHUD()
     {
         this.hudVisible=!this.hudVisible;
@@ -390,18 +457,12 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
                 Element elem=iter.next();
                 if(!elem.getId().equals("angleLayer"))
                     elem.setVisible(this.hudVisible);
-               /* else
-                    {
-                    CustomButtonController controller=nifty.getScreen("hud").findControl(elem.getId(),CustomButtonController.class);
-                    //textRenderer=textElement.getRenderer(TextRenderer.class);
-                    if(controller.getText().equals("Hide"))
-                        controller.setText("Show");
-                    else
-                        controller.setText("Hide");
-                    }*/
             }
     }
     
+    /**
+     * Callback launched when the user click on the "Go To Home" button of the GUI.
+     */
     public void homeVisionClicked()
     {
         this.gui.setVisionToHome();
@@ -414,62 +475,67 @@ public class MyScreenController extends AbstractAppState implements ScreenContro
         this.app=(SimpleApplication)app;
     }
  
+    /**
+     * Loop that controls the flow of screens to display. The loading screens are temporized, 3 second for each one.
+     * TODO property of the class "i" must deleted and the code must be more elegant, without so many if statements.
+     * @param tpf time per frame
+     */
     @Override
     public void update(float tpf) 
     { 
-    Date newDate=new Date();
+        Date newDate=new Date();
         if(this.i>=0 && ((newDate.getTime()-this.oldDate.getTime()>=3000) || this.i==0))
-            {
+        {
             this.oldDate=newDate;
             this.nifty.gotoScreen(this.screensMap.get(this.i));
             if(this.i==0)
-                {
+            {
                 this.gui.connect();
                 this.i++;
-                }
+            }
             else if(this.i==1)
-                {
+            {
                 this.gui.initializeKnowledges();
                 this.i++;
-                }
+            }
             else if(this.i==2)
-                {
+            {
                 this.gui.initTerrain();
                 this.i++;
-                }
+            }
             else if(this.i==3)
-                {
+            {
                 this.gui.initGroundGrid();
                 this.i++;
-                }
+            }
             else if(this.i==4)
-                {
+            {
                 this.gui.addLightToScene();
                 this.i++;
-                }
+            }
             else if(this.i==5)
-                {
+            {
                 this.gui.getHomePlanetAndDefense();
                 this.i++;
-                }
+            }
             else if(this.i==6)
-                {
+            {
                 this.gui.initKeys();
                 this.i++;
-                }
+            }
             else if(this.i==7)
-                {
+            {
                 this.gui.updatePositionGUI();
                 this.app.getFlyByCamera().setDragToRotate(false);  //to allow the user to interact using mouse
                 this.i=-2;
                 this.gui.setReadyState(true);
-                }
             }
+        }
         if(this.i==-2 && (newDate.getTime()-this.oldDate.getTime()>=3000))
-            {
+        {
             this.oldDate=newDate;
             this.setTextMoney();
-            }
+        }
     }
     
     private Nifty nifty;
