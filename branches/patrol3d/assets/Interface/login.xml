@@ -12,7 +12,7 @@
         <layer id="background" style="backgroundLayer">
         </layer>
         <layer id="foreground" style="foregroundLayer">
-            <panel id="panel_top" style="titlePanel" height="10%"><!--20%-->
+            <panel id="panel_top" style="titlePanel" height="10%">
                 <text text="Login Settings Tab" style="titleText" />
             </panel>    
             <panel id="fieldsPanel" style="fieldsPanel" height="60%">
@@ -29,7 +29,7 @@
                         <control name="label" text="Password:" style="simpleLabel"/>
                     </panel>
                     <panel id="userField" style="fieldStyle">
-                        <control id="pwd" name="textfield" valign="center" height="75%" width="200px" text=""/>
+                        <control id="pwd" name="textfield" valign="center" height="75%" width="200px" text="" passwordChar="*"/>
                     </panel>
                 </panel>
                 <panel id="panel_firstPort" style="singleFieldPanel">
@@ -37,7 +37,7 @@
                         <control name="label" text="My First Port:"  style="simpleLabel"/>
                     </panel>
                     <panel id="userField" style="fieldStyle">
-                        <control id="myFirstPort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getOutPort()}"></control>
+                        <control id="myFirstPort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getOutPort()}"/>
                     </panel>
                 </panel>
                 <panel id="panel_serverIP" style="singleFieldPanel">
@@ -45,7 +45,7 @@
                         <control name="label" text="Server IP Address:" style="simpleLabel"/>
                     </panel>
                     <panel id="userField" style="fieldStyle">
-                        <control id="serverIP" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getServerAddress()}"></control>
+                        <control id="serverIP" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getServerAddress()}"/>
                     </panel>
                 </panel>
                 <panel id="panel_serverPort" style="singleFieldPanel">
@@ -53,7 +53,7 @@
                         <control name="label" text="Sever Port Number:"  style="simpleLabel"/>
                     </panel>
                     <panel id="userField" style="fieldStyle">
-                        <control id="serverPort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getServerPort()}"></control>
+                        <control id="serverPort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getServerPort()}"/>
                     </panel>
                 </panel>
                 <panel id="panel_messagePort" style="singleFieldPanel">
@@ -61,7 +61,7 @@
                         <control name="label" text="Message Port Number:"  style="simpleLabel"/>
                     </panel>
                     <panel id="userField" style="fieldStyle">
-                        <control id="messagePort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getMessagePort()}"></control>
+                        <control id="messagePort" name="textfield" valign="center" height="75%" width="200px" text="${CALL.getMessagePort()}"/>
                     </panel>
                 </panel>
                 </panel>
@@ -73,18 +73,18 @@
                     <panel style="buttonPanel">
                         <panel id="ship1" style="buttonDiv">
                             <image filename="Interface/Images/playerShip2.png" width="180px" height="70px" visibleToMouse="true">
-                            <effect>
-                                <onHover name="pulsate" scaleFactor="0.008" startColor="#adf0" endColor="#00ff" post="true"/>
-                            </effect>
-                            <interact onClick="selectShip(spaceship-red)"/>
+                                <interact onClick="selectShip(spaceship-red)"/>
+                                <effect>
+                                    <onHover name="pulsate" scaleFactor="0.008" startColor="#adf0" endColor="#00ff" post="true"/>
+                                </effect>
                             </image>
                         </panel>
                         <panel id="ship2" style="buttonDiv">
                             <image filename="Interface/Images/enemyShip2.png" width="180px" height="70px" visibleToMouse="true">
-                            <effect>
-                                <onHover name="pulsate" scaleFactor="0.008" startColor="#adf0" endColor="#00ff" post="true"/>
-                            </effect>
-                            <interact onClick="selectShip(cylinderSpaceship18)"/>
+                                <interact onClick="selectShip(cylinderSpaceship18)"/>
+                                <effect>
+                                    <onHover name="pulsate" scaleFactor="0.008" startColor="#adf0" endColor="#00ff" post="true"/>
+                                </effect>
                             </image>
                         </panel>
                     </panel>
@@ -92,12 +92,14 @@
             <panel id="centeringPanel" style="centeringPanel" height="15%">
                 <panel id="buttonContainingPanel" style="buttonPanel">
                     <panel id="leftDiv" style="buttonDiv">
-                        <control name="pulsateBlueButton" id="mybutton" text="Start" style="slidingPulsateBlueButton"/>
-                        <interact onClick="startGame()"/>
+                        <control name="pulsateBlueButton" id="mybutton" text="Start" style="slidingPulsateBlueButton">
+                            <interact onClick="startGame()"/>
+                        </control>
                     </panel>
                     <panel id="rightDiv" style="buttonDiv">
-                        <control name="pulsateBlueButton" id="mybutton" text="Back" style="slidingPulsateBlueButton"/>
-                        <interact onClick="back()"/>
+                        <control name="pulsateBlueButton" id="mybutton" text="Back" style="slidingPulsateBlueButton">
+                            <interact onClick="back()"/>
+                        </control>
                     </panel> 
                 </panel>
             </panel>

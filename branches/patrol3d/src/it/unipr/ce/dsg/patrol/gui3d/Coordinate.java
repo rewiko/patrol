@@ -111,7 +111,7 @@ public class Coordinate
     /**
      * Comparison the actual point with the one passed
      * @param other other point
-     * @param precision if the comparison has to be done between int or float, "float" -> float, "integer" -> int
+     * @param precision if the comparison has to be done between int, float or double, "float" -> float, "integer" -> int, double in case of lack of parameter
      * @return true if they are equal, false otherwise
      */
     public boolean equalTo(Coordinate other,String precision)

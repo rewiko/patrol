@@ -18,19 +18,19 @@
                     <text id="moneytext" text="Money: ${CALL.getMoney()}" style="guiText"/>
                 </panel>
                 <panel id="buyShipPanel" style="vDivPanel" childLayout="center">
-                    <!--<control id="buyShipButton" name="button" label="Buy ship" width="70%" height="60%"/>-->
-                    <control name="pulsateBlueButton" id="buyShipButton" text="Buy ship" width="90%" height="60%" style="pulsateSquareBlueButton"/>
-                    <interact onClick="openShipWindowClicked()"/>
+                    <control name="pulsateBlueButton" id="buyShipButton" text="Buy ship" width="90%" height="60%" style="pulsateSquareBlueButton">
+                        <interact onClick="openShipWindowClicked()"/>
+                    </control>
                 </panel>
                 <panel id="buyDefencePanel" style="vDivPanel" childLayout="center">
-                    <!--<control id="buyDefenceButton" name="button" label="Buy defence" width="70%" height="60%"/>-->
-                    <control name="pulsateBlueButton" id="buyDefenceButton" text="Buy defence" width="90%" height="60%" style="pulsateSquareBlueButton"/>
-                    <interact onClick="openDefenseWindowClicked()"/>
+                    <control name="pulsateBlueButton" id="buyDefenceButton" text="Buy defence" width="90%" height="60%" style="pulsateSquareBlueButton">
+                        <interact onClick="openDefenseWindowClicked()"/>
+                    </control>
                 </panel>
                 <panel id="goHomePanel" style="vDivPanel" childLayout="center">
-                    <!--<control id="goHomeButton" name="button" label="Go To Home" width="70%" height="60%"/>-->
-                    <control name="pulsateBlueButton" id="goHomeButton" text="Go To Home" width="90%" height="60%" style="pulsateSquareBlueButton"/>
-                    <interact onClick="homeVisionClicked()"/>
+                    <control name="pulsateBlueButton" id="goHomeButton" text="Go To Home" width="90%" height="60%" style="pulsateSquareBlueButton">
+                        <interact onClick="homeVisionClicked()"/>
+                    </control>
                 </panel>
             </panel>
             <!--Notify area-->
@@ -60,10 +60,9 @@
         <layer id="angleLayer" style="angleLayer">
             <panel id="anglePanel" style="anglePanel">
                 <panel id="hideShowPanel" style="aDivPanel" childLayout="center">
-                    <!--<control id="hideShowButton" name="button" label="Hide/Show" width="70%" height="70%"/>-->
-                    <control name="pulsateBlueButton" id="hideShowButton" text="Hide/ Show" width="75%" height="90%" style="pulsateCircleBlueButton"/>
-                    <!--<control name="pulsateBlueButton" id="hideShowButton" text="Hide/ Show" width="80%" height="80%" style="pulsateCircleBlueButton"/>-->
-                    <interact onClick="toggleHUD()"/>
+                    <control name="pulsateBlueButton" id="hideShowButton" text="Hide/ Show" width="75%" height="90%" style="pulsateCircleBlueButton">
+                        <interact onClick="toggleHUD()"/>
+                    </control>
                 </panel>
             </panel>
         </layer>

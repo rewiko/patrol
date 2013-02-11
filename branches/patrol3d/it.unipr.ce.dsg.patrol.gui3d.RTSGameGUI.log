@@ -1,0 +1,29 @@
+10:13:35_: Try to connect and register...
+10:13:35_: Peer is created
+10:13:36_: Peer is registrated into the network
+10:13:36_: 0.0 100.0 0.0 100.0 0.0 0.0 delta:50.0
+10:13:36_: Speed: 10.0 Visibility: 10.0 Granularity: 5.0
+10:13:36_: Player ID: 3a4d67eb2c7c1aeb8cfd15182af01f6f7ec0be3d
+10:13:37_: Initialize grid of the ground, tile dimension is 5.0, field dimensions are 100.0x100.0
+10:13:37_: Created 400 tile
+10:13:37_: Home planet position: 90.0 95.0 delta:50.0
+10:13:37_: pianeta: 40.0 0.0 45.0 io 40.0 20.0 25.0
+10:13:38_: InitKeys
+10:13:48_: value=5.0 min=5.0
+10:13:48_: actual money=11.0
+10:13:48_: Creating a ship spatial
+10:13:48_: Comprata astronave: x:90.0 z:95.0
+10:13:48_: model to load=Models/spaceship-red/spaceship-red.j3o
+10:13:48_: Moving ship out of planet
+10:13:48_: End move on creation method
+10:13:48_: Ship was created and moved
+10:13:55_: value=5.0 min=5.0
+10:13:55_: actual money=3.0
+10:14:3_: value=5.0 min=5.0
+10:14:3_: actual money=12.0
+10:14:3_: Creating a ship spatial
+10:14:3_: Comprata astronave: x:90.0 z:95.0
+10:14:3_: model to load=Models/spaceship-red/spaceship-red.j3o
+10:14:3_: Moving ship out of planet
+10:14:3_: End move on creation method
+10:14:3_: Ship was created and moved
