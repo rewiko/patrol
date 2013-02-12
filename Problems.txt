@@ -1,0 +1,24 @@
+###############################
+PATROL GUI 3D TODO AND PROBLEMS
+###############################
+
+In the code there are several comments about what there is to do, here a brief of the principal:
+
+-)Fix bugs about clash (Connection refused almost every time a player's ship meet an enemy
+    ship or an enemy planet);
+-)When the problems of the clash will be resolved, it will be necessary to build a window 
+    to select the defence in case of attack to our planets. It can look at the files of the 
+    purchase windows, like examples;
+-)Change handling of the defence, every planet must have its defence, they shouldn't 
+    be globals (this it can be done at PATROL level or at GUI level);
+-)The number of defence of the planet shown in the GUI (at bottom, first line, last number 
+    on the right) is not correct at this time. It is corrett only for not conquered planets 
+    (-) and for the home planet at the beginning (1).
+-)When the problems about clash will be resolved, the system of the clash may it be changed, 
+    so the clash starts only when the resources are near (problems related to the render of 
+    the enemy starships because they come out and go back inside the fog of war, this should 
+    be the meaning of  the property of RTSGameGUI enemyShipMap that now is unused, it should 
+    track the ships and their visibilty);
+-)The grid, maybe, can be removed and this should allow to click everywhere (problems about
+    number formats, PATROL use float but now we use float with integer number, and step of 
+    the coordinates);

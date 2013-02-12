@@ -3,9 +3,9 @@
 <!--
     Document   : customButtonStyle.xml
     Created on : 5 settembre 2012, 21.40
-    Author     : giorgio
+    Author     : Michael Benassi Giorgio Micconi
     Description:
-        Purpose of the document follows.
+        This XML document defines custom buttons. There are several possibilities.
 -->
 
 <nifty-styles>

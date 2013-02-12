@@ -3,9 +3,9 @@
 <!--
     Document   : hudStyle.xml
     Created on : 5 settembre 2012, 14.08
-    Author     : giorgio
+    Author     : Michael Benassi Giorgio Micconi
     Description:
-        Purpose of the document follows.
+        This XML document defines custom panels, layers, ecc for the HUD. There are several possibilities.
 -->
 
 <nifty-styles>
