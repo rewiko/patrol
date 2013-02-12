@@ -3,9 +3,9 @@
 <!--
     Document   : style.xml
     Created on : 4 settembre 2012, 11.30
-    Author     : giorgio
+    Author     : Michael Benassi Giorgio Micconi
     Description:
-        Purpose of the document follows.
+        This XML document defines custom panels, layers, ecc for welcome/login/loading screens. There are several possibilities.
 -->
 
 <nifty-styles>

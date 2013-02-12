@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This file defines the composition of button -->
 <nifty-controls>
     <controlDefinition style="pulsateBlueButton" name="pulsateBlueButton" controller="mygame.CustomButtonController" inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping">
         <panel id="panel" style="#button">
             <panel id="pulsatePanel" style="#pulsateButton">
-                <!--<control name="label" text="$text" style="#buttonLabel"/>-->
                 <text id="label" text="$text" style="#buttonLabel"/>
             </panel>
         </panel>
