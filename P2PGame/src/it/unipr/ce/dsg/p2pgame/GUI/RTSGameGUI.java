@@ -34,6 +34,8 @@ import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobile;
 import it.unipr.ce.dsg.p2pgame.platform.GameResourceMobileResponsible;
 import it.unipr.ce.dsg.p2pgame.util.MultiLog;
 
+import it.unipr.ce.dsg.p2pgame.platform.bot.message.MessageSender;
+
 /**
  *
  * @author stefanoSeb
@@ -50,7 +52,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
 	/** Creates new form RTSGameGUI */
     public RTSGameGUI() {
 
-        request=new MessageSender();
+        request=new MessageSender(9998);
         initComponents();
     }
 
@@ -612,13 +614,16 @@ public class RTSGameGUI extends javax.swing.JFrame {
     	int serverPort = Integer.parseInt(serverPortTextField.getText().trim());
     	MultiLog.println(RTSGameGUI.class.toString(), "porta server letta " + serverPort);
     	
-    	
+    	System.out.println("prima di CreateGamePeer");
     	//message_sender
         request.CreateGamePeer(portMin+ 1 , portMin, 160, "", serverAddressTextField.getText().trim(), serverPort, portMin + 3, portMin + 2, serverAddressTextField.getText().trim(), serverPort+2, 4000,1000,64000,2000);
 
+        System.out.println("prima di registerOnServer");
     	//message_sender
-        request.registerOnServer(usernameTextField.getText(), passwordField.getPassword().toString());
-
+        //request.registerOnServer(usernameTextField.getText(), passwordField.getPassword().toString());
+        request.registerOnServer("username", "password");
+        
+        System.out.println("prima di startGame");
     	//message_sender
         request.startGame(0,575,0,575,0,0, 1,10, 5);
 
@@ -629,7 +634,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
     private void buyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buyButtonActionPerformed
         // TODO add your handling code here:
 
-        MessageSender request1=new MessageSender();
+        MessageSender request1=new MessageSender(9998);
 
         //message_sender
         if (request.GamePeerExist() == false)
@@ -879,7 +884,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
     public static void main(String args[]) {
 
     	new MultiLog("configLog.txt", false, true);
-        final MessageSender request1=new MessageSender();
+        final MessageSender request1=new MessageSender(9998);
 
     	peerGUI = new RTSGameGUI();
     	
@@ -1005,7 +1010,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
 
     private static void setPlanetVision(ArrayList<Object> vision, GamePlayer player, double gran){
 
-        MessageSender request1=new MessageSender();
+        MessageSender request1=new MessageSender(9998);
 
     	for (int i_x = (int) (player.getPosX() - player.getVisibility()); i_x < player.getPosX() + player.getVisibility(); i_x += gran){
 			for (int i_y = (int) (player.getPosY() - player.getVisibility()); i_y < player.getPosY() + player.getVisibility(); i_y += gran){
@@ -1121,7 +1126,7 @@ public class RTSGameGUI extends javax.swing.JFrame {
    
 
    
-    final MessageSender request;
+    final it.unipr.ce.dsg.p2pgame.platform.bot.message.MessageSender request;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel serverAddrLabel;
