@@ -250,6 +250,9 @@ public class RTSGameBot2 implements Runnable,InterfaceBot{
 		//System.out.println("1");
 		sender.CreateGamePeer(portMin+ 1 , portMin, 160, "", serverAdd, serverPort, portMin + 3, portMin + 2, serverAdd, serverPort+2, 4000,500,64000,2000);
 		
+		//request.CreateGamePeer(portMin+ 1 , portMin, 160, "", serverAddressTextField.getText().trim(), serverPort, portMin + 3, portMin + 2, serverAddressTextField.getText().trim(), serverPort+2, 4000,1000,64000,2000);
+
+		
 		//this.gp.registerOnServer(username, password);
 		
 		sender.registerOnServer(username, password);

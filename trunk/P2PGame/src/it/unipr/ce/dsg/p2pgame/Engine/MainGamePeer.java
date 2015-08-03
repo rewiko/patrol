@@ -51,7 +51,7 @@ public class MainGamePeer extends Thread{
 
         try {
 		if (server == null)
-                	server = new ServerSocket(this.portnumber);//(9999);
+                	server = new ServerSocket(this.portnumber);//(9998);
 
             } catch (IOException e) {
 		e.printStackTrace();
@@ -163,6 +163,7 @@ public class MainGamePeer extends Thread{
         this.gp=new GamePeer(inPort,outPort,idBitLength,id,serverAddr,serverPort,gameInPort,gameOutPort,gameServerAddr,gameServerPort, stab,fix,check, pub);
 
         this.message_listener=new GUIMessageListener(gp,(this.portnumber+5));
+        System.out.println("PORT: " + (this.portnumber+5));
         //this.message_listener.start();
 
         Thread listenerThread=new Thread(this.message_listener);
@@ -268,7 +269,7 @@ public class MainGamePeer extends Thread{
      */
     public static void main(String [] arg)
     {
-        MainGamePeer main=new MainGamePeer(9999);
+        MainGamePeer main=new MainGamePeer(9998);
         main.start();
 
 

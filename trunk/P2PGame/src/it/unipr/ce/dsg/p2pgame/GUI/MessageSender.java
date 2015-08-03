@@ -49,7 +49,7 @@ public class MessageSender{
      */
     private String sendMessage(Message message) throws UnknownHostException, IOException
     {
-        this.socket=new Socket("127.0.0.1",2424); // TODO: edit name and port
+        this.socket=new Socket("127.0.0.1",1235); // TODO: edit name and port
 
         socket.setSoTimeout(0);
         socket.setReuseAddress(true);
@@ -146,7 +146,7 @@ public class MessageSender{
 
         String response = null;
       
-        response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+        response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
         MessageReader messageReader = new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -173,7 +173,7 @@ public class MessageSender{
 
         String response = null;
       
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
         MessageReader messageReader = new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -205,7 +205,7 @@ public class MessageSender{
 
         String response = null;
        
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
         MessageReader messageReader = new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -236,7 +236,7 @@ public class MessageSender{
 
         String response = null;
        
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -266,16 +266,17 @@ public class MessageSender{
         Message message=new RegisterRequestMessage(username,password);
 
 
-        String response = null;
-       
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+        String response = it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString()); // FIXME era 1235
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
+        
+        System.out.println("receivedMessage = " + receivedMessage.getMessageType());
+        
         if(receivedMessage.getMessageType().equals("REGISTERRESPONSE"))
         {
             //....
-
+        	System.out.println("receivedMessage = " + receivedMessage.getMessageType());
         }
 
 
@@ -303,7 +304,7 @@ public class MessageSender{
 
         String response = null;
       
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -329,7 +330,7 @@ public class MessageSender{
         Message message=new MultilogMessage(id,text);
         String response = null;
       
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -356,7 +357,7 @@ public class MessageSender{
         Message message=new CreateResourceMessage(id, description,quantity);
         String response = null;
        
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -386,7 +387,7 @@ public class MessageSender{
 
          String response = null;
       
-     response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+     response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
          MessageReader messageReader=new MessageReader();
          Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -412,7 +413,7 @@ public class MessageSender{
         Message message=new CreateMobileResourceMessage(type,qt);
         String response = null;
       
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -435,7 +436,7 @@ public class MessageSender{
         Message message=new GamePeerResourcesRequest();
         String response = null;
       
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -590,7 +591,7 @@ public class MessageSender{
 
         String response = null;
         
-    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+    response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
         MessageReader messageReader=new MessageReader();
         Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -630,7 +631,7 @@ public GameResourceMobile getMobileResource(String resource_id)
 
     String response = null;
     
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -747,7 +748,7 @@ public GameResource getMyResourceFromId(String r_id)
 
     String response = null;
    
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -889,7 +890,7 @@ public ArrayList<Object> getVision()
 
     String response = null;
    
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());  // FIXME
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -976,7 +977,7 @@ public int getResourcesSize()
 
     String response = null;
    
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString()); // FIXME
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1006,7 +1007,7 @@ public GamePlayer getGamePlayer()
 
     String response = null;
    
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString());  // FIXME leggi variabile
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -1045,7 +1046,7 @@ public double getGranularity()
 
     String response = null;
     
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString()); // FIXME
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -1075,7 +1076,7 @@ public void UpdateResourceEvolve(double quantity)
 
     String response = null;
     
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1", 1235, message.generateXmlMessageString()); // FIXME
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
 
@@ -1101,7 +1102,7 @@ public void MovementRequest(double targetx,double targety,String resId,String th
     Message message=new MovementRequestMessage(targetx,targety,resId,threadId);
     String response = null;
     
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString()); // FIXME
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1141,7 +1142,7 @@ public void CreateGamePeer(int inPort, int outPort, int idBitLength, String id, 
     Message message=new CreateGamePeerRequestMessage(inPort,outPort,idBitLength,id,serverAddr,serverPort,gameInPort,gameOutPort,gameServerAddr,gameServerPort,stab,fix,check, pub);
     String response = null;
    
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",9999, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",9998, message.generateXmlMessageString()); // FIXME era 9999
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1164,7 +1165,7 @@ public boolean GamePeerExist()
     Message message=new GamePeerExistRequestMessage();
     String response = null;
    
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",9999, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",9998, message.generateXmlMessageString()); // FIXME era 9999
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
@@ -1192,7 +1193,7 @@ public String getIpAddress()
     Message message=new IpAddressRequestMessage();
     String response = null;
     
-response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",2424, message.generateXmlMessageString());
+response=it.simplexml.sender.MessageSender.sendMessage("127.0.0.1",1235, message.generateXmlMessageString()); // FIXME
 
     MessageReader messageReader=new MessageReader();
     Message receivedMessage = messageReader.readMessageFromString(response.trim());
